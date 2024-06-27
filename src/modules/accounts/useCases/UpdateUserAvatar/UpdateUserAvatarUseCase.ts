@@ -1,31 +1,25 @@
 import { inject, injectable } from "tsyringe";
 import { User } from "../../infra/typeorm/entities/User";
 import { IUsersRepository } from "../../repositories/IUsersRepository";
-import { deleteFile } from './../../../../utils/file'
+import { deleteFile } from "./../../../../utils/file";
 interface IRequest {
-  user_id: string
-  avatar_file: string
+  user_id: string;
+  avatar_file: string;
 }
 @injectable()
 class UpdateUserAvatarUseCase {
-
-
-
   constructor(
-    @inject('UsersRepository')
+    @inject("UsersRepository")
     private usersRepository: IUsersRepository
-  ) { }
+  ) {}
 
   async execute({ user_id, avatar_file }: IRequest): Promise<User> {
+    const user = await this.usersRepository.findById(user_id);
 
-    const user = await this.usersRepository.findById(user_id)
+    if (user.avatar) await deleteFile(`./tmp/avatar/${user.avatar}`);
 
-    if (user.avatar) await deleteFile(`./tmp/avatar/${user.avatar}`)
-    
-    user.avatar = avatar_file
-    return await this.usersRepository.create(user)
+    user.avatar = avatar_file;
+    return await this.usersRepository.create(user);
   }
 }
-export {
-  UpdateUserAvatarUseCase
-}
+export { UpdateUserAvatarUseCase };

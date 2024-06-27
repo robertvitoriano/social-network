@@ -23,7 +23,8 @@ export class User {
 
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   created_at!: Date;
-
+  @Column({ type: "varchar", nullable: true })
+  avatar: string;
   constructor() {
     if (!this.id) {
       this.id = uuid();
