@@ -3,7 +3,7 @@
     "target": "es6",
     "module": "commonjs",
     "esModuleInterop": true,
-    "strict": false,
+    "strict": true,
     "baseUrl": "./src",
     "outDir": "./dist",
     "paths": {
@@ -13,8 +13,8 @@
       "@errors/*": ["errors/*"],
       "@utils/*": ["utils/*"]
     },
-    "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true

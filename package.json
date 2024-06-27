@@ -45,13 +45,16 @@
     "prettier": "^2.2.1",
     "ts-jest": "^27.1.3",
     "ts-node-dev": "^1.1.8",
+    "tsx": "^4.15.7",
     "typescript": "^4.5.5"
   },
   "scripts": {
-    "dev": "ts-node-dev --inspect --transpile-only --ignore-watch node_modules --respawn  src/shared/infra/http/server.ts",
-    "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js",
+    "dev": "tsx --watch  src/shared/infra/http/server.ts",
+    "typeorm": "tsx ./node_modules/typeorm/cli.js",
     "test": "jest",
-    "seed:admin": "ts-node-dev src/shared/infra/typeorm/seed/admin.ts",
-    "migrate": "typeorm migation:run"
+    "seed:admin": "tsx src/shared/infra/typeorm/seed/admin.ts",
+    "migration:run": "npx tsx ./node_modules/typeorm/cli.js migration:run",
+    "migration:generate":"npx tsx ./node_modules/typeorm/cli.js migration:generate -n",
+    "migration:revert":"npx tsx ./node_modules/typeorm/cli.js migration:revert"
   }
 }

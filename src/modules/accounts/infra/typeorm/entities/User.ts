@@ -1,28 +1,28 @@
-import { v4 as uuid } from "uuid";
 import { Entity, Column, PrimaryColumn } from "typeorm";
+import { v4 as uuid } from "uuid";
 
 @Entity("users")
 export class User {
-  @PrimaryColumn()
-  id: string;
+  @PrimaryColumn({ type: "char", length: "36" })
+  id!: string;
 
-  @Column()
-  name: string;
+  @Column({ type: "varchar", length: "255" })
+  name!: string;
 
-  @Column()
-  email: string;
+  @Column({ type: "varchar", length: "255", unique: true })
+  username!: string;
 
-  @Column()
-  password: string;
+  @Column({ type: "varchar", length: "255" })
+  password!: string;
 
-  @Column()
-  created_at: Date;
+  @Column({ type: "varchar", length: "255" })
+  email!: string;
 
-  @Column()
-  isAdmin: boolean;
+  @Column({ type: "boolean", default: false })
+  isAdmin!: boolean;
 
-  @Column()
-  avatar: string;
+  @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
+  created_at!: Date;
 
   constructor() {
     if (!this.id) {
