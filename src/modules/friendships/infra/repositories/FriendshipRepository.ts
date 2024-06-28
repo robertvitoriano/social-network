@@ -21,48 +21,45 @@ class FriendshipRepository implements IFriendshipsRepository {
     userId: string;
     friendId: string;
   }): Promise<IUserFriendDTO | null> {
-    const friendship = await this.repository
-      .createQueryBuilder("friendships")
-      .leftJoinAndSelect("friendships.user", "user")
-      .leftJoinAndSelect("friendships.friend", "friend")
-      .where(
-        "friendships.user_id = :userId AND friendships.friend_id = :friendId",
-        { userId, friendId }
-      )
-      .orWhere(
-        "friendships.user_id = :friendId AND friendships.friend_id = :userId",
-        { userId, friendId }
-      )
-      .select([
-        "user.id",
-        "user.name",
-        "user.email",
-        "user.username",
-        "user.isAdmin",
-        "user.created_at",
-        "friend.id",
-        "friend.name",
-        "friend.email",
-        "friend.username",
-        "friend.isAdmin",
-        "friend.created_at",
-      ])
-      .getOne();
+    try {
+      const friendship = await getRepository(Friendship)
+        .createQueryBuilder("friendship")
+        .leftJoinAndMapOne(
+          "friendship.user",
+          User,
+          "user",
+          "friendship.user_id = user.id"
+        )
+        .leftJoinAndMapOne(
+          "friendship.friend",
+          User,
+          "friend",
+          "friendship.friend_id = friend.id"
+        )
+        .where(
+          "(friendship.user_id = :userId AND friendship.friend_id = :friendId) OR (friendship.user_id = :friendId AND friendship.friend_id = :userId)",
+          { userId, friendId }
+        )
+        .getOne();
 
-    if (!friendship) {
+      if (!friendship) {
+        return null;
+      }
+
+      const { user, friend } = friendship;
+
+      return {
+        id: user.id === userId ? friend.id : user.id,
+        name: user.id === userId ? friend.name : user.name,
+        email: user.id === userId ? friend.email : user.email,
+        username: user.id === userId ? friend.username : user.username,
+        isAdmin: user.id === userId ? friend.isAdmin : user.isAdmin,
+        created_at: user.id === userId ? friend.created_at : user.created_at,
+      };
+    } catch (error) {
+      console.error("Error executing query:", error);
       return null;
     }
-
-    const { user, friend } = friendship;
-
-    return {
-      id: user.id === userId ? friend.id : user.id,
-      name: user.id === userId ? friend.name : user.name,
-      email: user.id === userId ? friend.email : user.email,
-      username: user.id === userId ? friend.username : user.username,
-      isAdmin: user.id === userId ? friend.isAdmin : user.isAdmin,
-      created_at: user.id === userId ? friend.created_at : user.created_at,
-    };
   }
 
   async create({ friendId, userId }: ICreateFriendshipDTO): Promise<void> {
@@ -77,7 +74,7 @@ class FriendshipRepository implements IFriendshipsRepository {
   async update({ userId, friendId, status }): Promise<void> {
     await this.repository
       .createQueryBuilder()
-      .update("friendships")
+      .update("friendshi")
       .set({ status })
       .where("user_id = :userId AND friend_id = :friendId", {
         userId,

@@ -25,7 +25,6 @@ class SendFriendshipUseCase {
       );
     }
     await this.friendshipRepository.create({ userId, friendId });
-
     const io = webSocketServer.getIO();
 
     io.to(friendId).emit(EventType.FRIENDSHIP_REQUEST, { userId });

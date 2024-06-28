@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryColumn } from "typeorm";
+import { Entity, Column, PrimaryColumn, OneToMany } from "typeorm";
 import { v4 as uuid } from "uuid";
+import { Friendship } from "@modules/friendships/infra/typeorm/entities/Friendship";
 
 @Entity("users")
 export class User {
@@ -23,8 +24,16 @@ export class User {
 
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   created_at!: Date;
+
   @Column({ type: "varchar", nullable: true })
-  avatar: string;
+  avatar!: string;
+
+  @OneToMany(() => Friendship, (friendship) => friendship.user)
+  friendships!: Friendship[];
+
+  @OneToMany(() => Friendship, (friendship) => friendship.friend)
+  friends!: Friendship[];
+
   constructor() {
     if (!this.id) {
       this.id = uuid();

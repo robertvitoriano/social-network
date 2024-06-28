@@ -13,10 +13,13 @@ class SendFriendShipController {
       const { id } = request.user;
       await sendFriendShipUseCase.execute({ friendId, userId: id });
 
-      return response.status(201).json({ message: "User Sendd with success" });
+      return response
+        .status(201)
+        .json({ message: "Friendship created with success" });
     } catch (err) {
       console.error(err);
-      throw new AppError("Error creating user", 500);
+      const errorCode = err.statusCode || 500;
+      throw new AppError("Error creating user", errorCode);
     }
   }
 }
