@@ -2,13 +2,16 @@ import { IFriendshipsRepository } from "@modules/friendships/repositories/IFrien
 import ICreateFriendshipDTO from "../../dtos/ICreateFriendshipDTO";
 import { IUserFriendDTO } from "../../dtos/IUserFriendDTO";
 import { Friendship } from "../typeorm/entities/Friendship";
-import { Repository, getRepository } from "typeorm";
+import { User } from "@modules/accounts/infra/typeorm/entities/User"; // Assuming the User entity is located here
+import { Repository, getRepository, Not, In } from "typeorm";
 
 class FriendshipRepository implements IFriendshipsRepository {
   private repository: Repository<Friendship>;
+  private userRepository: Repository<User>; // Add a repository for User
 
   constructor() {
     this.repository = getRepository(Friendship);
+    this.userRepository = getRepository(User); // Initialize User repository
   }
 
   async findFriendship({
@@ -70,6 +73,7 @@ class FriendshipRepository implements IFriendshipsRepository {
     });
     await this.repository.save(friendship);
   }
+
   async update({ userId, friendId, status }): Promise<void> {
     await this.repository
       .createQueryBuilder()
@@ -85,13 +89,20 @@ class FriendshipRepository implements IFriendshipsRepository {
       })
       .execute();
   }
+
   async findUserFriends(userId: string): Promise<IUserFriendDTO[]> {
     const friends = await this.repository
       .createQueryBuilder("friendship")
       .leftJoinAndSelect("friendship.user", "user")
       .leftJoinAndSelect("friendship.friend", "friend")
-      .where("friendship.user_id = :userId", { userId })
-      .orWhere("friendship.friend_id = :userId", { userId })
+      .where(
+        "friendship.user_id = :userId AND friendship.status = 'accepted'",
+        { userId }
+      )
+      .orWhere(
+        "friendship.friend_id = :userId AND friendship.status = 'accepted'",
+        { userId }
+      )
       .select([
         "user.id",
         "user.name",
@@ -129,6 +140,47 @@ class FriendshipRepository implements IFriendshipsRepository {
         };
       }
     });
+  }
+
+  // New method to find non-friends
+  async findNonFriends(userId: string): Promise<IUserFriendDTO[]> {
+    // First, find all the friend IDs of the user
+    const friends = await this.repository
+      .createQueryBuilder("friendship")
+      .where(
+        "(friendship.user_id = :userId OR friendship.friend_id = :userId) AND friendship.status = 'accepted'",
+        { userId }
+      )
+      .select(["friendship.user_id", "friendship.friend_id"])
+      .getMany();
+
+    const friendIds = friends.map((friendship) =>
+      friendship.user_id === userId ? friendship.friend_id : friendship.user_id
+    );
+
+    // Find all users who are not friends
+    const nonFriends = await this.userRepository
+      .createQueryBuilder("user")
+      .where("user.id != :userId", { userId })
+      .andWhere("user.id NOT IN (:...friendIds)", { friendIds })
+      .select([
+        "user.id",
+        "user.name",
+        "user.email",
+        "user.username",
+        "user.isAdmin",
+        "user.created_at",
+      ])
+      .getMany();
+
+    return nonFriends.map((user) => ({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      username: user.username,
+      isAdmin: user.isAdmin,
+      created_at: user.created_at,
+    }));
   }
 }
 

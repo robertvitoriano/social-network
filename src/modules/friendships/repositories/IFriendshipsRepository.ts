@@ -8,6 +8,7 @@ interface IFriendshipsRepository {
     friendId: string;
   }): Promise<IUserFriendDTO>;
   findUserFriends(userId: string): Promise<IUserFriendDTO[]>;
+  findNonFriends(userId: string): Promise<IUserFriendDTO[]>;
   update(data: {
     friendId: string;
     userId: string;
