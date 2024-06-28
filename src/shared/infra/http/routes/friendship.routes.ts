@@ -4,30 +4,31 @@ import { ensureAuthenticated } from "../middlewares/ensureAuthenticated";
 import { SendFriendShipResponseController } from "@modules/friendships/useCases/sendFriendshipResponse/SendFriendShipResponseController";
 import { ListUserFriendsController } from "@modules/friendships/useCases/listUserFriends/ListUserFriendsController";
 import { ListUserNonFriendsController } from "@modules/friendships/useCases/listUserNonFriends/ListUserNonFriendsController";
-const usersRoutes = Router();
+const friendshipRoutes = Router();
 
 const sendFrienshipRequestController = new SendFriendShipController();
 const sendFrienshipResponseController = new SendFriendShipResponseController();
 const listUserFriendsController = new ListUserFriendsController();
 const listUserNonFriendsController = new ListUserNonFriendsController();
-usersRoutes.post(
-  "/friendships/send",
+
+friendshipRoutes.post(
+  "/send",
   ensureAuthenticated,
   sendFrienshipRequestController.handle
 );
-usersRoutes.post(
-  "/friendships/finish",
+friendshipRoutes.post(
+  "/finish",
   ensureAuthenticated,
   sendFrienshipResponseController.handle
 );
-usersRoutes.get(
-  "/friendships",
+friendshipRoutes.get(
+  "/",
   ensureAuthenticated,
   listUserFriendsController.handle
 );
-usersRoutes.get(
-  "/friendships/non-friends",
+friendshipRoutes.get(
+  "/non-friends",
   ensureAuthenticated,
   listUserNonFriendsController.handle
 );
-export { usersRoutes };
+export { friendshipRoutes };

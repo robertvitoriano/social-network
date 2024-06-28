@@ -2,16 +2,16 @@ import { IFriendshipsRepository } from "@modules/friendships/repositories/IFrien
 import ICreateFriendshipDTO from "../../dtos/ICreateFriendshipDTO";
 import { IUserFriendDTO } from "../../dtos/IUserFriendDTO";
 import { Friendship } from "../typeorm/entities/Friendship";
-import { User } from "@modules/accounts/infra/typeorm/entities/User"; // Assuming the User entity is located here
+import { User } from "@modules/accounts/infra/typeorm/entities/User";
 import { Repository, getRepository, Not, In } from "typeorm";
 
 class FriendshipRepository implements IFriendshipsRepository {
   private repository: Repository<Friendship>;
-  private userRepository: Repository<User>; // Add a repository for User
+  private userRepository: Repository<User>;
 
   constructor() {
     this.repository = getRepository(Friendship);
-    this.userRepository = getRepository(User); // Initialize User repository
+    this.userRepository = getRepository(User);
   }
 
   async findFriendship({
@@ -142,10 +142,8 @@ class FriendshipRepository implements IFriendshipsRepository {
     });
   }
 
-  // New method to find non-friends
   async findNonFriends(userId: string): Promise<IUserFriendDTO[]> {
-    // First, find all the friend IDs of the user
-    const friends = await this.repository
+    const friendships = await this.repository
       .createQueryBuilder("friendship")
       .where(
         "(friendship.user_id = :userId OR friendship.friend_id = :userId) AND friendship.status = 'accepted'",
@@ -154,15 +152,19 @@ class FriendshipRepository implements IFriendshipsRepository {
       .select(["friendship.user_id", "friendship.friend_id"])
       .getMany();
 
-    const friendIds = friends.map((friendship) =>
+    const friendIds = friendships.map((friendship) =>
       friendship.user_id === userId ? friendship.friend_id : friendship.user_id
     );
 
-    // Find all users who are not friends
-    const nonFriends = await this.userRepository
+    const nonFriendsQuery = this.userRepository
       .createQueryBuilder("user")
-      .where("user.id != :userId", { userId })
-      .andWhere("user.id NOT IN (:...friendIds)", { friendIds })
+      .where("user.id != :userId", { userId });
+
+    if (friendIds.length > 0) {
+      nonFriendsQuery.andWhere("user.id NOT IN (:...friendIds)", { friendIds });
+    }
+
+    const nonFriends = await nonFriendsQuery
       .select([
         "user.id",
         "user.name",

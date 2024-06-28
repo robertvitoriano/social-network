@@ -25,7 +25,7 @@ const httpServer = http.createServer(app);
 const webSocketServer = new WebSocketServer(httpServer);
 webSocketServer.init();
 
-app.listen(3334, () => {
+httpServer.listen(3334, () => {
   console.info("My app is running");
 });
 
