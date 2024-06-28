@@ -18,6 +18,7 @@ class AuthenticateUserController {
 
       return response.json(authenticateInfo);
     } catch (error) {
+      console.error(error);
       return response.status(error.statusCode).json({
         message: error.message || "Unexpected error.",
       });

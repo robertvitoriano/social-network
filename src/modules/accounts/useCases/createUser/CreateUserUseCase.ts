@@ -12,6 +12,7 @@ class CreateUserUseCase {
 
   async execute({
     name,
+    username,
     email,
     password,
     isAdmin,
@@ -24,6 +25,7 @@ class CreateUserUseCase {
 
     await this.userRepository.create({
       name,
+      username,
       email,
       isAdmin,
       password: hashedPassword,

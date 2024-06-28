@@ -22,6 +22,7 @@ class UserRepository implements IUsersRepository {
   async create({
     name,
     email,
+    username,
     password,
     isAdmin = false,
     avatar,
@@ -30,6 +31,7 @@ class UserRepository implements IUsersRepository {
     const user = this.repository.create({
       name,
       email,
+      username,
       password,
       isAdmin,
       avatar,

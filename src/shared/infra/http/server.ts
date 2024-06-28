@@ -10,10 +10,11 @@ import "./../../container";
 import { router } from "./routes";
 import http from "http";
 import { WebSocketServer } from "../ws/WebSocketServer";
-
+import cors from "cors";
 createConnection();
 
 const app = express();
+app.use(cors({ origin: "*" }));
 app.use(express.json());
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerConfig));
 app.use(morgan("common"));

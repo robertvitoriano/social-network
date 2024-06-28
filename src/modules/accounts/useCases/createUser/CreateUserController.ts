@@ -7,10 +7,11 @@ class CreateUserController {
     try {
       const createUserUseCase = container.resolve(CreateUserUseCase);
 
-      const { name, email, password, isAdmin } = request.body;
+      const { name, username, email, password, isAdmin } = request.body;
 
       await createUserUseCase.execute({
         name,
+        username,
         email,
         password,
         isAdmin,
@@ -21,7 +22,7 @@ class CreateUserController {
         .json({ message: "User created with success" });
     } catch (err) {
       console.error(err);
-      throw new AppError("Error creating user", 500);
+      throw new AppError("Error creating user", err.statusCode);
     }
   }
 }
