@@ -2,6 +2,10 @@ import { inject, injectable } from "tsyringe";
 import ICreateUserDTO from "../../dtos/ICreateFriendshipDTO";
 import { IFriendshipsRepository } from "../../repositories/IFriendshipsRepository";
 import { AppError } from "@shared/errors/AppError";
+import { webSocketServer } from "@shared/infra/http/server";
+import { ErrorMessages } from "@shared/enums/error-messages";
+import { EventType } from "@shared/enums/websocket-events";
+import { ClientErrorHttpStatusCode } from "@shared/enums/http-status-codes";
 
 @injectable()
 class SendFriendshipUseCase {
@@ -15,9 +19,16 @@ class SendFriendshipUseCase {
       await this.friendshipRepository.findFriendship({ friendId, userId });
 
     if (friendshipAlreadyExists) {
-      throw new AppError("Friendship already exists", 400);
+      throw new AppError(
+        ErrorMessages.FRIENDSHIP_ALREADY_EXISTS,
+        ClientErrorHttpStatusCode.BAD_REQUEST
+      );
     }
-    this.friendshipRepository.create({ userId, friendId });
+    await this.friendshipRepository.create({ userId, friendId });
+
+    const io = webSocketServer.getIO();
+
+    io.to(friendId).emit(EventType.FRIENDSHIP_REQUEST, { userId });
   }
 }
 export { SendFriendshipUseCase };

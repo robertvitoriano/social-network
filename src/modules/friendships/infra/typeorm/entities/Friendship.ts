@@ -12,10 +12,10 @@ export class Friendship {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Column()
+  @Column({ type: "char", length: "36" })
   user_id: string;
 
-  @Column()
+  @Column({ type: "char", length: "36" })
   friend_id: string;
 
   @Column({

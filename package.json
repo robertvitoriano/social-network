@@ -18,6 +18,7 @@
     "mysql": "^2.18.1",
     "pg": "^8.6.0",
     "reflect-metadata": "^0.1.13",
+    "socket.io": "^4.7.5",
     "swagger-ui-express": "^4.1.6",
     "ts-node": "^10.9.1",
     "tsyringe": "^4.6.0",
@@ -54,7 +55,7 @@
     "test": "jest",
     "seed:admin": "tsx src/shared/infra/typeorm/seed/admin.ts",
     "migration:run": "npx tsx ./node_modules/typeorm/cli.js migration:run",
-    "migration:generate":"npx tsx ./node_modules/typeorm/cli.js migration:generate -n",
-    "migration:revert":"npx tsx ./node_modules/typeorm/cli.js migration:revert"
+    "migration:generate": "npx tsx ./node_modules/typeorm/cli.js migration:generate -n",
+    "migration:revert": "npx tsx ./node_modules/typeorm/cli.js migration:revert"
   }
 }
