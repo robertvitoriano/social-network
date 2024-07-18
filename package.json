@@ -55,6 +55,7 @@
     "typeorm": "tsx ./node_modules/typeorm/cli.js",
     "test": "jest",
     "seed:admin": "tsx src/shared/infra/typeorm/seed/admin.ts",
+    "seed:notification-types":"tsx src/shared/infra/typeorm/seed/notification-types.ts",
     "migration:run": "npx tsx ./node_modules/typeorm/cli.js migration:run",
     "migration:generate": "npx tsx ./node_modules/typeorm/cli.js migration:generate -n",
     "migration:revert": "npx tsx ./node_modules/typeorm/cli.js migration:revert"
