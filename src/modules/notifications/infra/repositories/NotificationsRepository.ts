@@ -1,5 +1,4 @@
 import { INotificationsRepository } from "@modules/notifications/repositories/INotificationsRepository";
-import { User } from "@modules/accounts/infra/typeorm/entities/User";
 import { Notification } from "../typeorm/entities/Notification";
 import { Repository, getRepository } from "typeorm";
 import ICreateNotificationDTO from "@modules/notifications/dtos/ICreateNotificationDTO";
@@ -7,11 +6,9 @@ import { INotification } from "@modules/notifications/useCases/listNotifications
 
 class NotificationsRepository implements INotificationsRepository {
   private repository: Repository<Notification>;
-  private userRepository: Repository<User>;
 
   constructor() {
     this.repository = getRepository(Notification);
-    this.userRepository = getRepository(User);
   }
   async create(data: ICreateNotificationDTO): Promise<void> {
     const { notificationTypeId, senderId, receiverId } = data;
@@ -33,14 +30,12 @@ class NotificationsRepository implements INotificationsRepository {
       .where("receiver.id = :userId", { userId })
       .select([
         "notification.id",
-        "receiver.name",
-        "notificationType.type",
-        "sender.name",
+        "receiver.name as receiverName",
+        "notificationType.type as notificationType",
+        "sender.name as senderName",
         "notification.created_at",
       ])
       .getRawMany();
-
-    console.log({ userNotifications });
 
     return userNotifications;
   }

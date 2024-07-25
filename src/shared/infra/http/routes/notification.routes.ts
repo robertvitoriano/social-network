@@ -4,7 +4,7 @@ import { ensureAuthenticated } from "../middlewares/ensureAuthenticated";
 const listUserNotificationsController = new ListUserNotificationsController();
 const notificationRoutes = Router();
 
-notificationRoutes.post(
+notificationRoutes.get(
   "/list-user-notifications",
   ensureAuthenticated,
   listUserNotificationsController.handle
