@@ -14,6 +14,7 @@ class SendFriendshipUseCase {
   constructor(
     @inject("FriendshipRepository")
     private friendshipRepository: IFriendshipsRepository,
+    @inject("NotificationRepository")
     private notificationsRepository: INotificationsRepository
   ) {}
 
@@ -31,6 +32,7 @@ class SendFriendshipUseCase {
     const io = webSocketServer.getIO();
 
     io.to(friendId).emit(EventType.FRIENDSHIP_REQUEST, { userId });
+
     await this.notificationsRepository.create({
       notificationTypeId: NotificationTypes.FRIENDSHIP_REQUEST,
       receiverId: friendId,
