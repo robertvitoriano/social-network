@@ -5,4 +5,5 @@ export interface IUserFriendDTO {
   username: string;
   isAdmin: boolean;
   created_at: Date;
+  friendshipRequestStatus?: "sent" | "received" | "not_sent";
 }

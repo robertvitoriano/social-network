@@ -11,7 +11,7 @@ const sendFrienshipResponseController = new SendFriendShipResponseController();
 const listUserFriendsController = new ListUserFriendsController();
 const listUserNonFriendsController = new ListUserNonFriendsController();
 
-friendshipRoutes.post(
+friendshipRoutes.patch(
   "/send",
   ensureAuthenticated,
   sendFrienshipRequestController.handle

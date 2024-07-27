@@ -32,6 +32,7 @@ class NotificationsRepository implements INotificationsRepository {
         "notification.id",
         "receiver.name as receiverName",
         "notificationType.type as type",
+        "sender.id as senderId",
         "sender.name as senderName",
         "notification.created_at",
         "sender.avatar as senderAvatar",

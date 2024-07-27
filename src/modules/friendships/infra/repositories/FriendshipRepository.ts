@@ -1,6 +1,6 @@
 import { IFriendshipsRepository } from "@modules/friendships/repositories/IFriendshipsRepository";
-import ICreateFriendshipDTO from "../../dtos/ICreateFriendshipDTO";
-import { IUserFriendDTO } from "../../dtos/IUserFriendDTO";
+import ICreateFriendshipDTO from "@modules/friendships/dtos/ICreateFriendshipDTO";
+import { IUserFriendDTO } from "@modules/friendships/dtos/IUserFriendDTO";
 import { Friendship } from "../typeorm/entities/Friendship";
 import { User } from "@modules/accounts/infra/typeorm/entities/User";
 import { Repository, getRepository, Not, In } from "typeorm";
@@ -155,6 +155,18 @@ class FriendshipRepository implements IFriendshipsRepository {
 
     const nonFriendsQuery = this.userRepository
       .createQueryBuilder("user")
+      .leftJoinAndSelect(
+        "friendship",
+        "friendshipSent",
+        "friendshipSent.user_id = :userId AND friendshipSent.friend_id = user.id AND friendshipSent.status = 'pending'",
+        { userId }
+      )
+      .leftJoinAndSelect(
+        "friendship",
+        "friendshipReceived",
+        "friendshipReceived.friend_id = :userId AND friendshipReceived.user_id = user.id AND friendshipReceived.status = 'pending'",
+        { userId }
+      )
       .where("user.id != :userId", { userId });
 
     if (friendIds.length > 0) {
@@ -169,9 +181,11 @@ class FriendshipRepository implements IFriendshipsRepository {
         "user.username",
         "user.isAdmin",
         "user.created_at",
+        "friendshipSent.id",
+        "friendshipReceived.id",
       ])
       .getMany();
-
+    console.log({ nonFriends });
     return nonFriends.map((user) => ({
       id: user.id,
       name: user.name,
@@ -179,6 +193,13 @@ class FriendshipRepository implements IFriendshipsRepository {
       username: user.username,
       isAdmin: user.isAdmin,
       created_at: user.created_at,
+      //@ts-ignore
+      friendshipRequestStatus: user.friendshipSent?.id
+        ? "sent"
+        : //@ts-ignore
+        user.friendshipReceived?.id
+        ? "received"
+        : "not_sent",
     }));
   }
 }
