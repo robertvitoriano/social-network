@@ -157,14 +157,14 @@ class FriendshipRepository implements IFriendshipsRepository {
       .createQueryBuilder("user")
       .leftJoinAndSelect(
         "friendship",
-        "friendshipSent",
-        "friendshipSent.user_id = :userId AND friendshipSent.friend_id = user.id AND friendshipSent.status = 'pending'",
+        "sentFriendship",
+        "sentFriendship.user_id = user.id AND sentFriendship.friend_id = :userId AND sentFriendship.status = 'pending'",
         { userId }
       )
       .leftJoinAndSelect(
         "friendship",
-        "friendshipReceived",
-        "friendshipReceived.friend_id = :userId AND friendshipReceived.user_id = user.id AND friendshipReceived.status = 'pending'",
+        "receivedFriendship",
+        "receivedFriendship.friend_id = user.id AND receivedFriendship.user_id = :userId AND receivedFriendship.status = 'pending'",
         { userId }
       )
       .where("user.id != :userId", { userId });
@@ -181,10 +181,11 @@ class FriendshipRepository implements IFriendshipsRepository {
         "user.username",
         "user.isAdmin",
         "user.created_at",
-        "friendshipSent.id",
-        "friendshipReceived.id",
+        "sentFriendship.id AS sentFriendshipId",
+        "receivedFriendship.id AS receivedFriendshipId",
       ])
       .getMany();
+
     console.log({ nonFriends });
     return nonFriends.map((user) => ({
       id: user.id,
