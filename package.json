@@ -8,6 +8,7 @@
     "@types/jsonwebtoken": "^8.5.6",
     "@types/reflect-metadata": "^0.1.0",
     "@types/swagger-ui-express": "^4.1.2",
+    "aws-sdk": "^2.1664.0",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "csv-parse": "^4.15.4",
@@ -55,7 +56,7 @@
     "typeorm": "tsx ./node_modules/typeorm/cli.js",
     "test": "jest",
     "seed:admin": "tsx src/shared/infra/typeorm/seed/admin.ts",
-    "seed:notification-types":"tsx src/shared/infra/typeorm/seed/notification-types.ts",
+    "seed:notification-types": "tsx src/shared/infra/typeorm/seed/notification-types.ts",
     "migration:run": "npx tsx ./node_modules/typeorm/cli.js migration:run",
     "migration:generate": "npx tsx ./node_modules/typeorm/cli.js migration:generate -n",
     "migration:revert": "npx tsx ./node_modules/typeorm/cli.js migration:revert"
