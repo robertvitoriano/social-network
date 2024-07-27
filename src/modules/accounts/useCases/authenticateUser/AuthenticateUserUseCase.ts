@@ -9,7 +9,13 @@ interface IRequest {
   password: string;
 }
 interface IResponse {
-  user: { name: string; email: string; id: string };
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    avatar: string;
+    username: string;
+  };
   token: string;
 }
 
@@ -42,6 +48,8 @@ export class AuthenticateUserUseCase {
         id: user.id,
         name: user.name,
         email: user.email,
+        avatar: user.avatar,
+        username: user.username,
       },
       token: token,
     };

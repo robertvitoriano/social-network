@@ -1,7 +1,11 @@
 import ICreateUserDTO from "../../dtos/ICreateUserDTO";
 import { User } from "../../infra/typeorm/entities/User";
-import { Repository, getRepository } from "typeorm";
-import { IUsersRepository } from "@modules/accounts/repositories/IUsersRepository";
+import { Repository, UpdateResult, getRepository } from "typeorm";
+import {
+  IUsersRepository,
+  UserUpdateFields,
+} from "@modules/accounts/repositories/IUsersRepository";
+import { getValidProperties } from "@utils/parsing";
 
 class UserRepository implements IUsersRepository {
   private repository: Repository<User>;
@@ -9,7 +13,26 @@ class UserRepository implements IUsersRepository {
   constructor() {
     this.repository = getRepository(User);
   }
-  updateUser(userId: string, fields: any) {}
+
+  async updateUser(
+    userId: string,
+    fields: UserUpdateFields
+  ): Promise<User | null> {
+    const updateData: Partial<UserUpdateFields> = getValidProperties(fields);
+
+    if (Object.keys(updateData).length > 0) {
+      await this.repository.update(userId, updateData);
+
+      const updatedUser = await this.repository.findOne({
+        where: { id: userId },
+        select: ["id", "name", "email", "username", "avatar"],
+      });
+      return updatedUser || null;
+    }
+
+    return null;
+  }
+
   async findByEmail(email: string): Promise<User> {
     const user = await this.repository.findOne({ where: { email } });
     return user;

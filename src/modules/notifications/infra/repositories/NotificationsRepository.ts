@@ -34,6 +34,7 @@ class NotificationsRepository implements INotificationsRepository {
         "notificationType.type as notificationType",
         "sender.name as senderName",
         "notification.created_at",
+        "sender.avatar as senderAvatar",
       ])
       .getRawMany();
 

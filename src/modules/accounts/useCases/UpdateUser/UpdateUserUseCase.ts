@@ -1,11 +1,11 @@
-import { inject, injectable } from "tsyringe";
-import { User } from "../../infra/typeorm/entities/User";
-import { IUsersRepository } from "../../repositories/IUsersRepository";
-import { deleteFile } from "../../../../utils/file";
 import AWS from "aws-sdk";
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
+import { inject, injectable } from "tsyringe";
+import { User } from "../../infra/typeorm/entities/User";
+import { IUsersRepository } from "../../repositories/IUsersRepository";
+import { deleteFile } from "../../../../utils/file";
 
 interface IRequest {
   user_id: string;
@@ -26,7 +26,7 @@ class UpdateUserUseCase {
 
   async execute({ user_id, updateData }: IRequest): Promise<User> {
     const s3 = new AWS.S3();
-    const { avatarFile } = updateData;
+    const { avatarFile, name, username, email } = updateData;
     const user = await this.usersRepository.findById(user_id);
 
     if (!user) {
@@ -38,7 +38,7 @@ class UpdateUserUseCase {
     const fileHash = crypto.randomBytes(16).toString("hex");
     const fileKey = `user-avatar/${fileHash}-${avatarFile.originalname}`;
 
-    await s3
+    const { Location } = await s3
       .upload({
         ACL: "public-read",
         ContentDisposition: "attachment",
@@ -49,12 +49,16 @@ class UpdateUserUseCase {
       })
       .promise();
 
-    this.usersRepository.updateUser(user_id, updateData);
-    // user.avatar = uploadResult.Key;
+    const updateResult = await this.usersRepository.updateUser(user_id, {
+      avatar: Location,
+      email,
+      username,
+      name,
+    });
 
     await deleteFile(filePath);
-
-    return user;
+    console.log(updateResult);
+    return updateResult;
   }
 }
 
