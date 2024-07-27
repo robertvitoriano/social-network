@@ -31,7 +31,7 @@ class NotificationsRepository implements INotificationsRepository {
       .select([
         "notification.id",
         "receiver.name as receiverName",
-        "notificationType.type as notificationType",
+        "notificationType.type as type",
         "sender.name as senderName",
         "notification.created_at",
         "sender.avatar as senderAvatar",
