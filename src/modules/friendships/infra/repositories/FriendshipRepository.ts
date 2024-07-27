@@ -156,17 +156,12 @@ class FriendshipRepository implements IFriendshipsRepository {
     const nonFriendsQuery = this.userRepository
       .createQueryBuilder("user")
       .leftJoinAndSelect(
-        "friendship",
+        "user.friendships",
         "sentFriendship",
         "sentFriendship.user_id = user.id AND sentFriendship.friend_id = :userId AND sentFriendship.status = 'pending'",
         { userId }
       )
-      .leftJoinAndSelect(
-        "friendship",
-        "receivedFriendship",
-        "receivedFriendship.friend_id = user.id AND receivedFriendship.user_id = :userId AND receivedFriendship.status = 'pending'",
-        { userId }
-      )
+
       .where("user.id != :userId", { userId });
 
     if (friendIds.length > 0) {
@@ -179,10 +174,7 @@ class FriendshipRepository implements IFriendshipsRepository {
         "user.name",
         "user.email",
         "user.username",
-        "user.isAdmin",
-        "user.created_at",
         "sentFriendship.id AS sentFriendshipId",
-        "receivedFriendship.id AS receivedFriendshipId",
       ])
       .getMany();
 
@@ -195,12 +187,7 @@ class FriendshipRepository implements IFriendshipsRepository {
       isAdmin: user.isAdmin,
       created_at: user.created_at,
       //@ts-ignore
-      friendshipRequestStatus: user.friendshipSent?.id
-        ? "sent"
-        : //@ts-ignore
-        user.friendshipReceived?.id
-        ? "received"
-        : "not_sent",
+      friendshipRequestStatus: user.friendshipSent?.id ? "sent" : "not_sent",
     }));
   }
 }
