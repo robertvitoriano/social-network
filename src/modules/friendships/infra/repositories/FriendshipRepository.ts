@@ -139,7 +139,7 @@ class FriendshipRepository implements IFriendshipsRepository {
     });
   }
 
-  async findNonFriends(userId: string): Promise<IUserFriendDTO[]> {
+  async findNonFriends(userId: string): Promise<IUserFriendDTO[] | any> {
     const friendships = await this.repository
       .createQueryBuilder("friendship")
       .where(
@@ -153,42 +153,61 @@ class FriendshipRepository implements IFriendshipsRepository {
       friendship.user_id === userId ? friendship.friend_id : friendship.user_id
     );
 
-    const nonFriendsQuery = this.userRepository
-      .createQueryBuilder("user")
-      .leftJoinAndSelect(
-        "user.friendships",
-        "sentFriendship",
-        "sentFriendship.user_id = user.id AND sentFriendship.friend_id = :userId AND sentFriendship.status = 'pending'",
+    const pendingFriendshipQuery = this.repository
+      .createQueryBuilder("friendship")
+      .leftJoinAndSelect("friendship.user", "user")
+      .leftJoinAndSelect("friendship.friend", "friend")
+      .where("friendship.user_id = :userId AND friendship.status = 'pending'", {
+        userId,
+      })
+      .orWhere(
+        "friendship.friend_id = :userId AND friendship.status = 'pending'",
         { userId }
-      )
-
-      .where("user.id != :userId", { userId });
-
+      );
     if (friendIds.length > 0) {
-      nonFriendsQuery.andWhere("user.id NOT IN (:...friendIds)", { friendIds });
+      pendingFriendshipQuery.andWhere("user.id NOT IN (:...friendIds)", {
+        friendIds,
+      });
     }
 
-    const nonFriends = await nonFriendsQuery
-      .select([
-        "user.id",
-        "user.name",
-        "user.email",
-        "user.username",
-        "sentFriendship.id AS sentFriendshipId",
-      ])
-      .getMany();
+    const pendingFriendships = await pendingFriendshipQuery.getMany();
 
-    console.log({ nonFriends });
-    return nonFriends.map((user) => ({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      username: user.username,
-      isAdmin: user.isAdmin,
-      created_at: user.created_at,
-      //@ts-ignore
-      friendshipRequestStatus: user.friendshipSent?.id ? "sent" : "not_sent",
-    }));
+    const pendingFrienshipsFiltered = pendingFriendships.map((friendship) => {
+      if (friendship.user.id === userId) {
+        friendship.friend;
+        return { ...friendship.friend, friendshipRequestStatus: "sent" };
+      } else if (friendship.friend.id === userId) {
+        return { ...friendship.user, friendshipRequestStatus: "received" };
+      }
+    });
+    const pendingFriendsId = pendingFrienshipsFiltered.map((user) => user.id);
+
+    const pendingAndAlreadyFriendsId = [...pendingFriendsId, ...friendIds];
+
+    const userWithoutFriendshipRequestQuery = this.userRepository
+      .createQueryBuilder("user")
+      .where("user.id != :userId", { userId });
+
+    if (pendingAndAlreadyFriendsId.length > 0) {
+      userWithoutFriendshipRequestQuery.andWhere(
+        "user.id NOT IN (:...pendingAndAlreadyFriendsId)",
+        { pendingAndAlreadyFriendsId }
+      );
+    }
+
+    const usersWithoutFriendshipRequest =
+      await userWithoutFriendshipRequestQuery.getMany();
+
+    const nonFriendsWithFriendshipRequestStatus =
+      usersWithoutFriendshipRequest.map((friendship) => ({
+        ...friendship,
+        friendshipRequestStatus: "not_sent",
+      }));
+
+    return [
+      ...pendingFrienshipsFiltered,
+      ...nonFriendsWithFriendshipRequestStatus,
+    ];
   }
 }
 
