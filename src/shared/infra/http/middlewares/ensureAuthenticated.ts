@@ -27,7 +27,7 @@ export async function ensureAuthenticated(
 
     if (!user) throw new AppError("User not found", 401);
 
-    req.user = { id: userId, name: user.name };
+    req.user = { id: userId, name: user.name, avatar: user.avatar };
 
     next();
   } catch {

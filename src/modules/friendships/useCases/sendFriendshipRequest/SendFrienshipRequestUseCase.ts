@@ -22,6 +22,7 @@ class SendFriendshipUseCase {
     friendId,
     userId,
     userName,
+    userAvatar,
   }: ICreateFriendshipDTO): Promise<void> {
     const friendshipAlreadyExists =
       await this.friendshipRepository.findFriendship({ friendId, userId });
@@ -43,6 +44,7 @@ class SendFriendshipUseCase {
     });
     io.to(friendId).emit(EventType.FRIENDSHIP_REQUEST, {
       id: notificationCreated.id,
+      senderAvatar: userAvatar,
       senderName: userName,
       senderId: userId,
       created_at: notificationCreated.created_at,
