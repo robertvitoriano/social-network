@@ -19,7 +19,7 @@ class SendFriendShipResponseController {
       return response.status(201).json({ message: "friendship updated" });
     } catch (err) {
       console.error(err);
-      throw new AppError("Error creating user", 500);
+      throw new AppError("error updating friendship", 500);
     }
   }
 }

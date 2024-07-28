@@ -3,7 +3,7 @@ import ICreateNotificationDTO from "./../dtos/ICreateNotificationDTO";
 import { Notification } from "../infra/typeorm/entities/Notification";
 interface INotificationsRepository {
   create(data: ICreateNotificationDTO): Promise<Notification>;
-  listNotificationsByUserId(userId: string): Promise<INotification[]>;
+  listFriendshipNotificationsByUserId(userId: string): Promise<INotification[]>;
 }
 
 export { INotificationsRepository };

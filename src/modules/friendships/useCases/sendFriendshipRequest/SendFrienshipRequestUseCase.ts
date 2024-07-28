@@ -8,6 +8,7 @@ import { EventType } from "@shared/enums/websocket-events";
 import { ClientErrorHttpStatusCode } from "@shared/enums/http-status-codes";
 import { INotificationsRepository } from "@modules/notifications/repositories/INotificationsRepository";
 import { NotificationTypes } from "@shared/enums/notification-types";
+import { FriendshipStatus } from "@shared/enums/friendship-status";
 
 @injectable()
 class SendFriendshipUseCase {
@@ -49,6 +50,7 @@ class SendFriendshipUseCase {
       senderId: userId,
       created_at: notificationCreated.created_at,
       type: EventType.FRIENDSHIP_REQUEST,
+      friendshipRequestStatus: FriendshipStatus.PENDING,
     });
   }
 }

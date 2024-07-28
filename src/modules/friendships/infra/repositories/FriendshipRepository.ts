@@ -74,7 +74,7 @@ class FriendshipRepository implements IFriendshipsRepository {
   async update({ userId, friendId, status }): Promise<void> {
     await this.repository
       .createQueryBuilder()
-      .update("friendshi")
+      .update("friendship")
       .set({ status })
       .where("user_id = :userId AND friend_id = :friendId", {
         userId,

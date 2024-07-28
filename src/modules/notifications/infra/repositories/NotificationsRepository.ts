@@ -3,6 +3,7 @@ import { Notification } from "../typeorm/entities/Notification";
 import { Repository, getRepository } from "typeorm";
 import ICreateNotificationDTO from "@modules/notifications/dtos/ICreateNotificationDTO";
 import { INotification } from "@modules/notifications/useCases/listNotifications/interfaces";
+import { NotificationTypes } from "@shared/enums/notification-types";
 
 class NotificationsRepository implements INotificationsRepository {
   private repository: Repository<Notification>;
@@ -23,13 +24,23 @@ class NotificationsRepository implements INotificationsRepository {
     return notification;
   }
 
-  async listNotificationsByUserId(userId: string): Promise<INotification[]> {
+  async listFriendshipNotificationsByUserId(
+    userId: string
+  ): Promise<INotification[]> {
     const userNotifications = await this.repository
       .createQueryBuilder("notification")
       .innerJoinAndSelect("notification.receiver", "receiver")
       .innerJoinAndSelect("notification.sender", "sender")
       .innerJoinAndSelect("notification.notificationType", "notificationType")
+      .innerJoin(
+        "friendship",
+        "friendship",
+        "notification.receiver_id = friendship.friend_id"
+      )
       .where("receiver.id = :userId", { userId })
+      .andWhere("notification.notificationType = :notificationType", {
+        notificationType: NotificationTypes.FRIENDSHIP_REQUEST,
+      })
       .select([
         "notification.id as id",
         "receiver.name as receiverName",
@@ -38,11 +49,11 @@ class NotificationsRepository implements INotificationsRepository {
         "sender.name as senderName",
         "notification.created_at",
         "sender.avatar as senderAvatar",
+        "friendship.status as friendshipRequestStatus",
       ])
       .getRawMany();
 
     return userNotifications;
   }
 }
-
 export { NotificationsRepository };
