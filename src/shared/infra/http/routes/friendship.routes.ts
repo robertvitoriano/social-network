@@ -16,7 +16,7 @@ friendshipRoutes.patch(
   ensureAuthenticated,
   sendFrienshipRequestController.handle
 );
-friendshipRoutes.post(
+friendshipRoutes.patch(
   "/finish",
   ensureAuthenticated,
   sendFrienshipResponseController.handle

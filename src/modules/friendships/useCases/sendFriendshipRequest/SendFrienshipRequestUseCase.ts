@@ -1,5 +1,5 @@
 import { inject, injectable } from "tsyringe";
-import ICreateUserDTO from "../../dtos/ICreateFriendshipDTO";
+import ICreateFriendshipDTO from "../../dtos/ICreateFriendshipDTO";
 import { IFriendshipsRepository } from "../../repositories/IFriendshipsRepository";
 import { AppError } from "@shared/errors/AppError";
 import { webSocketServer } from "@shared/infra/http/server";
@@ -18,7 +18,11 @@ class SendFriendshipUseCase {
     private notificationsRepository: INotificationsRepository
   ) {}
 
-  async execute({ friendId, userId }: ICreateUserDTO): Promise<void> {
+  async execute({
+    friendId,
+    userId,
+    userName,
+  }: ICreateFriendshipDTO): Promise<void> {
     const friendshipAlreadyExists =
       await this.friendshipRepository.findFriendship({ friendId, userId });
 
@@ -28,15 +32,21 @@ class SendFriendshipUseCase {
         ClientErrorHttpStatusCode.BAD_REQUEST
       );
     }
+
     await this.friendshipRepository.create({ userId, friendId });
     const io = webSocketServer.getIO();
 
-    io.to(friendId).emit(EventType.FRIENDSHIP_REQUEST, { userId });
-
-    await this.notificationsRepository.create({
+    const notificationCreated = await this.notificationsRepository.create({
       notificationTypeId: NotificationTypes.FRIENDSHIP_REQUEST,
       receiverId: friendId,
       senderId: userId,
+    });
+    io.to(friendId).emit(EventType.FRIENDSHIP_REQUEST, {
+      id: notificationCreated.id,
+      senderName: userName,
+      senderId: userId,
+      created_at: notificationCreated.created_at,
+      type: EventType.FRIENDSHIP_REQUEST,
     });
   }
 }

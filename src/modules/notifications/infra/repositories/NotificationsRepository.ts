@@ -10,15 +10,17 @@ class NotificationsRepository implements INotificationsRepository {
   constructor() {
     this.repository = getRepository(Notification);
   }
-  async create(data: ICreateNotificationDTO): Promise<void> {
+  async create(data: ICreateNotificationDTO): Promise<Notification> {
     const { notificationTypeId, senderId, receiverId } = data;
-    const notification = this.repository.create({
+    const notificationToBeCreated = this.repository.create({
       notification_type_id: notificationTypeId,
       sender_id: senderId,
       receiver_id: receiverId,
     });
 
-    await this.repository.save(notification);
+    const notification = await this.repository.save(notificationToBeCreated);
+
+    return notification;
   }
 
   async listNotificationsByUserId(userId: string): Promise<INotification[]> {

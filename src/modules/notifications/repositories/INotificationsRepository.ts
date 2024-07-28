@@ -1,8 +1,8 @@
 import { INotification } from "../useCases/listNotifications/interfaces";
 import ICreateNotificationDTO from "./../dtos/ICreateNotificationDTO";
-
+import { Notification } from "../infra/typeorm/entities/Notification";
 interface INotificationsRepository {
-  create(data: ICreateNotificationDTO): Promise<void>;
+  create(data: ICreateNotificationDTO): Promise<Notification>;
   listNotificationsByUserId(userId: string): Promise<INotification[]>;
 }
 

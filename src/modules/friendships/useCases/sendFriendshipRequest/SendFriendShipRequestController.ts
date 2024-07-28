@@ -10,8 +10,12 @@ class SendFriendShipController {
       );
 
       const { friendId } = request.body;
-      const { id } = request.user;
-      await sendFriendShipUseCase.execute({ friendId, userId: id });
+      const { id, name } = request.user;
+      await sendFriendShipUseCase.execute({
+        friendId,
+        userId: id,
+        userName: name,
+      });
 
       return response
         .status(201)
