@@ -25,6 +25,9 @@ export class Notification {
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   created_at: Date;
 
+  @Column({ type: "boolean", default: false })
+  read: boolean;
+
   @ManyToOne(
     () => NotificationType,
     (notificationType) => notificationType.notifications,
