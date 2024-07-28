@@ -31,7 +31,7 @@ class NotificationsRepository implements INotificationsRepository {
       .innerJoinAndSelect("notification.notificationType", "notificationType")
       .where("receiver.id = :userId", { userId })
       .select([
-        "notification.id",
+        "notification.id as id",
         "receiver.name as receiverName",
         "notificationType.type as type",
         "sender.id as senderId",
