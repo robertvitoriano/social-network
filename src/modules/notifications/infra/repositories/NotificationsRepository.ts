@@ -38,9 +38,13 @@ class NotificationsRepository implements INotificationsRepository {
         "notification.receiver_id = friendship.friend_id"
       )
       .where("receiver.id = :userId", { userId })
-      .andWhere("notification.notificationType = :notificationType", {
-        notificationType: NotificationTypes.FRIENDSHIP_REQUEST,
-      })
+      .andWhere(
+        "notification.notificationType = :friendshipRequest OR notification.notificationType = :friendshipAccept",
+        {
+          friendshipRequest: NotificationTypes.FRIENDSHIP_REQUEST,
+          friendshipAccept: NotificationTypes.FRIENDSHIP_ACCEPTED,
+        }
+      )
       .select([
         "notification.id as id",
         "receiver.name as receiverName",
