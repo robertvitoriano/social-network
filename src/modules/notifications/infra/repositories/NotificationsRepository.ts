@@ -32,7 +32,7 @@ class NotificationsRepository implements INotificationsRepository {
       .innerJoinAndSelect("notification.receiver", "receiver")
       .innerJoinAndSelect("notification.sender", "sender")
       .innerJoinAndSelect("notification.notificationType", "notificationType")
-      .innerJoin(
+      .leftJoin(
         "friendship",
         "friendship",
         "notification.receiver_id = friendship.friend_id"

@@ -9,11 +9,13 @@ class SendFriendShipResponseController {
         container.resolve(SendFriendshipResponseUseCase);
 
       const { friendId, status } = request.body;
-      const { id } = request.user;
+      const { id, avatar: userAvatar, name: userName } = request.user;
       await sendFriendShipResponseUseCase.execute({
         friendId,
         userId: id,
         status,
+        userAvatar,
+        userName,
       });
 
       return response.status(201).json({ message: "friendship updated" });

@@ -3,5 +3,8 @@
     "editor.tabSize": 2,
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": "explicit"
-    }
+    },
+    "editor.wordWrap": "wordWrapColumn", 
+    "editor.wordWrapColumn": 120, 
+    "editor.rulers": [120] 
 }
