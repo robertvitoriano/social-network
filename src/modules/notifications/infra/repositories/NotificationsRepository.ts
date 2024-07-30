@@ -11,6 +11,7 @@ class NotificationsRepository implements INotificationsRepository {
   constructor() {
     this.repository = getRepository(Notification);
   }
+
   async create(data: ICreateNotificationDTO): Promise<Notification> {
     const { notificationTypeId, senderId, receiverId } = data;
     const notificationToBeCreated = this.repository.create({
@@ -20,7 +21,6 @@ class NotificationsRepository implements INotificationsRepository {
     });
 
     const notification = await this.repository.save(notificationToBeCreated);
-
     return notification;
   }
 
@@ -35,16 +35,16 @@ class NotificationsRepository implements INotificationsRepository {
       .leftJoin(
         "friendship",
         "friendship",
-        "notification.receiver_id = friendship.friend_id"
+        "notification.receiver_id = friendship.friend_id or notification.receiver_id = friendship.user_id"
       )
       .where("receiver.id = :userId", { userId })
-      .andWhere(
-        "notification.notificationType = :friendshipRequest OR notification.notificationType = :friendshipAccept",
-        {
-          friendshipRequest: NotificationTypes.FRIENDSHIP_REQUEST,
-          friendshipAccept: NotificationTypes.FRIENDSHIP_ACCEPTED,
-        }
-      )
+      .andWhere("sender.id != :userId", { userId })
+      .andWhere("notification.notificationType IN (:...notificationTypes)", {
+        notificationTypes: [
+          NotificationTypes.FRIENDSHIP_REQUEST,
+          NotificationTypes.FRIENDSHIP_ACCEPTED,
+        ],
+      })
       .select([
         "notification.id as id",
         "receiver.name as receiverName",
@@ -57,7 +57,9 @@ class NotificationsRepository implements INotificationsRepository {
       ])
       .getRawMany();
 
+    console.log({ userNotifications });
     return userNotifications;
   }
 }
+
 export { NotificationsRepository };
