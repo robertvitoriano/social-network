@@ -1,6 +1,6 @@
 import { INotificationsRepository } from "@modules/notifications/repositories/INotificationsRepository";
 import { Notification } from "../typeorm/entities/Notification";
-import { Repository, getRepository } from "typeorm";
+import { In, Repository, getRepository } from "typeorm";
 import ICreateNotificationDTO from "@modules/notifications/dtos/ICreateNotificationDTO";
 import { INotification } from "@modules/notifications/useCases/listNotifications/interfaces";
 import { NotificationTypes } from "@shared/enums/notification-types";
@@ -22,6 +22,12 @@ class NotificationsRepository implements INotificationsRepository {
 
     const notification = await this.repository.save(notificationToBeCreated);
     return notification;
+  }
+  async readNotifications(unreadNotificationIds: string[]): Promise<void> {
+    await this.repository.update(
+      { id: In(unreadNotificationIds) },
+      { read: true }
+    );
   }
 
   async listFriendshipNotificationsByUserId(
@@ -49,6 +55,7 @@ class NotificationsRepository implements INotificationsRepository {
         "notification.id as id",
         "receiver.name as receiverName",
         "notificationType.type as type",
+        "notification.read as wasRead",
         "sender.id as senderId",
         "sender.name as senderName",
         "notification.created_at",
@@ -57,7 +64,6 @@ class NotificationsRepository implements INotificationsRepository {
       ])
       .getRawMany();
 
-    console.log({ userNotifications });
     return userNotifications;
   }
 }
