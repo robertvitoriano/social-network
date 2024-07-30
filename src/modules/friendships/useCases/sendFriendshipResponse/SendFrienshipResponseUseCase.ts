@@ -50,6 +50,7 @@ class SendFriendshipResponseUseCase {
           senderId: userId,
           created_at: notificationCreated.created_at,
           type: EventType.FRIENDSHIP_ACCEPTED,
+          wasRead: false,
         });
       }
     } else {

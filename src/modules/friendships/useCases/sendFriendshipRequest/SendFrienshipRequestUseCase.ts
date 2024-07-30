@@ -51,6 +51,7 @@ class SendFriendshipUseCase {
       created_at: notificationCreated.created_at,
       type: EventType.FRIENDSHIP_REQUEST,
       friendshipRequestStatus: FriendshipStatus.PENDING,
+      wasRead: false,
     });
   }
 }
