@@ -7,11 +7,11 @@ export class PassportService {
   private loginOAuthUseCase;
   private passportInstance;
   constructor() {
-    this.usersRepository = new UserRepository();
-    this.loginOAuthUseCase = new LoginOAuthUseCase(this.usersRepository);
     this.passportInstance = passport;
   }
   setup() {
+    this.usersRepository = new UserRepository();
+    this.loginOAuthUseCase = new LoginOAuthUseCase(this.usersRepository);
     this.passportInstance.use(
       new Strategy(
         {

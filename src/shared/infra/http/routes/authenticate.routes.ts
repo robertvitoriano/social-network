@@ -9,21 +9,23 @@ const authenticateController = new AuthenticateUserController();
 authenticateRoutes.post("/sessions", authenticateController.handle);
 
 const passportService = new PassportService();
-
-passportService.setup();
-
-authenticateRoutes.get(
-  "/auth/google",
-  passportService
+function passportGoogleAuth() {
+  passportService.setup();
+  return passportService
     .getInstance()
-    .authenticate("google", { scope: ["profile", "email"] })
-);
+    .authenticate("google", { scope: ["profile", "email"] });
+}
+function passportGoogleCallback() {
+  passportService.setup();
+  return passportService
+    .getInstance()
+    .authenticate("google", { failureRedirect: "/login" });
+}
+authenticateRoutes.get("/auth/google", passportGoogleAuth);
 
 authenticateRoutes.get(
   "/auth/google/callback",
-  passportService
-    .getInstance()
-    .authenticate("google", { failureRedirect: "/login" }),
+  passportGoogleCallback,
   function (req, res) {
     //@ts-ignore
     const { token } = res.req.user;
