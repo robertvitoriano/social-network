@@ -1,5 +1,6 @@
 import { sign } from "jsonwebtoken";
 import { IUsersRepository } from "./../../repositories/IUsersRepository";
+
 interface IResponse {
   user: {
     id: string;
@@ -10,17 +11,16 @@ interface IResponse {
   };
   token: string;
 }
-
-class LoginOAuthUseCase {
-  constructor(private userRepository: IUsersRepository) {}
+export class LoginOAuthUseCase {
+  constructor(private usersRepository: IUsersRepository) {}
 
   public async execute(profile: any): Promise<IResponse> {
     const { name, email, picture } = profile._json;
 
-    let user: any = await this.userRepository.findByEmail(email);
+    let user: any = await this.usersRepository.findByEmail(email);
 
     if (!user) {
-      user = await this.userRepository.create({
+      user = await this.usersRepository.create({
         email,
         name,
         avatar: picture,
@@ -44,5 +44,3 @@ class LoginOAuthUseCase {
     }
   }
 }
-
-export { LoginOAuthUseCase };

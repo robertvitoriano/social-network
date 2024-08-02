@@ -1,13 +1,14 @@
 import { container } from "tsyringe";
 import { Request, Response } from "express";
 import { LoginOAuthUseCase } from "./LoginOAuthUseCase";
+import { UserRepository } from "@modules/accounts/infra/repositories/UsersRepository";
 
-class AuthenticateUserController {
+class LoginOAuthController {
   async handle(request: Request, response: Response): Promise<Response> {
     try {
       const { email, accessToken } = request.body;
-
-      const loginOAuthUseCase = container.resolve(LoginOAuthUseCase);
+      const usersRepository = new UserRepository();
+      const loginOAuthUseCase = new LoginOAuthUseCase(usersRepository);
 
       const authenticateInfo = await loginOAuthUseCase.execute({
         email,
@@ -24,4 +25,4 @@ class AuthenticateUserController {
   }
 }
 
-export { AuthenticateUserController };
+export { LoginOAuthController };

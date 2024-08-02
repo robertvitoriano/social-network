@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { AuthenticateUserController } from "../../../../modules/accounts/useCases/authenticateUser/AuthenticateUserController";
-import { passport } from "@modules/accounts/useCases/LoginOAuthUseCase/passport-setup";
+import { PassportService } from "@modules/accounts/useCases/LoginOAuthUseCase/PassportService";
 
 const authenticateRoutes = Router();
 
@@ -8,14 +8,22 @@ const authenticateController = new AuthenticateUserController();
 
 authenticateRoutes.post("/sessions", authenticateController.handle);
 
+const passportService = new PassportService();
+
+passportService.setup();
+
 authenticateRoutes.get(
   "/auth/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
+  passportService
+    .getInstance()
+    .authenticate("google", { scope: ["profile", "email"] })
 );
 
 authenticateRoutes.get(
   "/auth/google/callback",
-  passport.authenticate("google", { failureRedirect: "/login" }),
+  passportService
+    .getInstance()
+    .authenticate("google", { failureRedirect: "/login" }),
   function (req, res) {
     //@ts-ignore
     const { token } = res.req.user;

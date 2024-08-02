@@ -1,6 +1,6 @@
 import ICreateUserDTO from "../../dtos/ICreateUserDTO";
 import { User } from "../../infra/typeorm/entities/User";
-import { Repository, UpdateResult, getRepository } from "typeorm";
+import { Repository, getRepository } from "typeorm";
 import {
   IUsersRepository,
   UserUpdateFields,
