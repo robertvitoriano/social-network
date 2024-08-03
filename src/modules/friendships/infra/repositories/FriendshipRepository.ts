@@ -88,7 +88,7 @@ class FriendshipRepository implements IFriendshipsRepository {
   }
 
   async findUserFriends(userId: string): Promise<IUserFriendDTO[]> {
-    const friends = await this.repository
+    const rawFriends = await this.repository
       .createQueryBuilder("friendship")
       .leftJoinAndSelect("friendship.user", "user")
       .leftJoinAndSelect("friendship.friend", "friend")
@@ -101,42 +101,45 @@ class FriendshipRepository implements IFriendshipsRepository {
         { userId }
       )
       .select([
-        "user.id",
-        "user.name",
-        "user.email",
-        "user.username",
-        "user.isAdmin",
-        "user.created_at",
-        "friend.id",
-        "friend.name",
-        "friend.email",
-        "friend.username",
-        "friend.isAdmin",
-        "friend.created_at",
+        "user.id AS userId",
+        "user.name AS userName",
+        "user.email AS userEmail",
+        "user.username AS userUsername",
+        "user.isAdmin AS userIsAdmin",
+        "user.created_at AS userCreatedAt",
+        "friend.id AS friendId",
+        "friend.name AS friendName",
+        "friend.email AS friendEmail",
+        "friend.username AS friendUsername",
+        "friend.isAdmin AS friendIsAdmin",
+        "friend.created_at AS friendCreatedAt",
       ])
-      .getMany();
+      .getRawMany();
 
-    return friends.map((friendship) => {
-      if (friendship.user.id === userId) {
+    const friends: IUserFriendDTO[] = rawFriends.map((rawFriend) => {
+      const isUser = rawFriend.userId === userId;
+
+      if (isUser)
         return {
-          id: friendship.friend.id,
-          name: friendship.friend.name,
-          email: friendship.friend.email,
-          username: friendship.friend.username,
-          isAdmin: friendship.friend.isAdmin,
-          created_at: friendship.friend.created_at,
+          id: rawFriend.friendId,
+          name: rawFriend.friendName,
+          email: rawFriend.friendEmail,
+          username: rawFriend.friendUsername,
+          isAdmin: rawFriend.friendIsAdmin,
+          createdAt: rawFriend.friendCreatedAt,
         };
-      } else {
-        return {
-          id: friendship.user.id,
-          name: friendship.user.name,
-          email: friendship.user.email,
-          username: friendship.user.username,
-          isAdmin: friendship.user.isAdmin,
-          created_at: friendship.user.created_at,
-        };
-      }
+
+      return {
+        id: rawFriend.userId,
+        name: rawFriend.userName,
+        email: rawFriend.userEmail,
+        username: rawFriend.userUsername,
+        isAdmin: rawFriend.userIsAdmin,
+        createdAt: rawFriend.userCreatedAt,
+      };
     });
+
+    return friends;
   }
 
   async findNonFriends(userId: string): Promise<IUserFriendDTO[] | any> {
