@@ -104,14 +104,14 @@ class FriendshipRepository implements IFriendshipsRepository {
         "user.id AS userId",
         "user.name AS userName",
         "user.email AS userEmail",
+        "user.avatar as userAvatar",
         "user.username AS userUsername",
-        "user.isAdmin AS userIsAdmin",
         "user.created_at AS userCreatedAt",
         "friend.id AS friendId",
         "friend.name AS friendName",
         "friend.email AS friendEmail",
+        "friend.avatar as friendAvatar",
         "friend.username AS friendUsername",
-        "friend.isAdmin AS friendIsAdmin",
         "friend.created_at AS friendCreatedAt",
       ])
       .getRawMany();
@@ -125,7 +125,7 @@ class FriendshipRepository implements IFriendshipsRepository {
           name: rawFriend.friendName,
           email: rawFriend.friendEmail,
           username: rawFriend.friendUsername,
-          isAdmin: rawFriend.friendIsAdmin,
+          avatar: rawFriend.friendAvatar,
           createdAt: rawFriend.friendCreatedAt,
         };
 
@@ -134,7 +134,7 @@ class FriendshipRepository implements IFriendshipsRepository {
         name: rawFriend.userName,
         email: rawFriend.userEmail,
         username: rawFriend.userUsername,
-        isAdmin: rawFriend.userIsAdmin,
+        avatar: rawFriend.userAvatar,
         createdAt: rawFriend.userCreatedAt,
       };
     });
