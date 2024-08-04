@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryColumn, OneToMany } from "typeorm";
 import { v4 as uuid } from "uuid";
 import { Friendship } from "@modules/friendships/infra/typeorm/entities/Friendship";
+import { Message } from "@modules/chat/infra/typeorm/entities/Message";
 
 @Entity("users")
 export class User {
@@ -33,7 +34,11 @@ export class User {
 
   @OneToMany(() => Friendship, (friendship) => friendship.friend)
   friends!: Friendship[];
+  @OneToMany(() => Message, (message) => message.sender)
+  sentMessages: Message[];
 
+  @OneToMany(() => Message, (message) => message.receiver)
+  receivedMessages: Message[];
   constructor() {
     if (!this.id) {
       this.id = uuid();

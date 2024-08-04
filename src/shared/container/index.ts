@@ -5,6 +5,8 @@ import { FriendshipRepository } from "@modules/friendships/infra/repositories/Fr
 import { IFriendshipsRepository } from "@modules/friendships/repositories/IFriendshipsRepository";
 import { INotificationsRepository } from "@modules/notifications/repositories/INotificationsRepository";
 import { NotificationsRepository } from "@modules/notifications/infra/repositories/NotificationsRepository";
+import { IChatRepository } from "@modules/chat/repositories/IChatRepository";
+import { ChatRepository } from "@modules/chat/infra/repositories/ChatRepository";
 
 container.registerSingleton<IUsersRepository>(
   "UsersRepository",
@@ -19,3 +21,4 @@ container.registerSingleton<INotificationsRepository>(
   "NotificationRepository",
   NotificationsRepository
 );
+container.registerSingleton<IChatRepository>("ChatRepository", ChatRepository);

@@ -14,6 +14,10 @@ async function create() {
     INSERT INTO notification_types (id, type,  created_at)
       VALUES ('2', 'FRIENDSHIP_ACCEPTED',  NOW())
     `);
+  await connection.query(`
+      INSERT INTO notification_types (id, type,  created_at)
+        VALUES ('3', 'MESSAGE_RECEIVED',  NOW())
+      `);
 
   await connection.close();
 }

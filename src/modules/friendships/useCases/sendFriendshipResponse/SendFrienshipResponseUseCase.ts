@@ -48,7 +48,7 @@ class SendFriendshipResponseUseCase {
           senderAvatar: userAvatar,
           senderName: userName,
           senderId: userId,
-          created_at: notificationCreated.created_at,
+          createdAt: notificationCreated.created_at,
           type: EventType.FRIENDSHIP_ACCEPTED,
           wasRead: false,
         });
