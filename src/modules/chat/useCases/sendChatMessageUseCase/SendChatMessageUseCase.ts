@@ -19,7 +19,7 @@ class SendChatMessageUseCase {
     @inject("ChatRepository")
     private chatRepository: IChatRepository,
 
-    @inject("NotificationsRepository")
+    @inject("NotificationRepository")
     private notificationsRepository: INotificationsRepository
   ) {}
 
