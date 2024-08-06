@@ -25,7 +25,7 @@ class ChatRepository implements IChatRepository {
         "(message.receiver_id = :userId AND message.sender_id = :friendId) OR (message.receiver_id = :friendId AND message.sender_id = :userId)",
         { userId, friendId }
       )
-      .orderBy("created_at")
+      .orderBy("message.created_at", "ASC")
       .getRawMany();
 
     return messages;
