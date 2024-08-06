@@ -22,7 +22,7 @@ class SendChatMessageController {
 
       return response
         .status(201)
-        .json({ message: "Friendship created with success" });
+        .json({ message: "Message created with success" });
     } catch (err) {
       console.error(err);
       const errorCode =
