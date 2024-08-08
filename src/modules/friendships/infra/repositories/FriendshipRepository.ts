@@ -92,6 +92,25 @@ class FriendshipRepository implements IFriendshipsRepository {
       .createQueryBuilder("friendship")
       .leftJoinAndSelect("friendship.user", "user")
       .leftJoinAndSelect("friendship.friend", "friend")
+      .leftJoin(
+        (subQuery) =>
+          subQuery
+            .select("messages.id", "id")
+            .addSelect("messages.sender_id", "sender_id")
+            .addSelect("messages.receiver_id", "receiver_id")
+            .addSelect("messages.content", "content")
+            .addSelect("messages.created_at", "created_at")
+            .from("messages", "messages")
+            .where(
+              `messages.sender_id = :userId OR messages.receiver_id = :userId`,
+              { userId }
+            )
+            .orderBy("messages.created_at", "DESC")
+            .limit(1),
+        "last_message",
+        `(last_message.receiver_id = friendship.friend_id AND last_message.sender_id = friendship.user_id) OR 
+         (last_message.receiver_id = friendship.user_id AND last_message.sender_id = friendship.friend_id)`
+      )
       .where(
         "friendship.user_id = :userId AND friendship.status = 'accepted'",
         { userId }
@@ -104,38 +123,32 @@ class FriendshipRepository implements IFriendshipsRepository {
         "user.id AS userId",
         "user.name AS userName",
         "user.email AS userEmail",
-        "user.avatar as userAvatar",
+        "user.avatar AS userAvatar",
         "user.username AS userUsername",
         "user.created_at AS userCreatedAt",
         "friend.id AS friendId",
         "friend.name AS friendName",
         "friend.email AS friendEmail",
-        "friend.avatar as friendAvatar",
+        "friend.avatar AS friendAvatar",
         "friend.username AS friendUsername",
         "friend.created_at AS friendCreatedAt",
+        "last_message.content AS lastMessageContent",
+        "last_message.created_at AS lastMessageCreatedAt",
       ])
       .getRawMany();
 
     const friends: IUserFriendDTO[] = rawFriends.map((rawFriend) => {
       const isUser = rawFriend.userId === userId;
 
-      if (isUser)
-        return {
-          id: rawFriend.friendId,
-          name: rawFriend.friendName,
-          email: rawFriend.friendEmail,
-          username: rawFriend.friendUsername,
-          avatar: rawFriend.friendAvatar,
-          createdAt: rawFriend.friendCreatedAt,
-        };
-
       return {
-        id: rawFriend.userId,
-        name: rawFriend.userName,
-        email: rawFriend.userEmail,
-        username: rawFriend.userUsername,
-        avatar: rawFriend.userAvatar,
-        createdAt: rawFriend.userCreatedAt,
+        id: isUser ? rawFriend.friendId : rawFriend.userId,
+        name: isUser ? rawFriend.friendName : rawFriend.userName,
+        email: isUser ? rawFriend.friendEmail : rawFriend.userEmail,
+        username: isUser ? rawFriend.friendUsername : rawFriend.userUsername,
+        avatar: isUser ? rawFriend.friendAvatar : rawFriend.userAvatar,
+        createdAt: isUser ? rawFriend.friendCreatedAt : rawFriend.userCreatedAt,
+        lastMessage: rawFriend.lastMessageContent,
+        lastMessageCreatedAt: rawFriend.lastMessageCreatedAt,
       };
     });
 
