@@ -5,8 +5,7 @@ import { IChatRepository } from "@modules/chat/repositories/IChatRepository";
 import {
   IListUserMessagesParams,
   IMessage,
-} from "@modules/chat/useCases/listChatMessages/ListChatMessagesUseCase";
-import { User } from "@modules/accounts/infra/typeorm/entities/User";
+} from "@modules/chat/useCases/listChatMessages/types";
 
 class ChatRepository implements IChatRepository {
   private repository: Repository<Message>;

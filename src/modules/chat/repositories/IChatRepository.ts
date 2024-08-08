@@ -2,7 +2,7 @@ import ICreateChatMessageDTO from "../dtos/ICreateChatMessageDTO";
 import {
   IListUserMessagesParams,
   IMessage,
-} from "../useCases/listChatMessages/ListChatMessagesUseCase";
+} from "../useCases/listChatMessages/types";
 
 interface IChatRepository {
   createMessage(data: ICreateChatMessageDTO): Promise<void>;

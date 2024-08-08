@@ -1,17 +1,7 @@
 import { inject, injectable } from "tsyringe";
 import { IChatRepository } from "../../repositories/IChatRepository";
+import { IListUserMessagesParams, IMessage } from "./types";
 
-export interface IListUserMessagesParams {
-  friendId: string;
-  userId: string;
-  page: number;
-}
-export type IMessage = {
-  id: string;
-  userId: string;
-  content: string;
-  createdAt: string;
-};
 @injectable()
 class ListChatMessagesUseCase {
   constructor(
