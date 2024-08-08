@@ -18,14 +18,16 @@ class ListChatMessagesUseCase {
     friendId,
     page,
   }: IListUserMessagesParams): Promise<IListUserMessagesResult> {
+    const messagesPerPage = 25;
     const messages: IMessage[] = await this.chatRepository.listUserMessages({
       userId,
       friendId,
       page,
+      messagesPerPage,
     });
     const total = await this.chatRepository.getMessagesCount(friendId, userId);
-    const remainingMessages = total - messages.length * page;
-    return { messages, total, remaining: remainingMessages };
+    const totalPages: number = Math.ceil(total / messagesPerPage);
+    return { messages, currentPage: page, totalPages };
   }
 }
 export { ListChatMessagesUseCase };

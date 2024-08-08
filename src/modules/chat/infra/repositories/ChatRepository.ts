@@ -29,8 +29,8 @@ class ChatRepository implements IChatRepository {
     friendId,
     userId,
     page,
+    messagesPerPage = 25,
   }: IListUserMessagesParams): Promise<IMessage[]> {
-    const messagesPerPage = 5;
     const skip = page ? (page - 1) * messagesPerPage : 0;
 
     const messages = await this.repository

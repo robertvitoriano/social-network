@@ -2,6 +2,7 @@ export interface IListUserMessagesParams {
   friendId: string;
   userId: string;
   page: number;
+  messagesPerPage?: number;
 }
 export type IMessage = {
   id: string;
@@ -12,6 +13,6 @@ export type IMessage = {
 
 export interface IListUserMessagesResult {
   messages: IMessage[];
-  total: number;
-  remaining: number;
+  totalPages: number;
+  currentPage: number;
 }
