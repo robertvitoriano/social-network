@@ -13,6 +13,18 @@ class ChatRepository implements IChatRepository {
   constructor() {
     this.repository = getRepository(Message);
   }
+  async getMessagesCount(friendId: string, userId: string): Promise<number> {
+    const count = await this.repository
+      .createQueryBuilder("message")
+      .where(
+        "(message.receiver_id = :userId AND message.sender_id = :friendId) OR (message.receiver_id = :friendId AND message.sender_id = :userId)",
+        { userId, friendId }
+      )
+      .getCount();
+
+    return count;
+  }
+
   async listUserMessages({
     friendId,
     userId,

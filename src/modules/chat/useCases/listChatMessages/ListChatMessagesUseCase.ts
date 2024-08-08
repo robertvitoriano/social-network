@@ -1,6 +1,10 @@
 import { inject, injectable } from "tsyringe";
 import { IChatRepository } from "../../repositories/IChatRepository";
-import { IListUserMessagesParams, IMessage } from "./types";
+import {
+  IListUserMessagesParams,
+  IListUserMessagesResult,
+  IMessage,
+} from "./types";
 
 @injectable()
 class ListChatMessagesUseCase {
@@ -13,15 +17,15 @@ class ListChatMessagesUseCase {
     userId,
     friendId,
     page,
-  }: IListUserMessagesParams): Promise<IMessage[]> {
-    const userMessages: IMessage[] = await this.chatRepository.listUserMessages(
-      {
-        userId,
-        friendId,
-        page,
-      }
-    );
-    return userMessages;
+  }: IListUserMessagesParams): Promise<IListUserMessagesResult> {
+    const messages: IMessage[] = await this.chatRepository.listUserMessages({
+      userId,
+      friendId,
+      page,
+    });
+    const total = await this.chatRepository.getMessagesCount(friendId, userId);
+    const remainingMessages = total - messages.length * page;
+    return { messages, total, remaining: remainingMessages };
   }
 }
 export { ListChatMessagesUseCase };

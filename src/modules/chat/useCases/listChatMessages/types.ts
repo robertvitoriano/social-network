@@ -9,3 +9,9 @@ export type IMessage = {
   content: string;
   createdAt: string;
 };
+
+export interface IListUserMessagesResult {
+  messages: IMessage[];
+  total: number;
+  remaining: number;
+}
