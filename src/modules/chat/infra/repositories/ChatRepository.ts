@@ -34,12 +34,12 @@ class ChatRepository implements IChatRepository {
         "(message.receiver_id = :userId AND message.sender_id = :friendId) OR (message.receiver_id = :friendId AND message.sender_id = :userId)",
         { userId, friendId }
       )
-      .orderBy("message.created_at", "ASC")
+      .orderBy("message.created_at", "DESC")
       .skip(skip)
       .take(messagesPerPage)
       .getRawMany();
 
-    return messages;
+    return messages.reverse();
   }
 
   async createMessage({
