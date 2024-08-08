@@ -9,10 +9,11 @@ class ListChatMessagesController {
         container.resolve(ListChatMessagesUseCase);
 
       const { id: userId } = request.user;
-      const { friendId } = request.params;
+      const { friendId, page } = request.params;
       const userMessages = await listChatMessagesUseCase.execute({
         userId,
         friendId,
+        page: Number(page),
       });
 
       return response.status(200).json({
@@ -20,7 +21,7 @@ class ListChatMessagesController {
       });
     } catch (err) {
       console.error(err);
-      throw new AppError("Error to list friends", 500);
+      throw new AppError("Error to list chat messages", 500);
     }
   }
 }

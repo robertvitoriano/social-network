@@ -1,11 +1,11 @@
 import { inject, injectable } from "tsyringe";
 import { IChatRepository } from "../../repositories/IChatRepository";
-import { AppError } from "@shared/errors/AppError";
-import { IUserFriendDTO } from "@modules/friendships/dtos/IUserFriendDTO";
-export type IListUserMessagesParams = {
+
+export interface IListUserMessagesParams {
   friendId: string;
   userId: string;
-};
+  page: number;
+}
 export type IMessage = {
   id: string;
   userId: string;
@@ -22,11 +22,13 @@ class ListChatMessagesUseCase {
   async execute({
     userId,
     friendId,
+    page,
   }: IListUserMessagesParams): Promise<IMessage[]> {
     const userMessages: IMessage[] = await this.chatRepository.listUserMessages(
       {
         userId,
         friendId,
+        page,
       }
     );
     return userMessages;
