@@ -121,11 +121,13 @@ class FriendshipRepository implements IFriendshipsRepository {
       )
       .select([
         "user.id AS userId",
+        "user.online AS online",
         "user.name AS userName",
         "user.email AS userEmail",
         "user.avatar AS userAvatar",
         "user.username AS userUsername",
         "user.created_at AS userCreatedAt",
+        "friend.online AS online",
         "friend.id AS friendId",
         "friend.name AS friendName",
         "friend.email AS friendEmail",
@@ -142,6 +144,7 @@ class FriendshipRepository implements IFriendshipsRepository {
 
       return {
         id: isUser ? rawFriend.friendId : rawFriend.userId,
+        online: isUser ? rawFriend.online : rawFriend.online,
         name: isUser ? rawFriend.friendName : rawFriend.userName,
         email: isUser ? rawFriend.friendEmail : rawFriend.userEmail,
         username: isUser ? rawFriend.friendUsername : rawFriend.userUsername,

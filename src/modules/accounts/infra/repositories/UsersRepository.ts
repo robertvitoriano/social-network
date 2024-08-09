@@ -43,6 +43,10 @@ class UserRepository implements IUsersRepository {
     return user;
   }
 
+  async updateOnlineStatus(userId: string, online: boolean): Promise<void> {
+    await this.repository.update(userId, { online });
+  }
+
   async create({
     name,
     email,

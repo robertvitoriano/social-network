@@ -28,7 +28,6 @@ export class AuthenticateUserUseCase {
   async execute({ email, password }: IRequest): Promise<IResponse> {
     const user = await this.usersRepository.findByEmail(email);
     if (!user) {
-      console.log({ user });
       throw new AppError("Email or password invalid", 401);
     }
 
@@ -37,6 +36,8 @@ export class AuthenticateUserUseCase {
     if (!passwordMatch) {
       throw new AppError("Email or password invalid", 401);
     }
+
+    await this.usersRepository.updateOnlineStatus(user.id, true);
 
     const token = sign({ name: user.name, email: user.email }, "secret", {
       subject: user.id,
