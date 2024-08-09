@@ -29,6 +29,9 @@ export class User {
   @Column({ type: "varchar", nullable: true })
   avatar!: string;
 
+  @Column({ type: "boolean", default: false })
+  online: boolean;
+
   @OneToMany(() => Friendship, (friendship) => friendship.user)
   friendships!: Friendship[];
 
