@@ -6,7 +6,7 @@ const authenticateRoutes = Router();
 
 const authenticateController = new AuthenticateUserController();
 
-authenticateRoutes.post("/sessions", authenticateController.handle);
+authenticateRoutes.post("/log-in", authenticateController.handle);
 
 const passportService = new PassportService();
 function passportGoogleAuth() {

@@ -157,6 +157,29 @@ class FriendshipRepository implements IFriendshipsRepository {
 
     return friends;
   }
+  async getFriendIds(userId: string): Promise<string[]> {
+    const friendships = await this.repository
+      .createQueryBuilder("friendship")
+      .where(
+        "friendship.user_id = :userId AND friendship.status = 'accepted'",
+        { userId }
+      )
+      .orWhere(
+        "friendship.friend_id = :userId AND friendship.status = 'accepted'",
+        { userId }
+      )
+      .select([
+        "friendship.user_id AS userId",
+        "friendship.friend_id AS friendId",
+      ])
+      .getRawMany();
+
+    const friendIds = friendships.map((friendship) =>
+      friendship.userId === userId ? friendship.friendId : friendship.userId
+    );
+
+    return friendIds;
+  }
 
   async findNonFriends(userId: string): Promise<IUserFriendDTO[] | any> {
     const friendships = await this.repository

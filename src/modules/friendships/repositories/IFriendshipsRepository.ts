@@ -14,6 +14,7 @@ interface IFriendshipsRepository {
     userId: string;
     status: "accepted" | "rejected";
   }): Promise<void>;
+  getFriendIds(userId: string): Promise<string[]>;
 }
 
 export { IFriendshipsRepository };

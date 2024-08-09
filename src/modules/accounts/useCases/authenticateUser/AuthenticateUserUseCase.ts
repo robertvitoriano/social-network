@@ -3,6 +3,9 @@ import { inject, injectable } from "tsyringe";
 import { compare } from "bcrypt";
 import { sign } from "jsonwebtoken";
 import { IUsersRepository } from "../../repositories/IUsersRepository";
+import { webSocketServer } from "@shared/infra/http/server";
+import { EventType } from "@shared/enums/websocket-events";
+import { IFriendshipsRepository } from "@modules/friendships/repositories/IFriendshipsRepository";
 
 interface IRequest {
   email: string;
@@ -23,7 +26,9 @@ interface IResponse {
 export class AuthenticateUserUseCase {
   constructor(
     @inject("UsersRepository")
-    private usersRepository: IUsersRepository
+    private usersRepository: IUsersRepository,
+    @inject("FriendshipRepository")
+    private friendshipRepository: IFriendshipsRepository
   ) {}
   async execute({ email, password }: IRequest): Promise<IResponse> {
     const user = await this.usersRepository.findByEmail(email);
@@ -38,11 +43,15 @@ export class AuthenticateUserUseCase {
     }
 
     await this.usersRepository.updateOnlineStatus(user.id, true);
+    const io = webSocketServer.getIO();
 
     const token = sign({ name: user.name, email: user.email }, "secret", {
       subject: user.id,
       expiresIn: "1d",
     });
+    const friendIds = await this.friendshipRepository.getFriendIds(user.id);
+
+    io.to(friendIds).emit(EventType.FRIEND_LOGGED_IN, user.id);
 
     return {
       user: {
