@@ -3,7 +3,8 @@ import { v4 as uuidV4 } from "uuid";
 import { hash } from "bcrypt";
 
 const defaultHost =
-  process.env.ENVIRONMENT === "prod" ? process.env.MYSQLDB_HOST : "localhost";
+  process.env.ENVIRONMENT === "dev" ? "mysqldb" : process.env.MYSQLDB_HOST;
+
 async function create() {
   const connection = await createConnection(defaultHost);
   const password = await hash("123456", 8);

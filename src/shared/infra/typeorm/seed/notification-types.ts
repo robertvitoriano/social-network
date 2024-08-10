@@ -1,7 +1,7 @@
 import createConnection from "./../index";
 
 const defaultHost =
-  process.env.ENVIRONMENT === "prod" ? process.env.MYSQLDB_HOST : "localhost";
+  process.env.ENVIRONMENT === "dev" ? "mysqldb" : process.env.MYSQLDB_HOST;
 
 async function create() {
   const connection = await createConnection(defaultHost);

@@ -4,7 +4,7 @@ interface IOptions {
   host: string;
 }
 const defaultHost =
-  process.env.ENVIRONMENT === "prod" ? process.env.MYSQLDB_HOST : "mysqldb";
+  process.env.ENVIRONMENT === "dev" ? "mysqldb" : process.env.MYSQLDB_HOST;
 
 export default async (host = defaultHost): Promise<Connection> => {
   const defaulOptions = await getConnectionOptions();
