@@ -1,4 +1,4 @@
-import { Server as SocketIOServer } from "socket.io";
+import { Socket, Server as SocketIOServer } from "socket.io";
 import { Server as HttpServer } from "http";
 import { EventType } from "@shared/enums/websocket-events";
 
@@ -15,7 +15,7 @@ class WebSocketServer {
   }
 
   public init(): void {
-    this.io.on("connection", (socket) => {
+    this.io.on("connection", (socket: Socket) => {
       console.log("User connected: ", socket.id);
 
       socket.on(EventType.USER_JOIN_ROOM, (userId) => {
@@ -25,6 +25,16 @@ class WebSocketServer {
 
       socket.on("disconnect", () => {
         console.log("User disconnected: ", socket.id);
+      });
+      socket.on(EventType.USER_TYPING, (receiverId: string) => {
+        if (this.io.sockets.adapter.rooms.has(receiverId)) {
+          socket.to(receiverId).emit(EventType.USER_TYPING);
+        }
+      });
+      socket.on(EventType.USER_TYPING_STOPPED, (receiverId: string) => {
+        if (this.io.sockets.adapter.rooms.has(receiverId)) {
+          socket.to(receiverId).emit(EventType.USER_TYPING_STOPPED);
+        }
       });
     });
   }
