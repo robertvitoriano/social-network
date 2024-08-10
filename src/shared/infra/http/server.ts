@@ -12,6 +12,9 @@ import http from "http";
 import { WebSocketServer } from "../ws/WebSocketServer";
 import cors from "cors";
 import AWS from "aws-sdk";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 AWS.config.update({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
