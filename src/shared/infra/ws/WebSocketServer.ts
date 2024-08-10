@@ -8,7 +8,7 @@ class WebSocketServer {
   constructor(server: HttpServer) {
     this.io = new SocketIOServer(server, {
       cors: {
-        origin: "http://localhost:3000",
+        origin: "*",
         methods: ["GET", "POST"],
       },
     });

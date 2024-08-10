@@ -11,7 +11,8 @@ services:
     ports:
       - "3306:3306"  
     volumes:
-      - db:/var/lib/mysql  
+      - db:/var/lib/mysql
+      - ./my.cnf:/etc/mysql/my.cnf
 
   app:
     build: .
