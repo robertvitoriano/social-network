@@ -28,7 +28,9 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerConfig));
 app.use(morgan("common"));
 app.use(router);
 app.use(appErrorMiddleware);
-
+app.get("/", (request, response) => {
+  response.json({ message: "My app is running" });
+});
 const httpServer = http.createServer(app);
 const webSocketServer = new WebSocketServer(httpServer);
 webSocketServer.init();
