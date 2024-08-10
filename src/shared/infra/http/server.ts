@@ -42,6 +42,11 @@ io.on("connection", (socket: Socket) => {
       socket.to(receiverId).emit(EventType.USER_TYPING);
     }
   });
+  socket.on(EventType.USER_TYPING_STOPPED, (receiverId: string) => {
+    if (io.sockets.adapter.rooms.has(receiverId)) {
+      socket.to(receiverId).emit(EventType.USER_TYPING_STOPPED);
+    }
+  });
 });
 
 httpServer.listen(3334, () => {
