@@ -1,7 +1,7 @@
 import { container } from "tsyringe";
 import { Request, Response } from "express";
 import { LoginOAuthUseCase } from "./LoginOAuthUseCase";
-import { UserRepository } from "@modules/accounts/infra/repositories/UsersRepository";
+import { UserRepository } from "../../infra/repositories/UsersRepository";
 
 class LoginOAuthController {
   async handle(request: Request, response: Response): Promise<Response> {

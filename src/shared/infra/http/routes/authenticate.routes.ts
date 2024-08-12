@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { AuthenticateUserController } from "../../../../modules/accounts/useCases/authenticateUser/AuthenticateUserController";
 import { LogOutUserController } from "../../../../modules/accounts/useCases/logoutUser/LogOutUserController";
-import { PassportService } from "@modules/accounts/useCases/LoginOAuthUseCase/PassportService";
 import { ensureAuthenticated } from "../middlewares/ensureAuthenticated";
+import { PassportService } from "../../../../modules/accounts/useCases/LoginOAuthUseCase/PassportService";
 
 const authenticateRoutes = Router();
 

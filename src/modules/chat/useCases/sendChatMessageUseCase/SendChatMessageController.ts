@@ -2,7 +2,7 @@ import { AppError } from "../../../../shared/errors/AppError";
 import { Request, Response } from "express";
 import { container } from "tsyringe";
 import { SendChatMessageUseCase } from "./SendChatMessageUseCase";
-import { ServerErrorHttpStatusCode } from "@shared/enums/http-status-codes";
+import { ServerErrorHttpStatusCode } from "../../../../shared/enums/http-status-codes";
 class SendChatMessageController {
   async handle(request: Request, response: Response): Promise<Response> {
     try {

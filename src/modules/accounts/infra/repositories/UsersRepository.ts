@@ -4,8 +4,8 @@ import { Repository, getRepository } from "typeorm";
 import {
   IUsersRepository,
   UserUpdateFields,
-} from "@modules/accounts/repositories/IUsersRepository";
-import { getValidProperties } from "@utils/parsing";
+} from "../../repositories/IUsersRepository";
+import { getValidProperties } from "../../../../utils/parsing";
 
 class UserRepository implements IUsersRepository {
   private repository: Repository<User>;

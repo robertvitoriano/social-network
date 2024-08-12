@@ -3,9 +3,9 @@ import { inject, injectable } from "tsyringe";
 import { compare } from "bcrypt";
 import { sign } from "jsonwebtoken";
 import { IUsersRepository } from "../../repositories/IUsersRepository";
-import { webSocketServer } from "@shared/infra/http/server";
-import { EventType } from "@shared/enums/websocket-events";
-import { IFriendshipsRepository } from "@modules/friendships/repositories/IFriendshipsRepository";
+import { IFriendshipsRepository } from "../../../friendships/repositories/IFriendshipsRepository";
+import { webSocketServer } from "../../../../shared/infra/http/server";
+import { EventType } from "../../../../shared/enums/websocket-events";
 
 interface IRequest {
   email: string;

@@ -5,8 +5,8 @@ import {
   ManyToOne,
   JoinColumn,
 } from "typeorm";
-import { User } from "@modules/accounts/infra/typeorm/entities/User";
 import { NotificationType } from "./NotificationType";
+import { User } from "../../../../accounts/infra/typeorm/entities/User";
 
 @Entity("notifications")
 export class Notification {

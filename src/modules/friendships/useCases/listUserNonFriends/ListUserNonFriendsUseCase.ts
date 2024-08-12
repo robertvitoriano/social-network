@@ -1,6 +1,6 @@
 import { inject, injectable } from "tsyringe";
 import { IFriendshipsRepository } from "../../repositories/IFriendshipsRepository";
-import { IUserFriendDTO } from "@modules/friendships/dtos/IUserFriendDTO";
+import { IUserFriendDTO } from "../../dtos/IUserFriendDTO";
 
 @injectable()
 class ListUserNonFriendsUseCase {

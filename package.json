@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "type": "module",
   "dependencies": {
     "@types/bcrypt": "^5.0.0",
     "@types/jsonwebtoken": "^8.5.6",
@@ -59,7 +60,7 @@
     "dev": "tsx --watch  src/shared/infra/http/server.ts",
     "start": "node dist/src/shared/infra/http/server.js",
     "typeorm": "tsx ./node_modules/typeorm/cli.js",
-    "build": "tsc && node scripts/replace-aliases.js",
+    "build": "tsc --build",
     "test": "jest",
     "seed:admin": "tsx src/shared/infra/typeorm/seed/admin.ts",
     "seed:notification-types": "tsx src/shared/infra/typeorm/seed/notification-types.ts",

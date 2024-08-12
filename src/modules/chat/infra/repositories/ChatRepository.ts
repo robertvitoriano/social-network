@@ -1,11 +1,11 @@
 import { Repository, getRepository, Not, In } from "typeorm";
-import ICreateChatMessageDTO from "@modules/chat/dtos/ICreateChatMessageDTO";
 import { Message } from "../typeorm/entities/Message";
-import { IChatRepository } from "@modules/chat/repositories/IChatRepository";
+import { IChatRepository } from "../../repositories/IChatRepository";
+import ICreateChatMessageDTO from "../../dtos/ICreateChatMessageDTO";
 import {
   IListUserMessagesParams,
   IMessage,
-} from "@modules/chat/useCases/listChatMessages/types";
+} from "../../useCases/listChatMessages/types";
 
 class ChatRepository implements IChatRepository {
   private repository: Repository<Message>;

@@ -1,8 +1,8 @@
-import { IFriendshipsRepository } from "@modules/friendships/repositories/IFriendshipsRepository";
-import ICreateFriendshipDTO from "@modules/friendships/dtos/ICreateFriendshipDTO";
-import { IUserFriendDTO } from "@modules/friendships/dtos/IUserFriendDTO";
+import { User } from "../../../accounts/infra/typeorm/entities/User";
+import ICreateFriendshipDTO from "../../dtos/ICreateFriendshipDTO";
+import { IUserFriendDTO } from "../../dtos/IUserFriendDTO";
+import { IFriendshipsRepository } from "../../repositories/IFriendshipsRepository";
 import { Friendship } from "../typeorm/entities/Friendship";
-import { User } from "@modules/accounts/infra/typeorm/entities/User";
 import { Repository, getRepository, Not, In } from "typeorm";
 
 class FriendshipRepository implements IFriendshipsRepository {

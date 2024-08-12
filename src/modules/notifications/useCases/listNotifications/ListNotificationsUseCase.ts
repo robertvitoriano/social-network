@@ -1,6 +1,6 @@
 import { inject, injectable } from "tsyringe";
-import { INotificationsRepository } from "@modules/notifications/repositories/INotificationsRepository";
 import { INotification } from "./interfaces";
+import { INotificationsRepository } from "../../repositories/INotificationsRepository";
 
 @injectable()
 class ListNotificationsUseCase {

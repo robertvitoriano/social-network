@@ -2,9 +2,10 @@
 FROM node:alpine AS build
 
 WORKDIR /usr/app
-
 COPY package.json package-lock.json ./
+RUN npm install typescript -g
 RUN npm install --production
+RUN npm run build
 
 # Stage 2: Copy only the necessary files and run the application
 FROM node:alpine
@@ -16,4 +17,4 @@ COPY . .
 
 EXPOSE 3334
 
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "start"]

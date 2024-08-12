@@ -1,7 +1,7 @@
 import passport from "passport";
 import { Strategy } from "passport-google-oauth20";
 import { LoginOAuthUseCase } from "./LoginOAuthUseCase";
-import { UserRepository } from "@modules/accounts/infra/repositories/UsersRepository";
+import { UserRepository } from "../../infra/repositories/UsersRepository";
 export class PassportService {
   private usersRepository;
   private loginOAuthUseCase;

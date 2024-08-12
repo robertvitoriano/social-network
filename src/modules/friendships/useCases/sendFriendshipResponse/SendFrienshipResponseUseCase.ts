@@ -1,15 +1,15 @@
 import { inject, injectable } from "tsyringe";
 import ICreateUserDTO from "../../dtos/ICreateFriendshipDTO";
 import { IFriendshipsRepository } from "../../repositories/IFriendshipsRepository";
-import { AppError } from "@shared/errors/AppError";
-import { IFriendshipUpdateDTO } from "@modules/friendships/dtos/IFriendshipUpdateDTO";
-import { webSocketServer } from "@shared/infra/http/server";
-import { EventType } from "@shared/enums/websocket-events";
-import { ClientErrorHttpStatusCode } from "@shared/enums/http-status-codes";
-import { FriendshipStatus } from "@shared/enums/friendship-status";
-import { INotificationsRepository } from "@modules/notifications/repositories/INotificationsRepository";
-import { NotificationTypes } from "@shared/enums/notification-types";
-import { IUsersRepository } from "@modules/accounts/repositories/IUsersRepository";
+import { IUsersRepository } from "../../../accounts/repositories/IUsersRepository";
+import { INotificationsRepository } from "../../../notifications/repositories/INotificationsRepository";
+import { IFriendshipUpdateDTO } from "../../dtos/IFriendshipUpdateDTO";
+import { FriendshipStatus } from "../../../../shared/enums/friendship-status";
+import { webSocketServer } from "../../../../shared/infra/http/server";
+import { NotificationTypes } from "../../../../shared/enums/notification-types";
+import { EventType } from "../../../../shared/enums/websocket-events";
+import { ClientErrorHttpStatusCode } from "../../../../shared/enums/http-status-codes";
+import { AppError } from "../../../../shared/errors/AppError";
 
 @injectable()
 class SendFriendshipResponseUseCase {

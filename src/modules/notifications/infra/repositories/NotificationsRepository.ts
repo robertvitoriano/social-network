@@ -1,9 +1,9 @@
-import { INotificationsRepository } from "@modules/notifications/repositories/INotificationsRepository";
+import { NotificationTypes } from "../../../../shared/enums/notification-types";
+import ICreateNotificationDTO from "../../dtos/ICreateNotificationDTO";
+import { INotificationsRepository } from "../../repositories/INotificationsRepository";
+import { INotification } from "../../useCases/listNotifications/interfaces";
 import { Notification } from "../typeorm/entities/Notification";
 import { In, Repository, getRepository } from "typeorm";
-import ICreateNotificationDTO from "@modules/notifications/dtos/ICreateNotificationDTO";
-import { INotification } from "@modules/notifications/useCases/listNotifications/interfaces";
-import { NotificationTypes } from "@shared/enums/notification-types";
 
 class NotificationsRepository implements INotificationsRepository {
   private repository: Repository<Notification>;

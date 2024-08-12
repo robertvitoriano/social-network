@@ -1,9 +1,10 @@
 import { Router } from "express";
-import { SendFriendShipController } from "@modules/friendships/useCases/sendFriendshipRequest/SendFriendShipRequestController";
 import { ensureAuthenticated } from "../middlewares/ensureAuthenticated";
-import { SendFriendShipResponseController } from "@modules/friendships/useCases/sendFriendshipResponse/SendFriendShipResponseController";
-import { ListUserFriendsController } from "@modules/friendships/useCases/listUserFriends/ListUserFriendsController";
-import { ListUserNonFriendsController } from "@modules/friendships/useCases/listUserNonFriends/ListUserNonFriendsController";
+import { ListUserFriendsController } from "../../../../modules/friendships/useCases/listUserFriends/ListUserFriendsController";
+import { ListUserNonFriendsController } from "../../../../modules/friendships/useCases/listUserNonFriends/ListUserNonFriendsController";
+import { SendFriendShipController } from "../../../../modules/friendships/useCases/sendFriendshipRequest/SendFriendShipRequestController";
+import { SendFriendShipResponseController } from "../../../../modules/friendships/useCases/sendFriendshipResponse/SendFriendShipResponseController";
+
 const friendshipRoutes = Router();
 
 const sendFrienshipRequestController = new SendFriendShipController();

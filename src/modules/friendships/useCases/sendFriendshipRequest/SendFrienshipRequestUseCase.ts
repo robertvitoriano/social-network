@@ -1,14 +1,14 @@
 import { inject, injectable } from "tsyringe";
 import ICreateFriendshipDTO from "../../dtos/ICreateFriendshipDTO";
 import { IFriendshipsRepository } from "../../repositories/IFriendshipsRepository";
-import { AppError } from "@shared/errors/AppError";
-import { webSocketServer } from "@shared/infra/http/server";
-import { ErrorMessages } from "@shared/enums/error-messages";
-import { EventType } from "@shared/enums/websocket-events";
-import { ClientErrorHttpStatusCode } from "@shared/enums/http-status-codes";
-import { INotificationsRepository } from "@modules/notifications/repositories/INotificationsRepository";
-import { NotificationTypes } from "@shared/enums/notification-types";
-import { FriendshipStatus } from "@shared/enums/friendship-status";
+import { ErrorMessages } from "../../../../shared/enums/error-messages";
+import { FriendshipStatus } from "../../../../shared/enums/friendship-status";
+import { ClientErrorHttpStatusCode } from "../../../../shared/enums/http-status-codes";
+import { NotificationTypes } from "../../../../shared/enums/notification-types";
+import { EventType } from "../../../../shared/enums/websocket-events";
+import { AppError } from "../../../../shared/errors/AppError";
+import { webSocketServer } from "../../../../shared/infra/http/server";
+import { INotificationsRepository } from "../../../notifications/repositories/INotificationsRepository";
 
 @injectable()
 class SendFriendshipUseCase {

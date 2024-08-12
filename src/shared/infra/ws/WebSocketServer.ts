@@ -1,6 +1,6 @@
 import { Socket, Server as SocketIOServer } from "socket.io";
 import { Server as HttpServer } from "http";
-import { EventType } from "@shared/enums/websocket-events";
+import { EventType } from "../../enums/websocket-events";
 
 class WebSocketServer {
   private io: SocketIOServer;

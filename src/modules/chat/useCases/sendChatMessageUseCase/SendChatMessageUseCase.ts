@@ -1,9 +1,9 @@
 import { inject, injectable } from "tsyringe";
 import { IChatRepository } from "../../repositories/IChatRepository";
-import { webSocketServer } from "@shared/infra/http/server";
-import { EventType } from "@shared/enums/websocket-events";
-import { INotificationsRepository } from "@modules/notifications/repositories/INotificationsRepository";
-import { NotificationTypes } from "@shared/enums/notification-types";
+import { NotificationTypes } from "../../../../shared/enums/notification-types";
+import { EventType } from "../../../../shared/enums/websocket-events";
+import { webSocketServer } from "../../../../shared/infra/http/server";
+import { INotificationsRepository } from "../../../notifications/repositories/INotificationsRepository";
 
 type ISendChatMessageUseCaseParams = {
   receiverId: string;
