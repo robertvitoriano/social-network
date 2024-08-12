@@ -1,12 +1,12 @@
-import createConnection from "./../index";
 import { v4 as uuidV4 } from "uuid";
 import { hash } from "bcrypt";
-
-const defaultHost =
-  process.env.ENVIRONMENT === "dev" ? "mysqldb" : process.env.MYSQLDB_HOST;
+import { DatabaseConnection } from "../DatabaseConnection";
 
 async function create() {
-  const connection = await createConnection(defaultHost);
+  const defaultHost =
+    process.env.ENVIRONMENT === "dev" ? "mysqldb" : process.env.MYSQLDB_HOST;
+  const dbConnection = new DatabaseConnection();
+  const connection = await dbConnection.connect(defaultHost);
   const password = await hash("123456", 8);
   const id = uuidV4();
 

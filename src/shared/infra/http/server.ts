@@ -5,7 +5,7 @@ import swaggerUi from "swagger-ui-express";
 import swaggerConfig from "./../../../swagger.json";
 import morgan from "morgan";
 import { appErrorMiddleware } from "./middlewares/appErrorMiddleware";
-import createConnection from "./../typeorm";
+import { DatabaseConnection } from "../typeorm/DatabaseConnection";
 import "./../../container";
 import { router } from "./routes";
 import http from "http";
@@ -22,7 +22,8 @@ AWS.config.update({
   region: process.env.AWS_REGION,
 });
 
-createConnection();
+const dbConnection = new DatabaseConnection();
+dbConnection.connect();
 
 const app = express();
 app.use(cors({ origin: "*" }));
