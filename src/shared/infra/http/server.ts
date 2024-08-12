@@ -35,6 +35,14 @@ app.use(appErrorMiddleware);
 app.get("/", (request, response) => {
   response.json({ message: "My app is running" });
 });
+app.post("/log-in", async (req, res) => {
+  try {
+    console.log("my post route worked");
+  } catch (error) {
+    console.error("POST route error:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 const httpServer = http.createServer(app);
 const webSocketServer = new WebSocketServer(httpServer);
 webSocketServer.init();
