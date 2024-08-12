@@ -59,7 +59,7 @@
     "dev": "tsx --watch  src/shared/infra/http/server.ts",
     "start": "node dist/src/shared/infra/http/server.js",
     "typeorm": "tsx ./node_modules/typeorm/cli.js",
-    "build": "tsc --build && tsc-alias",
+    "build": "tsc && node scripts/replace-aliases.js",
     "test": "jest",
     "seed:admin": "tsx src/shared/infra/typeorm/seed/admin.ts",
     "seed:notification-types": "tsx src/shared/infra/typeorm/seed/notification-types.ts",
