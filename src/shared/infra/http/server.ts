@@ -26,7 +26,7 @@ const dbConnection = new DatabaseConnection();
 dbConnection.connect();
 
 const app = express();
-app.use(cors({ origin: "*" }));
+app.use(cors({ origin: "*", methods: ["GET", "POST", "DELETE", "PATCH"] }));
 app.use(express.json());
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerConfig));
 app.use(morgan("common"));

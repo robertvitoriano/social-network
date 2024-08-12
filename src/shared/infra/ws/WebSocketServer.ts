@@ -9,7 +9,7 @@ class WebSocketServer {
     this.io = new SocketIOServer(server, {
       cors: {
         origin: "*",
-        methods: ["GET", "POST"],
+        methods: ["GET", "POST", "DELETE", "PATCH"],
       },
     });
   }
