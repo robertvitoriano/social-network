@@ -2,7 +2,7 @@ import ICreateUserDTO from "@modules/accounts/dtos/ICreateUserDTO";
 import { User } from "@modules/accounts/infra/typeorm/entities/User";
 import { IUsersRepository } from "../IUsersRepository";
 
-class InMemoryUsersRepository implements IUsersRepository {
+class InMemoryUsersRepository {
   users: User[] = [];
 
   async create({ email, name, password }: ICreateUserDTO): Promise<User> {

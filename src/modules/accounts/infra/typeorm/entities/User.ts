@@ -1,7 +1,7 @@
+import { Message } from "@modules/chat/infra/typeorm/entities/Message";
+import { Friendship } from "@modules/friendships/infra/typeorm/entities/Friendship";
 import { Entity, Column, PrimaryColumn, OneToMany } from "typeorm";
 import { v4 as uuid } from "uuid";
-import { Friendship } from "@modules/friendships/infra/typeorm/entities/Friendship";
-import { Message } from "@modules/chat/infra/typeorm/entities/Message";
 
 @Entity("users")
 export class User {

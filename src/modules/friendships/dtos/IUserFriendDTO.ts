@@ -1,9 +1,14 @@
 export interface IUserFriendDTO {
   id: string;
+  online?: string;
   name: string;
   email: string;
   username: string;
-  isAdmin: boolean;
-  created_at: Date;
+  avatar: string;
+  createdAt?: string;
+  lastMessage?: string;
+  lastMessageCreatedAt?: string;
   friendshipRequestStatus?: "sent" | "received" | "not_sent";
+  isAdmin?: boolean;
+  created_at?: Date;
 }
