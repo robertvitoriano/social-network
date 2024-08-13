@@ -1,5 +1,6 @@
+import dotEnv from "dotenv";
 import { DatabaseConnection } from "../DatabaseConnection";
-
+dotEnv.config();
 async function create() {
   const dbConnection = new DatabaseConnection();
   const connection = await dbConnection.connect(process.env.MYSQLDB_HOST);
