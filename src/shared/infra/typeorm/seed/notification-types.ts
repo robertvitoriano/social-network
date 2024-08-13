@@ -1,9 +1,8 @@
 import { DatabaseConnection } from "../DatabaseConnection";
 
-const defaultHost =
-  process.env.ENVIRONMENT === "dev" ? "mysqldb" : process.env.MYSQLDB_HOST;
-
 async function create() {
+  const defaultHost =
+    process.env.ENVIRONMENT === "dev" ? "mysqldb" : process.env.MYSQLDB_HOST;
   const dbConnection = new DatabaseConnection();
   const connection = await dbConnection.connect(defaultHost);
   await connection.query(`
