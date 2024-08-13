@@ -1,10 +1,8 @@
 import { DatabaseConnection } from "../DatabaseConnection";
 
 async function create() {
-  const defaultHost =
-    process.env.ENVIRONMENT === "dev" ? "mysqldb" : process.env.MYSQLDB_HOST;
   const dbConnection = new DatabaseConnection();
-  const connection = await dbConnection.connect(defaultHost);
+  const connection = await dbConnection.connect(process.env.MYSQLDB_HOST);
   await connection.query(`
     INSERT INTO notification_types (id, type, created_at)
     VALUES 
