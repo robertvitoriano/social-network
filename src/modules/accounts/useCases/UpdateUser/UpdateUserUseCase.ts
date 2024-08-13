@@ -33,12 +33,18 @@ class UpdateUserUseCase {
       throw new Error("User not found");
     }
 
-    const tmpDir = path.resolve("./tmp/avatar");
+    const tmpDir = path.resolve(__dirname, "../../../../../tmp/avatar");
+
     if (!fs.existsSync(tmpDir)) {
       fs.mkdirSync(tmpDir, { recursive: true });
     }
 
     const filePath = path.resolve(tmpDir, avatarFile.filename);
+
+    if (!fs.existsSync(filePath)) {
+      throw new Error(`File not found: ${filePath}`);
+    }
+
     const fileContent = fs.readFileSync(filePath);
     const fileHash = crypto.randomBytes(16).toString("hex");
     const fileKey = `user-avatar/${fileHash}-${avatarFile.originalname}`;
