@@ -5,7 +5,6 @@ import {
   ManyToOne,
   JoinColumn,
 } from "typeorm";
-import { User } from "./../../../../accounts/infra/typeorm/entities/User";
 
 @Entity("friendship")
 export class Friendship {
@@ -28,11 +27,11 @@ export class Friendship {
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   created_at: Date;
 
-  @ManyToOne(() => User, { onDelete: "CASCADE" })
+  @ManyToOne("User", "friendships", { onDelete: "CASCADE" })
   @JoinColumn({ name: "user_id" })
-  user: User;
+  user!: any;
 
-  @ManyToOne(() => User, { onDelete: "CASCADE" })
+  @ManyToOne("User", "friends", { onDelete: "CASCADE" })
   @JoinColumn({ name: "friend_id" })
-  friend: User;
+  friend!: any;
 }

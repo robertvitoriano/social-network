@@ -37,11 +37,13 @@ export class User {
 
   @OneToMany(() => Friendship, (friendship) => friendship.friend)
   friends!: Friendship[];
+
   @OneToMany(() => Message, (message) => message.sender)
   sentMessages: Message[];
 
   @OneToMany(() => Message, (message) => message.receiver)
   receivedMessages: Message[];
+
   constructor() {
     if (!this.id) {
       this.id = uuid();

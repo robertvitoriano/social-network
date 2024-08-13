@@ -1,16 +1,15 @@
 import {
   Entity,
-  PrimaryGeneratedColumn,
   Column,
+  PrimaryGeneratedColumn,
   ManyToOne,
   JoinColumn,
 } from "typeorm";
-import { User } from "../../../../accounts/infra/typeorm/entities/User";
 
 @Entity("messages")
 export class Message {
   @PrimaryGeneratedColumn("uuid")
-  id: string;
+  id!: string;
 
   @Column({ type: "char", length: 36 })
   receiver_id: string;
@@ -24,11 +23,11 @@ export class Message {
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   created_at: Date;
 
-  @ManyToOne(() => User, (user) => user.sentMessages)
+  @ManyToOne("User", "sentMessages", { onDelete: "CASCADE" })
   @JoinColumn({ name: "sender_id" })
-  sender: User;
+  sender!: any;
 
-  @ManyToOne(() => User, (user) => user.receivedMessages)
+  @ManyToOne("User", "receivedMessages", { onDelete: "CASCADE" })
   @JoinColumn({ name: "receiver_id" })
-  receiver: User;
+  receiver!: any;
 }
