@@ -37,6 +37,7 @@ class WebSocketServer {
         }
       });
       socket.on(EventType.MESSAGE_SENT, ({ receiverId, ...newMessage }) => {
+        console.log({ receiverId, ...newMessage });
         if (this.io.sockets.adapter.rooms.has(newMessage.receiverId)) {
           socket
             .to(newMessage.receiverId)
