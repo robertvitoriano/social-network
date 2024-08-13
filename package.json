@@ -60,17 +60,17 @@
     "tsx": "^4.15.7",
     "typescript": "^4.9.5"
   },
-"scripts": {
-  "build": "swc src -d dist && copyfiles -u 1 src/swagger.json dist/src/ && copyfiles -u 1 .env dist/",
-  "start": "node dist/src/shared/infra/http/server.js",
-  "dev": "swc-node src/shared/infra/http/server.ts",
-  "typeorm": "tsx ./node_modules/typeorm/cli.js",
-  "test": "jest",
-  "seed:admin": "tsx src/shared/infra/typeorm/seed/admin.ts",
-  "seed:notification-types": "tsx src/shared/infra/typeorm/seed/notification-types.ts",
-  "migration:run": "npx tsx ./node_modules/typeorm/cli.js migration:run",
-  "migration:generate": "npx tsx ./node_modules/typeorm/cli.js migration:generate -n",
-  "migration:revert": "npx tsx ./node_modules/typeorm/cli.js migration:revert"
-}
+  "scripts": {
+    "build": "swc src -d dist && cp src/swagger.json dist/src && cp .env dist/",
+    "start": "node dist/src/shared/infra/http/server.js",
+    "dev": "swc-node src/shared/infra/http/server.ts",
+    "typeorm": "tsx ./node_modules/typeorm/cli.js",
+    "test": "jest",
+    "seed:admin": "tsx src/shared/infra/typeorm/seed/admin.ts",
+    "seed:notification-types": "tsx src/shared/infra/typeorm/seed/notification-types.ts",
+    "migration:run": "npx tsx ./node_modules/typeorm/cli.js migration:run",
+    "migration:generate": "npx tsx ./node_modules/typeorm/cli.js migration:generate -n",
+    "migration:revert": "npx tsx ./node_modules/typeorm/cli.js migration:revert"
+  }
 
 }
