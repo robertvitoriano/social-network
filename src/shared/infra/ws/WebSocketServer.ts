@@ -36,6 +36,13 @@ class WebSocketServer {
           socket.to(receiverId).emit(EventType.USER_TYPING_STOPPED);
         }
       });
+      socket.on(EventType.MESSAGE_SENT, ({ receiverId, ...newMessage }) => {
+        if (this.io.sockets.adapter.rooms.has(newMessage.receiverId)) {
+          socket
+            .to(newMessage.receiverId)
+            .emit(EventType.MESSAGE_RECEIVED, newMessage);
+        }
+      });
     });
   }
 
