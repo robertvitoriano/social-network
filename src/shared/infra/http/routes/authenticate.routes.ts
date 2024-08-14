@@ -5,12 +5,13 @@ import { ensureAuthenticated } from "../middlewares/ensureAuthenticated";
 import passport from "passport";
 import { Strategy } from "passport-google-oauth20";
 import dotenv from "dotenv";
+import { LoginOAuthUseCase } from "../../../../modules/accounts/useCases/LoginOAuthUseCase/LoginOAuthUseCase";
+import { container } from "tsyringe";
 dotenv.config();
 const authenticateRoutes = Router();
 
 const authenticateController = new AuthenticateUserController();
 const logoutUserController = new LogOutUserController();
-
 passport.use(
   new Strategy(
     {
@@ -20,7 +21,9 @@ passport.use(
       scope: ["profile", "email"],
     },
     async function (accessToken, refreshToken, profile, cb) {
-      console.log("HELLO WORLD");
+      const loginOAuthUseCase = container.resolve(LoginOAuthUseCase);
+      const loginResponse = loginOAuthUseCase.execute(profile);
+      return loginResponse;
     }
   )
 );
@@ -42,9 +45,8 @@ authenticateRoutes.get(
   passport.authenticate("google", { failureRedirect: "/login" }),
   function (req, res) {
     //@ts-ignore
-    const { token } = res.req.user;
-
-    res.redirect(`${process.env.CLIENT_URL}?token=${token}`);
+    console.log({ req });
+    console.log({ res });
   }
 );
 
