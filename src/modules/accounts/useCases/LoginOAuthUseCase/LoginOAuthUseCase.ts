@@ -20,7 +20,7 @@ export class LoginOAuthUseCase {
     private usersRepository: IUsersRepository
   ) {}
 
-  public async execute(oauthCode: string): Promise<void> {
+  public async execute(oauthCode: string): Promise<IResponse> {
     const tokenResponse = await axios.post(
       "https://oauth2.googleapis.com/token",
       {
@@ -42,31 +42,32 @@ export class LoginOAuthUseCase {
         },
       }
     );
-    console.log({ userInfoResponse });
-    //let user: any = await this.usersRepository.findByEmail(email);
+    console.log(userInfoResponse);
+    const { name, picture, email } = userInfoResponse.data;
+    let user: any = await this.usersRepository.findByEmail(email);
 
-    // if (!user) {
-    //   user = await this.usersRepository.create({
-    //     email,
-    //     name,
-    //     avatar: picture,
-    //     username: email.split("@")[0],
-    //   });
-    //   const token = sign({ name: user.name, email: user.email }, "secret", {
-    //     subject: user.id,
-    //     expiresIn: "1d",
-    //   });
+    if (!user) {
+      user = await this.usersRepository.create({
+        email,
+        name,
+        avatar: picture,
+        username: email.split("@")[0],
+      });
+    }
+    const token = sign({ name: user.name, email: user.email }, "secret", {
+      subject: user.id,
+      expiresIn: "1d",
+    });
 
-    //   return {
-    //     user: {
-    //       id: user.id,
-    //       name: user.name,
-    //       email: user.email,
-    //       avatar: user.avatar,
-    //       username: user.username,
-    //     },
-    //     token: token,
-    //   };
-    // }
+    return {
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        avatar: user.avatar,
+        username: user.username,
+      },
+      token: token,
+    };
   }
 }
