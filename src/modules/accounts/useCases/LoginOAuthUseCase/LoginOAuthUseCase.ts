@@ -2,6 +2,7 @@ import { sign } from "jsonwebtoken";
 import { IUsersRepository } from "./../../repositories/IUsersRepository";
 import axios from "axios";
 import { inject, injectable } from "tsyringe";
+import crypto from "crypto";
 
 interface IResponse {
   user: {
@@ -50,6 +51,7 @@ export class LoginOAuthUseCase {
       user = await this.usersRepository.create({
         email,
         name,
+        password: this.generateRandomPassword(12),
         avatar: picture,
         username: email.split("@")[0],
       });
@@ -69,5 +71,8 @@ export class LoginOAuthUseCase {
       },
       token: token,
     };
+  }
+  private generateRandomPassword(length: number): string {
+    return crypto.randomBytes(length).toString("hex");
   }
 }
