@@ -34,7 +34,6 @@ export class LoginOAuthUseCase {
 
     const accessToken = tokenResponse.data.access_token;
 
-    // Now use the access token to get user profile information
     const userInfoResponse = await axios.get(
       "https://www.googleapis.com/oauth2/v2/userinfo",
       {
