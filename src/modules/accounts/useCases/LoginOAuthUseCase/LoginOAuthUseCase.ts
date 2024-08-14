@@ -21,20 +21,29 @@ export class LoginOAuthUseCase {
   ) {}
 
   public async execute(oauthCode: string): Promise<void> {
-    const oauthRequest = {
-      url: new URL("https://oauth2.googleapis.com/token"),
-      params: {
+    const tokenResponse = await axios.post(
+      "https://oauth2.googleapis.com/token",
+      {
         client_id: process.env.GOOGLE_CLIENT_ID,
         client_secret: process.env.GOOGLE_CLIENT_SECRET,
         code: oauthCode,
         grant_type: "authorization_code",
         redirect_uri: process.env.GOOGLE_CALLBACK_URL,
-      },
-    };
-    const oauthResponse = await axios.post(oauthRequest.url.toString(), null, {
-      params: oauthRequest.params,
-    });
+      }
+    );
 
+    const accessToken = tokenResponse.data.access_token;
+
+    // Now use the access token to get user profile information
+    const userInfoResponse = await axios.get(
+      "https://www.googleapis.com/oauth2/v2/userinfo",
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    console.log({ userInfoResponse });
     //let user: any = await this.usersRepository.findByEmail(email);
 
     // if (!user) {
