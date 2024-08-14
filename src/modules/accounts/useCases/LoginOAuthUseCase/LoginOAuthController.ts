@@ -6,14 +6,10 @@ import { UserRepository } from "../../infra/repositories/UsersRepository";
 class LoginOAuthController {
   async handle(request: Request, response: Response): Promise<Response> {
     try {
-      const { email, accessToken } = request.body;
-      const usersRepository = new UserRepository();
-      const loginOAuthUseCase = new LoginOAuthUseCase(usersRepository);
+      const authCode = String(request.query.code);
 
-      const authenticateInfo = await loginOAuthUseCase.execute({
-        email,
-        accessToken,
-      });
+      const loginOAuthUseCase = container.resolve(LoginOAuthUseCase);
+      const authenticateInfo = await loginOAuthUseCase.execute(authCode);
 
       return response.json(authenticateInfo);
     } catch (error) {
