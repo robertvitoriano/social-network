@@ -34,7 +34,6 @@ export class LoginOAuthUseCase {
     const oauthResponse = await axios.post(oauthRequest.url.toString(), null, {
       params: oauthRequest.params,
     });
-    console.log(oauthResponse);
 
     //let user: any = await this.usersRepository.findByEmail(email);
 
