@@ -7,9 +7,13 @@ class LoginOAuthController {
     try {
       const authCode = String(request.query.code);
       const loginOAuthUseCase = container.resolve(LoginOAuthUseCase);
-      const authenticateInfo = await loginOAuthUseCase.execute(authCode);
+      const { token, user } = await loginOAuthUseCase.execute(authCode);
 
-      return response.json(authenticateInfo);
+      const frontendUrl = new URL(process.env.CLIENT_URL!);
+      frontendUrl.searchParams.append("token", token);
+      frontendUrl.searchParams.append("user", JSON.stringify(user));
+
+      response.redirect(frontendUrl.toString());
     } catch (error) {
       console.error(error);
       return response.status(error.statusCode).json({

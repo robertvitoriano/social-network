@@ -3,9 +3,7 @@ import { AuthenticateUserController } from "../../../../modules/accounts/useCase
 import { LogOutUserController } from "../../../../modules/accounts/useCases/logoutUser/LogOutUserController";
 import { ensureAuthenticated } from "../middlewares/ensureAuthenticated";
 import dotenv from "dotenv";
-import { LoginOAuthUseCase } from "../../../../modules/accounts/useCases/LoginOAuthUseCase/LoginOAuthUseCase";
-import { container } from "tsyringe";
-import { LoginOAuthController } from "src/modules/accounts/useCases/LoginOAuthUseCase/LoginOAuthController";
+import { LoginOAuthController } from "./../../../../modules/accounts/useCases/LoginOAuthUseCase/LoginOAuthController";
 dotenv.config();
 const authenticateRoutes = Router();
 
