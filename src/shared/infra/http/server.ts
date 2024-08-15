@@ -23,7 +23,7 @@ AWS.config.update({
 });
 
 const dbConnection = new DatabaseConnection();
-dbConnection.connect();
+dbConnection.connect().then(() => console.log("Connected to database"));
 
 const app = express();
 app.use(cors({ origin: "*", methods: ["GET", "POST", "DELETE", "PATCH"] }));

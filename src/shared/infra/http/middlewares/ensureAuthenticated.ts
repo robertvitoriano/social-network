@@ -30,7 +30,8 @@ export async function ensureAuthenticated(
     req.user = { id: userId, name: user.name, avatar: user.avatar };
 
     next();
-  } catch {
+  } catch (error) {
+    console.error(error);
     throw new AppError("Invalid Token", 401);
   }
 }

@@ -42,6 +42,7 @@
     "@types/jest": "^27.4.1",
     "@types/morgan": "^1.9.2",
     "@types/multer": "^1.4.5",
+    "@types/node": "^22.3.0",
     "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^4.19.0",
     "@typescript-eslint/parser": "^4.19.0",
@@ -64,7 +65,7 @@
   "scripts": {
     "build": "swc src -d dist && cp src/swagger.json dist/src && cp .env dist/",
     "start": "node dist/src/shared/infra/http/server.js",
-    "dev": "tsx --watch  src/shared/infra/http/server.ts",
+    "dev": "tsx src/shared/infra/http/server.ts",
     "typeorm": "tsx ./node_modules/typeorm/cli.js",
     "test": "jest",
     "seed:admin": "tsx src/shared/infra/typeorm/seed/admin.ts",
