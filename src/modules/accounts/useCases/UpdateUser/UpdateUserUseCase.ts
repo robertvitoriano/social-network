@@ -21,11 +21,12 @@ interface IRequest {
 class UpdateUserUseCase {
   constructor(
     @inject("UsersRepository")
-    private usersRepository: IUsersRepository
+    private usersRepository: IUsersRepository,
+    @inject("S3")
+    private s3: AWS.S3
   ) {}
 
   async execute({ user_id, updateData }: IRequest): Promise<User> {
-    const s3 = new AWS.S3();
     const { avatarFile, name, username, email } = updateData;
     const user = await this.usersRepository.findById(user_id);
 
@@ -49,7 +50,7 @@ class UpdateUserUseCase {
     const fileHash = crypto.randomBytes(16).toString("hex");
     const fileKey = `user-avatar/${fileHash}-${avatarFile.originalname}`;
 
-    const { Location } = await s3
+    const { Location } = await this.s3
       .upload({
         ACL: "public-read",
         ContentDisposition: "attachment",

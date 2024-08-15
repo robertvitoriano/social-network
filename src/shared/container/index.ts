@@ -7,6 +7,7 @@ import { FriendshipRepository } from "../../modules/friendships/infra/repositori
 import { IFriendshipsRepository } from "../../modules/friendships/repositories/IFriendshipsRepository";
 import { NotificationsRepository } from "../../modules/notifications/infra/repositories/NotificationsRepository";
 import { INotificationsRepository } from "../../modules/notifications/repositories/INotificationsRepository";
+import AWS from "aws-sdk";
 
 container.registerSingleton<IUsersRepository>(
   "UsersRepository",
@@ -21,4 +22,5 @@ container.registerSingleton<INotificationsRepository>(
   "NotificationRepository",
   NotificationsRepository
 );
+container.registerSingleton<AWS.S3>("S3", AWS.S3);
 container.registerSingleton<IChatRepository>("ChatRepository", ChatRepository);
