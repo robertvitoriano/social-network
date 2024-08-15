@@ -1,5 +1,6 @@
+const dotEnv = require('dotenv')
 const path = require('path');
-
+dotEnv.config()
 const isProduction = process.env.ENVIRONMENT === 'prod';
 
 const User = isProduction
