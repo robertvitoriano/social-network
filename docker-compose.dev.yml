@@ -12,16 +12,6 @@ services:
       - "3306:3306"  
     volumes:
       - db:/var/lib/mysql
-  app:
-    build: .
-    container_name: social_network
-    ports:
-      - "3334:3334"  
-    volumes:
-      - .:/usr/app
-    depends_on:
-      - mysqldb  
-
 volumes:
   db:
     driver: local  
