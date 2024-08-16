@@ -4,8 +4,8 @@ import axios from "axios";
 import { inject, injectable } from "tsyringe";
 import crypto from "crypto";
 import { webSocketServer } from "../../../../shared/infra/http/server";
-import { EventType } from "src/shared/enums/websocket-events";
-import { IFriendshipsRepository } from "src/modules/friendships/repositories/IFriendshipsRepository";
+import { EventType } from "../../../../shared/enums/websocket-events";
+import { IFriendshipsRepository } from "../../../friendships/repositories/IFriendshipsRepository";
 
 interface IResponse {
   user: {
