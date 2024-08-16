@@ -3,6 +3,9 @@ import { IUsersRepository } from "./../../repositories/IUsersRepository";
 import axios from "axios";
 import { inject, injectable } from "tsyringe";
 import crypto from "crypto";
+import { webSocketServer } from "../../../../shared/infra/http/server";
+import { EventType } from "src/shared/enums/websocket-events";
+import { IFriendshipsRepository } from "src/modules/friendships/repositories/IFriendshipsRepository";
 
 interface IResponse {
   user: {
@@ -18,7 +21,9 @@ interface IResponse {
 export class LoginOAuthUseCase {
   constructor(
     @inject("UsersRepository")
-    private usersRepository: IUsersRepository
+    private usersRepository: IUsersRepository,
+    @inject("FriendshipRepository")
+    private friendshipRepository: IFriendshipsRepository
   ) {}
 
   public async execute(oauthCode: string): Promise<IResponse> {
@@ -60,6 +65,13 @@ export class LoginOAuthUseCase {
       subject: user.id,
       expiresIn: "1d",
     });
+    await this.usersRepository.updateOnlineStatus(user.id, true);
+
+    const io = webSocketServer.getIO();
+
+    const friendIds = await this.friendshipRepository.getFriendIds(user.id);
+
+    io.to(friendIds).emit(EventType.FRIEND_LOGGED_IN, user.id);
 
     return {
       user: {
