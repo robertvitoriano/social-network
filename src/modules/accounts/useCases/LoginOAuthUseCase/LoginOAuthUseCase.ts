@@ -43,7 +43,7 @@ export class LoginOAuthUseCase {
         },
       }
     );
-    console.log(userInfoResponse);
+
     const { name, picture, email } = userInfoResponse.data;
     let user: any = await this.usersRepository.findByEmail(email);
 
