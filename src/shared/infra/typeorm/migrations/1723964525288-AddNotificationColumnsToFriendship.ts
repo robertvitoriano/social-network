@@ -5,10 +5,10 @@ import {
   TableForeignKey,
 } from "typeorm";
 
-export class AddNotificationColumnsToFriendship1723961667605
+export class AddNotificationColumnsToFriendship1723964525288
   implements MigrationInterface
 {
-  name = "AddNotificationColumnsToFriendship1723961667605";
+  name = "AddNotificationColumnsToFriendship1723964525288";
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.addColumn(
