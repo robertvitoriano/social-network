@@ -39,19 +39,20 @@ class SendChatMessageUseCase {
     const io = webSocketServer.getIO();
 
     const notificationCreated = await this.notificationsRepository.create({
-      notificationTypeId: NotificationTypes.MESSAGE_SENT,
+      notificationTypeId: NotificationTypes.MESSAGE_RECEIVED,
       receiverId,
       senderId,
     });
 
-    io.to(receiverId).emit(EventType.MESSAGE_SENT, {
+    io.to(receiverId).emit(EventType.MESSAGE_RECEIVED, {
       id: notificationCreated.id,
       senderAvatar: userAvatar,
       senderName: userName,
       senderId,
       createdAt: notificationCreated.created_at,
-      type: EventType.MESSAGE_SENT,
+      type: EventType.MESSAGE_RECEIVED,
       wasRead: false,
+      content,
     });
   }
 }
