@@ -3,4 +3,5 @@ export default interface ICreateFriendshipDTO {
   userId: string;
   userName?: string;
   userAvatar?: string;
+  requestNotificationId: string;
 }

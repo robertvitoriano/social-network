@@ -35,20 +35,26 @@ class SendFriendshipUseCase {
       );
     }
 
-    await this.friendshipRepository.create({ userId, friendId });
     const io = webSocketServer.getIO();
 
-    const notificationCreated = await this.notificationsRepository.create({
-      notificationTypeId: NotificationTypes.FRIENDSHIP_REQUEST,
-      receiverId: friendId,
-      senderId: userId,
+    const friendshipRequestNotificationCreated =
+      await this.notificationsRepository.create({
+        notificationTypeId: NotificationTypes.FRIENDSHIP_REQUEST,
+        receiverId: friendId,
+        senderId: userId,
+      });
+    await this.friendshipRepository.create({
+      userId,
+      friendId,
+      requestNotificationId: friendshipRequestNotificationCreated.id,
     });
+
     io.to(friendId).emit(EventType.FRIENDSHIP_REQUEST, {
-      id: notificationCreated.id,
+      id: friendshipRequestNotificationCreated.id,
       senderAvatar: userAvatar,
       senderName: userName,
       senderId: userId,
-      createdAt: notificationCreated.created_at,
+      createdAt: friendshipRequestNotificationCreated.created_at,
       type: EventType.FRIENDSHIP_REQUEST,
       friendshipRequestStatus: FriendshipStatus.PENDING,
       wasRead: false,

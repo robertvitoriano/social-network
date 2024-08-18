@@ -63,11 +63,16 @@ class FriendshipRepository implements IFriendshipsRepository {
     }
   }
 
-  async create({ friendId, userId }: ICreateFriendshipDTO): Promise<void> {
+  async create({
+    friendId,
+    userId,
+    requestNotificationId,
+  }: ICreateFriendshipDTO): Promise<void> {
     const friendship = this.repository.create({
       friend_id: friendId,
       user_id: userId,
       status: "pending",
+      request_notification_id: requestNotificationId,
     });
     await this.repository.save(friendship);
   }
