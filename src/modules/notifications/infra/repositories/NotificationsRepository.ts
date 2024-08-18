@@ -41,7 +41,7 @@ class NotificationsRepository implements INotificationsRepository {
       .leftJoin(
         "friendship",
         "friendship",
-        "notification.receiver_id = friendship.friend_id or notification.receiver_id = friendship.user_id"
+        "notification.id = friendship.request_notification_id OR notification.id = friendship.accepted_notification_id"
       )
       .where("receiver.id = :userId", { userId })
       .andWhere("sender.id != :userId", { userId })
