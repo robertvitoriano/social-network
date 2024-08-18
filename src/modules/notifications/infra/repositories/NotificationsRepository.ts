@@ -43,12 +43,18 @@ class NotificationsRepository implements INotificationsRepository {
         "friendship",
         "notification.id = friendship.request_notification_id OR notification.id = friendship.accepted_notification_id"
       )
+      .leftJoin(
+        "messages",
+        "messages",
+        "notification.id = messages.notification_id"
+      )
       .where("receiver.id = :userId", { userId })
       .andWhere("sender.id != :userId", { userId })
       .andWhere("notification.notificationType IN (:...notificationTypes)", {
         notificationTypes: [
           NotificationTypes.FRIENDSHIP_REQUEST,
           NotificationTypes.FRIENDSHIP_ACCEPTED,
+          NotificationTypes.MESSAGE_RECEIVED,
         ],
       })
       .select([
@@ -58,9 +64,10 @@ class NotificationsRepository implements INotificationsRepository {
         "notification.read as wasRead",
         "sender.id as senderId",
         "sender.name as senderName",
-        "notification.created_at",
+        "notification.created_at as createdAt",
         "sender.avatar as senderAvatar",
         "friendship.status as friendshipRequestStatus",
+        "messages.content as content",
       ])
       .getRawMany();
 

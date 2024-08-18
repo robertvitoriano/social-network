@@ -30,12 +30,6 @@ class SendChatMessageUseCase {
     userAvatar,
     userName,
   }: ISendChatMessageUseCaseParams): Promise<void> {
-    await this.chatRepository.createMessage({
-      receiverId,
-      senderId,
-      content,
-    });
-
     const io = webSocketServer.getIO();
 
     const notificationCreated = await this.notificationsRepository.create({
@@ -52,6 +46,13 @@ class SendChatMessageUseCase {
       createdAt: notificationCreated.created_at,
       type: EventType.MESSAGE_RECEIVED,
       wasRead: false,
+      content,
+    });
+
+    await this.chatRepository.createMessage({
+      notificationId: notificationCreated.id,
+      receiverId,
+      senderId,
       content,
     });
   }
