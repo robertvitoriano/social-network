@@ -6,7 +6,6 @@ import {
   JoinColumn,
   OneToOne,
 } from "typeorm";
-import { Notification } from "./../../../../notifications/infra/typeorm/entities/Notification";
 @Entity("friendship")
 export class Friendship {
   @PrimaryGeneratedColumn("uuid")
@@ -41,11 +40,17 @@ export class Friendship {
   @ManyToOne("User", "friends", { onDelete: "CASCADE" })
   @JoinColumn({ name: "friend_id" })
   friend!: any;
-  @OneToOne(() => Notification, { onDelete: "SET NULL", nullable: true })
+  @OneToOne("notifications", "friendship", {
+    onDelete: "SET NULL",
+    nullable: true,
+  })
   @JoinColumn({ name: "request_notification_id" })
-  requestNotification: Notification;
+  requestNotification: any;
 
-  @OneToOne(() => Notification, { onDelete: "SET NULL", nullable: true })
+  @OneToOne("notifications", "friendship", {
+    onDelete: "SET NULL",
+    nullable: true,
+  })
   @JoinColumn({ name: "accepted_notification_id" })
-  acceptedNotification: Notification;
+  acceptedNotification: any;
 }
