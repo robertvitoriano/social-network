@@ -33,6 +33,9 @@ export class Friendship {
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   created_at: Date;
 
+  @Column({ type: "boolean", default: false })
+  chatting: boolean;
+
   @ManyToOne("User", "friendships", { onDelete: "CASCADE" })
   @JoinColumn({ name: "user_id" })
   user!: any;
