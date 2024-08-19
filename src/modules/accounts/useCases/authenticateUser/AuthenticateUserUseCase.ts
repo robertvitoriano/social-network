@@ -4,8 +4,8 @@ import { compare } from "bcrypt";
 import { sign } from "jsonwebtoken";
 import { IUsersRepository } from "../../repositories/IUsersRepository";
 import { EventType } from "../../../../shared/enums/websocket-events";
-import { webSocketServer } from "../../../../shared/infra/http/server";
 import { IFriendshipsRepository } from "../../../friendships/repositories/IFriendshipsRepository";
+import { WebSocketServer } from "./../../../../shared/infra/ws/WebSocketServer";
 
 interface IRequest {
   email: string;
@@ -43,6 +43,7 @@ export class AuthenticateUserUseCase {
     }
 
     await this.usersRepository.updateOnlineStatus(user.id, true);
+    const webSocketServer = WebSocketServer.getInstance();
     const io = webSocketServer.getIO();
 
     const token = sign({ name: user.name, email: user.email }, "secret", {

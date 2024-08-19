@@ -1,10 +1,8 @@
-import { AppError } from "../../../../shared/errors/AppError";
 import { inject, injectable } from "tsyringe";
-import { compare } from "bcrypt";
-import { sign } from "jsonwebtoken";
+
 import { IUsersRepository } from "../../repositories/IUsersRepository";
 import { IFriendshipsRepository } from "../../../friendships/repositories/IFriendshipsRepository";
-import { webSocketServer } from "../../../../shared/infra/http/server";
+import { WebSocketServer } from "./../../../../shared/infra/ws/WebSocketServer";
 import { EventType } from "../../../../shared/enums/websocket-events";
 
 interface IRequest {
@@ -32,7 +30,7 @@ export class LogoutUserUseCase {
   ) {}
   async execute(userId: string): Promise<void> {
     await this.usersRepository.updateOnlineStatus(userId, false);
-
+    const webSocketServer = WebSocketServer.getInstance();
     const io = webSocketServer.getIO();
 
     const friendIds = await this.friendshipRepository.getFriendIds(userId);

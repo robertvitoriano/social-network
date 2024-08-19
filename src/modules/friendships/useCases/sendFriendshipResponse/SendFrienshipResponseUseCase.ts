@@ -5,7 +5,7 @@ import { IUsersRepository } from "../../../accounts/repositories/IUsersRepositor
 import { INotificationsRepository } from "../../../notifications/repositories/INotificationsRepository";
 import { IFriendshipUpdateDTO } from "../../dtos/IFriendshipUpdateDTO";
 import { FriendshipStatus } from "../../../../shared/enums/friendship-status";
-import { webSocketServer } from "../../../../shared/infra/http/server";
+import { WebSocketServer } from "./../../../../shared/infra/ws/WebSocketServer";
 import { NotificationTypes } from "../../../../shared/enums/notification-types";
 import { EventType } from "../../../../shared/enums/websocket-events";
 import { ClientErrorHttpStatusCode } from "../../../../shared/enums/http-status-codes";
@@ -37,6 +37,7 @@ class SendFriendshipResponseUseCase {
 
       if (status === FriendshipStatus.ACCEPTED) {
         console.log("FRIENDSHIP REQUEST ACCEPTED");
+        const webSocketServer = WebSocketServer.getInstance();
         const io = webSocketServer.getIO();
         const notificationCreated = await this.notificationsRepository.create({
           notificationTypeId: NotificationTypes.FRIENDSHIP_ACCEPTED,

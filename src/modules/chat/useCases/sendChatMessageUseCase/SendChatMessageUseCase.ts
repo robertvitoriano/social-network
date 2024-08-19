@@ -2,7 +2,7 @@ import { inject, injectable } from "tsyringe";
 import { IChatRepository } from "../../repositories/IChatRepository";
 import { NotificationTypes } from "../../../../shared/enums/notification-types";
 import { EventType } from "../../../../shared/enums/websocket-events";
-import { webSocketServer } from "../../../../shared/infra/http/server";
+import { WebSocketServer } from "./../../../../shared/infra/ws/WebSocketServer";
 import { INotificationsRepository } from "../../../notifications/repositories/INotificationsRepository";
 import { IUsersRepository } from "src/modules/accounts/repositories/IUsersRepository";
 
@@ -32,6 +32,7 @@ class SendChatMessageUseCase {
     userAvatar,
     userName,
   }: ISendChatMessageUseCaseParams): Promise<void> {
+    const webSocketServer = WebSocketServer.getInstance();
     const io = webSocketServer.getIO();
     let notification = null;
     const isUserOnline = await this.usersRepository.isUserOnline(receiverId);

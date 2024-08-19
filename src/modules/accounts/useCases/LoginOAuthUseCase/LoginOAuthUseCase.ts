@@ -3,7 +3,7 @@ import { IUsersRepository } from "./../../repositories/IUsersRepository";
 import axios from "axios";
 import { inject, injectable } from "tsyringe";
 import crypto from "crypto";
-import { webSocketServer } from "../../../../shared/infra/http/server";
+import { WebSocketServer } from "./../../../../shared/infra/ws/WebSocketServer";
 import { EventType } from "../../../../shared/enums/websocket-events";
 import { IFriendshipsRepository } from "../../../friendships/repositories/IFriendshipsRepository";
 
@@ -66,7 +66,7 @@ export class LoginOAuthUseCase {
       expiresIn: "1d",
     });
     await this.usersRepository.updateOnlineStatus(user.id, true);
-
+    const webSocketServer = WebSocketServer.getInstance();
     const io = webSocketServer.getIO();
 
     const friendIds = await this.friendshipRepository.getFriendIds(user.id);

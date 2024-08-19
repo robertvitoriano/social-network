@@ -2,21 +2,30 @@ import { Socket, Server as SocketIOServer } from "socket.io";
 import { Server as HttpServer } from "http";
 import { EventType } from "../../enums/websocket-events";
 
-class WebSocketServer {
+export class WebSocketServer {
+  private static instance: WebSocketServer;
   private io: SocketIOServer;
   private chatState: Map<string, boolean>;
 
-  constructor(server: HttpServer) {
+  private constructor() {
+    this.chatState = new Map();
+  }
+
+  public static getInstance(): WebSocketServer {
+    if (!WebSocketServer.instance) {
+      WebSocketServer.instance = new WebSocketServer();
+    }
+    return WebSocketServer.instance;
+  }
+
+  public init(server: HttpServer): void {
     this.io = new SocketIOServer(server, {
       cors: {
         origin: "*",
         methods: ["GET", "POST", "DELETE", "PATCH"],
       },
     });
-    this.chatState = new Map();
-  }
 
-  public init(): void {
     this.io.on("connection", (socket: Socket) => {
       console.log("User connected: ", socket.id);
 
@@ -56,9 +65,8 @@ class WebSocketServer {
   public getChatState(): Map<string, boolean> {
     return this.chatState;
   }
+
   public getIO(): SocketIOServer {
     return this.io;
   }
 }
-
-export { WebSocketServer };

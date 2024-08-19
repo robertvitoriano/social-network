@@ -7,12 +7,10 @@ const dbConnection = new DatabaseConnection();
 let webSocketServer;
 dbConnection.connect().then(() => {
   const httpServer = http.createServer(app);
-  webSocketServer = new WebSocketServer(httpServer);
-  webSocketServer.init();
+  const webSocketServer = WebSocketServer.getInstance();
+  webSocketServer.init(httpServer);
 
   httpServer.listen(3334, () => {
     console.info("My app is running");
   });
 });
-
-export { webSocketServer };

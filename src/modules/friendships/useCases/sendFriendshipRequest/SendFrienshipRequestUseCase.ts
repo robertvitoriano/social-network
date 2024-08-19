@@ -7,7 +7,7 @@ import { ClientErrorHttpStatusCode } from "../../../../shared/enums/http-status-
 import { NotificationTypes } from "../../../../shared/enums/notification-types";
 import { EventType } from "../../../../shared/enums/websocket-events";
 import { AppError } from "../../../../shared/errors/AppError";
-import { webSocketServer } from "../../../../shared/infra/http/server";
+import { WebSocketServer } from "./../../../../shared/infra/ws/WebSocketServer";
 import { INotificationsRepository } from "../../../notifications/repositories/INotificationsRepository";
 
 @injectable()
@@ -34,7 +34,7 @@ class SendFriendshipUseCase {
         ClientErrorHttpStatusCode.BAD_REQUEST
       );
     }
-
+    const webSocketServer = WebSocketServer.getInstance();
     const io = webSocketServer.getIO();
 
     const friendshipRequestNotificationCreated =
