@@ -12,6 +12,7 @@ interface IUsersRepository {
   findByEmail(email: string): Promise<User>;
   findById(id: string): Promise<User | undefined>;
   updateOnlineStatus(userId: string, online: boolean): Promise<void>;
+  isUserOnline(userId: string): Promise<boolean>;
 }
 
 export { IUsersRepository };

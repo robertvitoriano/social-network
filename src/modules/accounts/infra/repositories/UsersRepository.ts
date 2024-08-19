@@ -69,6 +69,13 @@ class UserRepository implements IUsersRepository {
     const userCreated = await this.repository.save(user);
     return userCreated;
   }
+  async isUserOnline(userId: string): Promise<boolean> {
+    const user = await this.repository.findOne({
+      where: { id: userId },
+      select: ["online"],
+    });
+    return !!user?.online;
+  }
 }
 
 export { UserRepository };
