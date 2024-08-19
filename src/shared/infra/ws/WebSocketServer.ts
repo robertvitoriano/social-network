@@ -4,6 +4,7 @@ import { EventType } from "../../enums/websocket-events";
 
 class WebSocketServer {
   private io: SocketIOServer;
+  private chatState: Map<string, boolean>;
 
   constructor(server: HttpServer) {
     this.io = new SocketIOServer(server, {
@@ -12,6 +13,7 @@ class WebSocketServer {
         methods: ["GET", "POST", "DELETE", "PATCH"],
       },
     });
+    this.chatState = new Map();
   }
 
   public init(): void {
@@ -23,27 +25,37 @@ class WebSocketServer {
         console.log(`User ${userId} joined room ${userId}`);
       });
 
+      socket.on(EventType.CHAT_OPEN, ({ userId, friendId }) => {
+        if (!this.chatState.get(`${userId}_${friendId}`)) {
+          this.chatState.set(`${userId}_${friendId}`, true);
+        }
+      });
+
+      socket.on(EventType.CHAT_CLOSE, ({ userId, friendId }) => {
+        this.chatState.set(`${userId}_${friendId}`, false);
+      });
+
       socket.on("disconnect", () => {
         console.log("User disconnected: ", socket.id);
       });
+
       socket.on(EventType.USER_TYPING, (receiverId: string) => {
         if (this.io.sockets.adapter.rooms.has(receiverId)) {
           socket.to(receiverId).emit(EventType.USER_TYPING);
         }
       });
+
       socket.on(EventType.USER_TYPING_STOPPED, (receiverId: string) => {
         if (this.io.sockets.adapter.rooms.has(receiverId)) {
           socket.to(receiverId).emit(EventType.USER_TYPING_STOPPED);
         }
       });
-      socket.on(EventType.MESSAGE_SENT, ({ receiverId, ...newMessage }) => {
-        if (this.io.sockets.adapter.rooms.has(receiverId)) {
-          socket.to(receiverId).emit(EventType.MESSAGE_RECEIVED, newMessage);
-        }
-      });
     });
   }
 
+  public getChatState(): Map<string, boolean> {
+    return this.chatState;
+  }
   public getIO(): SocketIOServer {
     return this.io;
   }

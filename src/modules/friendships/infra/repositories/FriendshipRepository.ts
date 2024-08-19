@@ -257,25 +257,6 @@ class FriendshipRepository implements IFriendshipsRepository {
       ...nonFriendsWithFriendshipRequestStatus,
     ];
   }
-  async setChattingStatus({
-    userId,
-    friendId,
-    isChatting,
-  }: {
-    userId: string;
-    friendId: string;
-    isChatting: boolean;
-  }): Promise<void> {
-    await this.repository
-      .createQueryBuilder()
-      .update(Friendship)
-      .set({ chatting: isChatting })
-      .where(
-        "(user_id = :userId AND friend_id = :friendId) OR (user_id = :friendId AND friend_id = :userId)",
-        { userId, friendId }
-      )
-      .execute();
-  }
 }
 
 export { FriendshipRepository };
