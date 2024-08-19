@@ -4,7 +4,7 @@ import { NotificationTypes } from "../../../../shared/enums/notification-types";
 import { EventType } from "../../../../shared/enums/websocket-events";
 import { WebSocketServer } from "./../../../../shared/infra/ws/WebSocketServer";
 import { INotificationsRepository } from "../../../notifications/repositories/INotificationsRepository";
-import { IUsersRepository } from "src/modules/accounts/repositories/IUsersRepository";
+import { IUsersRepository } from "../../../accounts/repositories/IUsersRepository";
 
 type ISendChatMessageUseCaseParams = {
   receiverId: string;
