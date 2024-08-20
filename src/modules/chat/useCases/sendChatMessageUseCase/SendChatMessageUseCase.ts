@@ -35,13 +35,25 @@ class SendChatMessageUseCase {
     const webSocketServer = WebSocketServer.getInstance();
     const io = webSocketServer.getIO();
     let notification = null;
-    const isUserOnline = await this.usersRepository.isUserOnline(receiverId);
-
-    if (!isUserOnline) {
+    const friendChatIsOpen = webSocketServer.isFriendChatOpen({
+      userId: senderId,
+      friendId: receiverId,
+    });
+    if (!friendChatIsOpen) {
       notification = await this.notificationsRepository.create({
         notificationTypeId: NotificationTypes.MESSAGE_RECEIVED,
         receiverId,
         senderId,
+      });
+      io.to(receiverId).emit(EventType.MESSAGE_RECEIVED_NOTIFICATION, {
+        id: notification?.id,
+        senderAvatar: userAvatar,
+        senderName: userName,
+        senderId,
+        createdAt: notification?.created_at,
+        type: EventType.MESSAGE_RECEIVED,
+        wasRead: false,
+        content,
       });
     }
 

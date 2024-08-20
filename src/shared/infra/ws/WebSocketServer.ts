@@ -9,6 +9,10 @@ export class WebSocketServer {
 
   private constructor() {
     this.chatState = new Map();
+
+    setInterval(() => {
+      this.resetChatState();
+    }, 5 * 60 * 1000);
   }
 
   public static getInstance(): WebSocketServer {
@@ -27,11 +31,11 @@ export class WebSocketServer {
     });
 
     this.io.on("connection", (socket: Socket) => {
-      console.log("User connected: ", socket.id);
+      console.info("User connected: ", socket.id);
 
       socket.on(EventType.USER_JOIN_ROOM, (userId) => {
         socket.join(userId);
-        console.log(`User ${userId} joined room ${userId}`);
+        console.info(`User ${userId} joined room ${userId}`);
       });
 
       socket.on(EventType.CHAT_OPEN, ({ userId, friendId }) => {
@@ -42,7 +46,7 @@ export class WebSocketServer {
         const userChatState = this.chatState.get(userId);
         if (userChatState) {
           userChatState.set(friendId, true);
-          console.log(`User ${userId} opened chat with ${friendId}`);
+          console.info(`User ${userId} opened chat with ${friendId}`);
         }
       });
 
@@ -50,12 +54,12 @@ export class WebSocketServer {
         const userChatState = this.chatState.get(userId);
         if (userChatState) {
           userChatState.set(friendId, false);
-          console.log(`User ${userId} closed chat with ${friendId}`);
+          console.info(`User ${userId} closed chat with ${friendId}`);
         }
       });
 
       socket.on("disconnect", () => {
-        console.log("User disconnected: ", socket.id);
+        console.info("User disconnected: ", socket.id);
       });
 
       socket.on(EventType.USER_TYPING, (receiverId: string) => {
@@ -72,8 +76,25 @@ export class WebSocketServer {
     });
   }
 
+  private resetChatState(): void {
+    console.info("Resetting chat states...");
+    this.chatState.forEach((friendChatState) => {
+      friendChatState.forEach((_, friendId) => {
+        friendChatState.set(friendId, false);
+      });
+    });
+  }
+
   public getChatState(): Map<string, Map<string, boolean>> {
     return this.chatState;
+  }
+
+  public isFriendChatOpen({ userId, friendId }): boolean {
+    const userChatState = this.chatState.get(userId);
+    if (userChatState) {
+      return userChatState.get(friendId);
+    }
+    return false;
   }
 
   public getIO(): SocketIOServer {
