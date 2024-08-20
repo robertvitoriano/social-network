@@ -6,13 +6,14 @@ export class WebSocketServer {
   private static instance: WebSocketServer;
   private io: SocketIOServer;
   private chatState: Map<string, Map<string, boolean>>;
+  private timeToResetChatState = 5 * 60 * 1000;
 
   private constructor() {
     this.chatState = new Map();
 
     setInterval(() => {
       this.resetChatState();
-    }, 5 * 60 * 1000);
+    }, this.timeToResetChatState);
   }
 
   public static getInstance(): WebSocketServer {
@@ -45,8 +46,10 @@ export class WebSocketServer {
 
         const userChatState = this.chatState.get(userId);
         if (userChatState) {
-          userChatState.set(friendId, true);
-          console.info(`User ${userId} opened chat with ${friendId}`);
+          if (!userChatState.get(friendId)) {
+            userChatState.set(friendId, true);
+            console.info(`User ${userId} opened chat with ${friendId}`);
+          }
         }
       });
 

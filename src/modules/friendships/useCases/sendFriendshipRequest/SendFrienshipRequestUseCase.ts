@@ -55,7 +55,7 @@ class SendFriendshipUseCase {
       senderName: userName,
       senderId: userId,
       createdAt: friendshipRequestNotificationCreated.created_at,
-      type: EventType.FRIENDSHIP_REQUEST,
+      typeId: NotificationTypes.FRIENDSHIP_REQUEST,
       friendshipRequestStatus: FriendshipStatus.PENDING,
       wasRead: false,
     });

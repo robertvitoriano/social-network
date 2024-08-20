@@ -36,9 +36,10 @@ class SendChatMessageUseCase {
     const io = webSocketServer.getIO();
     let notification = null;
     const friendChatIsOpen = webSocketServer.isFriendChatOpen({
-      userId: senderId,
-      friendId: receiverId,
+      userId: receiverId,
+      friendId: senderId,
     });
+    console.log({ friendChatIsOpen });
     if (!friendChatIsOpen) {
       notification = await this.notificationsRepository.create({
         notificationTypeId: NotificationTypes.MESSAGE_RECEIVED,
@@ -51,7 +52,7 @@ class SendChatMessageUseCase {
         senderName: userName,
         senderId,
         createdAt: notification?.created_at,
-        type: EventType.MESSAGE_RECEIVED,
+        typeId: NotificationTypes.MESSAGE_RECEIVED,
         wasRead: false,
         content,
       });
@@ -63,7 +64,7 @@ class SendChatMessageUseCase {
       senderName: userName,
       senderId,
       createdAt: notification?.created_at,
-      type: EventType.MESSAGE_RECEIVED,
+      eventType: EventType.MESSAGE_RECEIVED,
       wasRead: false,
       content,
     });

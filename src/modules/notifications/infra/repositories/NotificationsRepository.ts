@@ -60,7 +60,7 @@ class NotificationsRepository implements INotificationsRepository {
       .select([
         "notification.id as id",
         "receiver.name as receiverName",
-        "notificationType.type as type",
+        "notificationType.type as typeId",
         "notification.read as wasRead",
         "sender.id as senderId",
         "sender.name as senderName",

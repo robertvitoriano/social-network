@@ -34,7 +34,7 @@ const ormConfig = {
     ? ['./dist/src/shared/infra/typeorm/migrations/*.{js}']
     : ['./src/shared/infra/typeorm/migrations/*.{ts,js}'],
   entities: [User, Friendship, NotificationType, Notification, Message],
-  logging: !isProduction,
+  logging: false,
   cli: {
     migrationsDir: './src/shared/infra/typeorm/migrations'
   }
