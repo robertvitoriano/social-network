@@ -5,7 +5,7 @@ import { EventType } from "../../enums/websocket-events";
 export class WebSocketServer {
   private static instance: WebSocketServer;
   private io: SocketIOServer;
-  private chatState: Map<string, boolean>;
+  private chatState: Map<string, Map<string, boolean>>;
 
   private constructor() {
     this.chatState = new Map();
@@ -35,13 +35,23 @@ export class WebSocketServer {
       });
 
       socket.on(EventType.CHAT_OPEN, ({ userId, friendId }) => {
-        if (!this.chatState.get(`${userId}_${friendId}`)) {
-          this.chatState.set(`${userId}_${friendId}`, true);
+        if (!this.chatState.has(userId)) {
+          this.chatState.set(userId, new Map<string, boolean>());
+        }
+
+        const userChatState = this.chatState.get(userId);
+        if (userChatState) {
+          userChatState.set(friendId, true);
+          console.log(`User ${userId} opened chat with ${friendId}`);
         }
       });
 
       socket.on(EventType.CHAT_CLOSE, ({ userId, friendId }) => {
-        this.chatState.set(`${userId}_${friendId}`, false);
+        const userChatState = this.chatState.get(userId);
+        if (userChatState) {
+          userChatState.set(friendId, false);
+          console.log(`User ${userId} closed chat with ${friendId}`);
+        }
       });
 
       socket.on("disconnect", () => {
@@ -62,7 +72,7 @@ export class WebSocketServer {
     });
   }
 
-  public getChatState(): Map<string, boolean> {
+  public getChatState(): Map<string, Map<string, boolean>> {
     return this.chatState;
   }
 
