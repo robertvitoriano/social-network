@@ -19,8 +19,6 @@ class SendChatMessageUseCase {
   constructor(
     @inject("ChatRepository")
     private chatRepository: IChatRepository,
-    @inject("UsersRepository")
-    private usersRepository: IUsersRepository,
     @inject("NotificationRepository")
     private notificationsRepository: INotificationsRepository
   ) {}
@@ -39,13 +37,13 @@ class SendChatMessageUseCase {
       userId: receiverId,
       friendId: senderId,
     });
-    console.log({ friendChatIsOpen });
     if (!friendChatIsOpen) {
       notification = await this.notificationsRepository.create({
         notificationTypeId: NotificationTypes.MESSAGE_RECEIVED,
         receiverId,
         senderId,
       });
+
       io.to(receiverId).emit(EventType.MESSAGE_RECEIVED_NOTIFICATION, {
         id: notification?.id,
         senderAvatar: userAvatar,
@@ -63,7 +61,7 @@ class SendChatMessageUseCase {
       senderAvatar: userAvatar,
       senderName: userName,
       senderId,
-      createdAt: notification?.created_at,
+      createdAt: notification?.created_at || new Date().toISOString(),
       eventType: EventType.MESSAGE_RECEIVED,
       wasRead: false,
       content,
