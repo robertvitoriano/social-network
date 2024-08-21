@@ -3,8 +3,8 @@ import { Server as HttpServer } from "http";
 import { EventType } from "../../enums/websocket-events";
 import { UserRepository } from "../../../modules/accounts/infra/repositories/UsersRepository";
 import { container } from "tsyringe";
-import { LogoutUserUseCase } from "src/modules/accounts/useCases/logoutUser/LogOutUserUseCase";
-import { FriendshipRepository } from "src/modules/friendships/infra/repositories/FriendshipRepository";
+import { LogoutUserUseCase } from "../../../modules/accounts/useCases/logoutUser/LogOutUserUseCase";
+import { FriendshipRepository } from "../../../modules/friendships/infra/repositories/FriendshipRepository";
 export class WebSocketServer {
   private static instance: WebSocketServer;
   private io: SocketIOServer;
