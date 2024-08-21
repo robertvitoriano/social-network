@@ -1,7 +1,10 @@
 import { Socket, Server as SocketIOServer } from "socket.io";
 import { Server as HttpServer } from "http";
 import { EventType } from "../../enums/websocket-events";
-
+import { UserRepository } from "../../../modules/accounts/infra/repositories/UsersRepository";
+import { container } from "tsyringe";
+import { LogoutUserUseCase } from "src/modules/accounts/useCases/logoutUser/LogOutUserUseCase";
+import { FriendshipRepository } from "src/modules/friendships/infra/repositories/FriendshipRepository";
 export class WebSocketServer {
   private static instance: WebSocketServer;
   private io: SocketIOServer;
@@ -75,6 +78,18 @@ export class WebSocketServer {
         if (this.io.sockets.adapter.rooms.has(receiverId)) {
           socket.to(receiverId).emit(EventType.USER_TYPING_STOPPED);
         }
+      });
+      socket.on(EventType.USER_ONLINE, async ({ userId }) => {
+        const userRepository = new UserRepository();
+        const friendshipRepository = new FriendshipRepository();
+        const friendIds = await friendshipRepository.getFriendIds(userId);
+        socket.to(friendIds).emit(EventType.FRIEND_LOGGED_IN, userId);
+
+        await userRepository.updateOnlineStatus(userId, true);
+      });
+      socket.on(EventType.USER_OFFLINE, async ({ userId }) => {
+        const logoutUserUseCase = container.resolve(LogoutUserUseCase);
+        await logoutUserUseCase.execute(userId);
       });
     });
   }
