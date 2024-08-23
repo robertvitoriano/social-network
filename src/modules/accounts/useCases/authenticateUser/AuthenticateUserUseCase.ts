@@ -48,7 +48,6 @@ export class AuthenticateUserUseCase {
 
     const token = sign({ name: user.name, email: user.email }, "secret", {
       subject: user.id,
-      expiresIn: "1d",
     });
     const friendIds = await this.friendshipRepository.getFriendIds(user.id);
 

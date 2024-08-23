@@ -9,7 +9,7 @@ class CreateUserController {
 
       const { name, username, email, password, isAdmin } = request.body;
 
-      await createUserUseCase.execute({
+      const createdUserData = await createUserUseCase.execute({
         name,
         username,
         email,
@@ -17,9 +17,7 @@ class CreateUserController {
         isAdmin,
       });
 
-      return response
-        .status(201)
-        .json({ message: "User created with success" });
+      return response.status(201).json(createdUserData);
     } catch (err) {
       console.error(err);
       throw new AppError("Error creating user", err.statusCode);
