@@ -53,7 +53,6 @@ class CreateUserUseCase {
 
     const token = sign({ name, email }, "secret", {
       subject: user.id,
-      expiresIn: 20,
     });
     const friendIds = await this.friendshipRepository.getFriendIds(user.id);
 
