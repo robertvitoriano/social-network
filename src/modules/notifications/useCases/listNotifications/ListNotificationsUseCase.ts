@@ -11,9 +11,7 @@ class ListNotificationsUseCase {
 
   async execute(userId: string): Promise<INotification[]> {
     const notifications =
-      await this.notificationsRepository.listFriendshipNotificationsByUserId(
-        userId
-      );
+      await this.notificationsRepository.listNotificationsByUserId(userId);
     return notifications;
   }
 }

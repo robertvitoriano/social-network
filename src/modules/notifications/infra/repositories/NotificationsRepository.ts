@@ -30,9 +30,7 @@ class NotificationsRepository implements INotificationsRepository {
     );
   }
 
-  async listFriendshipNotificationsByUserId(
-    userId: string
-  ): Promise<INotification[]> {
+  async listNotificationsByUserId(userId: string): Promise<INotification[]> {
     const userNotifications = await this.repository
       .createQueryBuilder("notification")
       .innerJoinAndSelect("notification.receiver", "receiver")
@@ -57,6 +55,12 @@ class NotificationsRepository implements INotificationsRepository {
           NotificationTypes.MESSAGE_RECEIVED,
         ],
       })
+      .andWhere(
+        `(
+          (notification.notificationType = ${NotificationTypes.MESSAGE_RECEIVED} AND notification.read = false) 
+          OR notification.notificationType != ${NotificationTypes.MESSAGE_RECEIVED}
+        )`
+      )
       .select([
         "notification.id as id",
         "receiver.name as receiverName",
