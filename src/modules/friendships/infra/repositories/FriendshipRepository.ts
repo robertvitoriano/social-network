@@ -108,11 +108,6 @@ class FriendshipRepository implements IFriendshipsRepository {
             .addSelect("messages.created_at", "created_at")
             .addSelect("messages.friendship_id", "lastMessageFriendshipId")
             .from("messages", "messages")
-            .where(
-              `(messages.sender_id = :userId ) 
-              OR (messages.receiver_id = :userId)`,
-              { userId }
-            )
             .orderBy("messages.created_at", "DESC")
             .limit(1),
         "last_message",
