@@ -106,6 +106,7 @@ class FriendshipRepository implements IFriendshipsRepository {
             .addSelect("messages.receiver_id", "receiver_id")
             .addSelect("messages.content", "content")
             .addSelect("messages.created_at", "created_at")
+            .addSelect("messages.friendship_id", "lastMessageFriendshipId")
             .from("messages", "messages")
             .where(
               `(messages.sender_id = :userId ) 
@@ -115,8 +116,7 @@ class FriendshipRepository implements IFriendshipsRepository {
             .orderBy("messages.created_at", "DESC")
             .limit(1),
         "last_message",
-        `(last_message.receiver_id = friendship.friend_id AND last_message.sender_id = friendship.user_id) OR 
-         (last_message.receiver_id = friendship.user_id AND last_message.sender_id = friendship.friend_id)`
+        `lastMessageFriendshipId = friendship.id`
       )
       .where(
         "friendship.user_id = :userId AND friendship.status = 'accepted'",
