@@ -10,7 +10,7 @@ class SendChatMessageController {
         SendChatMessageUseCase
       );
 
-      const { receiverId, content } = request.body;
+      const { receiverId, content, friendshipId } = request.body;
       const { id, name, avatar } = request.user;
       await sendChatMessageUseCase.execute({
         receiverId,
@@ -18,6 +18,7 @@ class SendChatMessageController {
         userName: name,
         userAvatar: avatar,
         content,
+        friendshipId,
       });
 
       return response

@@ -4,7 +4,7 @@ import { NotificationTypes } from "../../../../shared/enums/notification-types";
 import { EventType } from "../../../../shared/enums/websocket-events";
 import { WebSocketServer } from "./../../../../shared/infra/ws/WebSocketServer";
 import { INotificationsRepository } from "../../../notifications/repositories/INotificationsRepository";
-import { IUsersRepository } from "../../../accounts/repositories/IUsersRepository";
+import { IFriendshipsRepository } from "../../../friendships/repositories/IFriendshipsRepository";
 
 type ISendChatMessageUseCaseParams = {
   receiverId: string;
@@ -12,6 +12,7 @@ type ISendChatMessageUseCaseParams = {
   content: string;
   userAvatar: string;
   userName: string;
+  friendshipId: string;
 };
 
 @injectable()
@@ -29,6 +30,7 @@ class SendChatMessageUseCase {
     content,
     userAvatar,
     userName,
+    friendshipId,
   }: ISendChatMessageUseCaseParams): Promise<void> {
     const webSocketServer = WebSocketServer.getInstance();
     const io = webSocketServer.getIO();
@@ -72,6 +74,7 @@ class SendChatMessageUseCase {
       receiverId,
       senderId,
       content,
+      friendshipId,
     });
   }
 }

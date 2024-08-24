@@ -99,19 +99,21 @@ class FriendshipRepository implements IFriendshipsRepository {
       .leftJoinAndSelect("friendship.user", "user")
       .leftJoinAndSelect("friendship.friend", "friend")
       .leftJoin(
-        (subQuery) =>
-          subQuery
-            .select("messages.id", "id")
-            .addSelect("messages.sender_id", "sender_id")
-            .addSelect("messages.receiver_id", "receiver_id")
-            .addSelect("messages.content", "content")
-            .addSelect("messages.created_at", "created_at")
-            .addSelect("messages.friendship_id", "lastMessageFriendshipId")
-            .from("messages", "messages")
-            .orderBy("messages.created_at", "DESC")
-            .limit(1),
-        "last_message",
-        `lastMessageFriendshipId = friendship.id`
+        (qb) =>
+          qb
+            .select("m.content", "lastMessageContent")
+            .addSelect("m.created_at", "lastMessageCreatedAt")
+            .addSelect("m.friendship_id", "lastMessageFriendshipId")
+            .from("messages", "m")
+            .where(
+              `m.created_at = (
+                  SELECT MAX(m2.created_at)
+                  FROM messages m2
+                  WHERE m2.friendship_id = m.friendship_id
+                )`
+            ),
+        "message",
+        "message.lastMessageFriendshipId = friendship.id"
       )
       .where(
         "friendship.user_id = :userId AND friendship.status = 'accepted'",
@@ -122,6 +124,7 @@ class FriendshipRepository implements IFriendshipsRepository {
         { userId }
       )
       .select([
+        "friendship.id AS friendshipId",
         "user.id AS userId",
         "user.online AS userOnline",
         "user.name AS userName",
@@ -136,8 +139,8 @@ class FriendshipRepository implements IFriendshipsRepository {
         "friend.avatar AS friendAvatar",
         "friend.username AS friendUsername",
         "friend.created_at AS friendCreatedAt",
-        "last_message.content AS lastMessageContent",
-        "last_message.created_at AS lastMessageCreatedAt",
+        "message.lastMessageContent AS lastMessageContent",
+        "message.lastMessageCreatedAt AS lastMessageCreatedAt",
       ])
       .getRawMany();
 
@@ -145,6 +148,7 @@ class FriendshipRepository implements IFriendshipsRepository {
       const isUser = rawFriend.userId === userId;
 
       return {
+        friendshipId: rawFriend.friendshipId,
         id: isUser ? rawFriend.friendId : rawFriend.userId,
         online: isUser ? rawFriend.friendOnline : rawFriend.userOnline,
         name: isUser ? rawFriend.friendName : rawFriend.userName,

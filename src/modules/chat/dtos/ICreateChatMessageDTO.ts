@@ -3,4 +3,5 @@ export default interface ICreateChatMessageDTO {
   receiverId: string;
   content: string;
   notificationId: string;
+  friendshipId: string;
 }

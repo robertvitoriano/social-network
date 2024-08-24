@@ -58,12 +58,14 @@ class ChatRepository implements IChatRepository {
     receiverId,
     senderId,
     notificationId,
+    friendshipId,
   }: ICreateChatMessageDTO): Promise<void> {
     const sendership = this.repository.create({
       sender_id: senderId,
       receiver_id: receiverId,
       notification_id: notificationId,
       content,
+      friendship_id: friendshipId,
     });
     await this.repository.save(sendership);
   }
