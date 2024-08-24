@@ -108,7 +108,8 @@ class FriendshipRepository implements IFriendshipsRepository {
             .addSelect("messages.created_at", "created_at")
             .from("messages", "messages")
             .where(
-              `messages.sender_id = :userId OR messages.receiver_id = :userId`,
+              `(messages.sender_id = :userId ) 
+              OR (messages.receiver_id = :userId)`,
               { userId }
             )
             .orderBy("messages.created_at", "DESC")
@@ -127,14 +128,14 @@ class FriendshipRepository implements IFriendshipsRepository {
       )
       .select([
         "user.id AS userId",
-        "user.online AS online",
+        "user.online AS userOnline",
         "user.name AS userName",
         "user.email AS userEmail",
         "user.avatar AS userAvatar",
         "user.username AS userUsername",
         "user.created_at AS userCreatedAt",
-        "friend.online AS online",
         "friend.id AS friendId",
+        "friend.online AS friendOnline",
         "friend.name AS friendName",
         "friend.email AS friendEmail",
         "friend.avatar AS friendAvatar",
@@ -150,7 +151,7 @@ class FriendshipRepository implements IFriendshipsRepository {
 
       return {
         id: isUser ? rawFriend.friendId : rawFriend.userId,
-        online: isUser ? rawFriend.online : rawFriend.online,
+        online: isUser ? rawFriend.friendOnline : rawFriend.userOnline,
         name: isUser ? rawFriend.friendName : rawFriend.userName,
         email: isUser ? rawFriend.friendEmail : rawFriend.userEmail,
         username: isUser ? rawFriend.friendUsername : rawFriend.userUsername,
@@ -163,6 +164,7 @@ class FriendshipRepository implements IFriendshipsRepository {
 
     return friends;
   }
+
   async getFriendIds(userId: string): Promise<string[]> {
     const friendships = await this.repository
       .createQueryBuilder("friendship")

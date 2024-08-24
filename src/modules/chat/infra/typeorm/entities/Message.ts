@@ -21,6 +21,9 @@ export class Message {
   @Column({ type: "char", length: 36 })
   notification_id: string;
 
+  @Column({ type: "char", length: 36 })
+  friendship_id: string;
+
   @Column({ type: "text" })
   content: string;
 
