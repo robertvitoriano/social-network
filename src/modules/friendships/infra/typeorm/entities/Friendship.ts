@@ -5,6 +5,7 @@ import {
   ManyToOne,
   JoinColumn,
   OneToOne,
+  OneToMany,
 } from "typeorm";
 @Entity("friendship")
 export class Friendship {
@@ -53,4 +54,7 @@ export class Friendship {
   })
   @JoinColumn({ name: "accepted_notification_id" })
   acceptedNotification: any;
+
+  @OneToMany("messages", "friendship", { onDelete: "CASCADE" })
+  messages!: any;
 }

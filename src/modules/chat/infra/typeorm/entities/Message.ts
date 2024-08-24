@@ -44,4 +44,12 @@ export class Message {
   })
   @JoinColumn({ name: "notification_id" })
   messageNotification: any;
+
+  @OneToOne("friendship", "friendship", {
+    onDelete: "SET NULL",
+    nullable: true,
+  })
+  @ManyToOne("Friendship", "messages", { onDelete: "CASCADE" })
+  @JoinColumn({ name: "friendship_id" })
+  messageFriendship: any;
 }
