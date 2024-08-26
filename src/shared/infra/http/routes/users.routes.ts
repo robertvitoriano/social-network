@@ -4,7 +4,7 @@ import { CreateUserController } from "../../../../modules/accounts/useCases/crea
 import uploadConfig from "../../../../config/upload";
 import multer from "multer";
 import { ensureAuthenticated } from "../middlewares/ensureAuthenticated";
-import { GetUserProfileController } from "src/modules/accounts/useCases/getUserProfile/GetUserProfileController";
+import { GetUserProfileController } from "../../../../modules/accounts/useCases/getUserProfile/GetUserProfileController";
 
 const usersRoutes = Router();
 
