@@ -48,6 +48,8 @@ export class User {
   @OneToMany(() => Post, (post: Post) => post.user)
   posts: Post[];
 
+  @OneToMany(() => Post, (post: Post) => post.timeLineOwner)
+  timelinePosts: Post[];
   constructor() {
     if (!this.id) {
       this.id = uuid();

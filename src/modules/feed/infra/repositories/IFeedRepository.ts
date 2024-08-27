@@ -1,4 +1,7 @@
-import { Post } from "../entities/Post";
+import {
+  IListUserPostsParams,
+  IPost,
+} from "../../useCases/listUserPosts/types";
 import { ICreatePostDTO } from "./../../dtos/ICreatePostDTO";
 export type UserUpdateFields = {
   username?: string;
@@ -7,7 +10,9 @@ export type UserUpdateFields = {
   avatar?: string;
 };
 interface IFeedRepository {
-  create(data: ICreatePostDTO): Promise<void>;
+  createPost(data: ICreatePostDTO): Promise<void>;
+  getPostsCount(userId: string): Promise<number>;
+  listUserTimelinePosts(data: IListUserPostsParams): Promise<IPost[]>;
 }
 
 export { IFeedRepository };
