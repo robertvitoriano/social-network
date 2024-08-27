@@ -1,8 +1,8 @@
 import { Router } from "express";
 
 import { ensureAuthenticated } from "../middlewares/ensureAuthenticated";
-import { CreatePostController } from "src/modules/feed/useCases/createPost/CreatePostController";
-import { ListUserFeedPostsController } from "src/modules/feed/useCases/listUserPosts/ListUserFeedPostsController";
+import { CreatePostController } from "../../../../modules/feed/useCases/createPost/CreatePostController";
+import { ListUserFeedPostsController } from "../../../../modules/feed/useCases/listUserPosts/ListUserFeedPostsController";
 
 const createPostController = new CreatePostController();
 const listUserFeedPostsController = new ListUserFeedPostsController();
