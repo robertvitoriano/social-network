@@ -2,6 +2,7 @@ import { Entity, Column, PrimaryColumn, OneToMany } from "typeorm";
 import { v4 as uuid } from "uuid";
 import { Friendship } from "../../../../friendships/infra/typeorm/entities/Friendship";
 import { Message } from "../../../../chat/infra/typeorm/entities/Message";
+import { Post } from "../../../../feed/infra/entities/Post";
 
 @Entity("users")
 export class User {
@@ -43,6 +44,9 @@ export class User {
 
   @OneToMany(() => Message, (message) => message.receiver)
   receivedMessages: Message[];
+
+  @OneToMany(() => Post, (post: Post) => post.user)
+  posts: Post[];
 
   constructor() {
     if (!this.id) {

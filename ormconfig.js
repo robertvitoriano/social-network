@@ -22,6 +22,9 @@ const Message = isProduction
 const NotificationType = isProduction
   ? require(path.join(__dirname, 'dist/src/modules/notifications/infra/typeorm/entities/NotificationType')).NotificationType
   : require(path.join(__dirname, 'src/modules/notifications/infra/typeorm/entities/NotificationType')).NotificationType;
+  const Post = isProduction
+  ? require(path.join(__dirname, 'dist/src/modules/feed/infra/entities/Post')).Post
+  : require(path.join(__dirname, 'src/modules/feed/infra/entities/Post')).Post;
 
 const ormConfig = {
   type: 'mysql',
@@ -33,7 +36,7 @@ const ormConfig = {
   migrations: isProduction
     ? ['./dist/src/shared/infra/typeorm/migrations/*.{js}']
     : ['./src/shared/infra/typeorm/migrations/*.{ts,js}'],
-  entities: [User, Friendship, NotificationType, Notification, Message],
+  entities: [User, Friendship, NotificationType, Notification, Message, Post],
   logging: false,
   cli: {
     migrationsDir: './src/shared/infra/typeorm/migrations'
