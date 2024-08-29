@@ -27,6 +27,9 @@ export class Post {
   @UpdateDateColumn({ type: "timestamp" })
   updated_at: Date;
 
+  @Column({ type: "int", default: 0 })
+  likes_count: number;
+
   @Column({ type: "boolean", default: false })
   is_private: boolean;
 
