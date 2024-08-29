@@ -52,7 +52,7 @@ class FeedRepository implements IFeedRepository {
       userId: post.userId,
       content: post.content,
       createdAt: post.createdAt,
-      user: {
+      creator: {
         id: post.userId,
         name: post.userName,
         avatar: post.userAvatar,
