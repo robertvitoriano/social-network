@@ -30,9 +30,14 @@ class FeedRepository implements IFeedRepository {
 
     const posts = await this.postRepository
       .createQueryBuilder("posts")
+      .innerJoin("posts.user", "user")
       .select([
         "posts.id as id",
         "posts.user_id as userId",
+        "user.avatar as userAvatar",
+        "user.id as userId",
+        "user.name as userName",
+        "user.email as userEmail",
         "posts.content as content",
         "posts.created_at as createdAt",
       ])
@@ -42,8 +47,20 @@ class FeedRepository implements IFeedRepository {
       .take(postsPerPage)
       .getRawMany();
 
-    return posts;
+    return posts.map((post) => ({
+      id: post.id,
+      userId: post.userId,
+      content: post.content,
+      createdAt: post.createdAt,
+      user: {
+        id: post.userId,
+        name: post.userName,
+        avatar: post.userAvatar,
+        email: post.userEmail,
+      },
+    }));
   }
+
   async createPost(data: ICreatePostDTO): Promise<void> {
     const createdPost = this.postRepository.create({
       user_id: data.userId,
