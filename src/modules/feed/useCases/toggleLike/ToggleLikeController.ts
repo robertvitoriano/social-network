@@ -18,7 +18,7 @@ class ToggleLikeController {
       console.error(err);
       const errorCode =
         err.statusCode || ServerErrorHttpStatusCode.INTERNAL_SERVER_ERROR;
-      throw new AppError("Error creating new post", errorCode);
+      throw new AppError("Error toggling like", errorCode);
     }
   }
 }

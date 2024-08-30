@@ -80,7 +80,7 @@ class FeedRepository implements IFeedRepository {
   }
   async findLike(postId: string, userId: string) {
     const like = await this.likeRepository.findOne({
-      where: { postId, userId },
+      where: { post_id: postId, user_id: userId },
     });
     return like;
   }
