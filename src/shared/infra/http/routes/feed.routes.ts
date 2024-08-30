@@ -3,7 +3,7 @@ import { Router } from "express";
 import { ensureAuthenticated } from "../middlewares/ensureAuthenticated";
 import { CreatePostController } from "../../../../modules/feed/useCases/createPost/CreatePostController";
 import { ListUserFeedPostsController } from "../../../../modules/feed/useCases/listUserPosts/ListUserFeedPostsController";
-import { ToggleLikeController } from "src/modules/feed/useCases/toggleLike/ToggleLikeController";
+import { ToggleLikeController } from "../../../../modules/feed/useCases/toggleLike/ToggleLikeController";
 
 const createPostController = new CreatePostController();
 const listUserFeedPostsController = new ListUserFeedPostsController();
