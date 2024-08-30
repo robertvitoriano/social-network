@@ -1,5 +1,6 @@
 import { Repository, getRepository } from "typeorm";
 import { Post } from "../entities/Post";
+import { Comment } from "./../entities/Comment";
 import { IFeedRepository } from "./IFeedRepository";
 import { ICreatePostDTO } from "../../dtos/ICreatePostDTO";
 import {
@@ -7,15 +8,18 @@ import {
   IPost,
 } from "../../useCases/listUserPosts/types";
 import { Like } from "../entities/Like";
+import { ICreateCommentDTO } from "../../dtos/ICreateCommentDTO";
 
 class FeedRepository implements IFeedRepository {
   private postRepository: Repository<Post>;
   private likeRepository: Repository<Like>;
-
+  private commentRepository: Repository<Comment>;
   constructor() {
     this.likeRepository = getRepository(Like);
     this.postRepository = getRepository(Post);
+    this.commentRepository = getRepository(Comment);
   }
+
   async getPostsCount(userId: string): Promise<number> {
     const count = await this.postRepository
       .createQueryBuilder("posts")
@@ -92,6 +96,50 @@ class FeedRepository implements IFeedRepository {
     });
     await this.likeRepository.save(newLike);
     await this.postRepository.increment({ id: postId }, "likes_count", 1);
+  }
+
+  async createComment(data: ICreateCommentDTO) {
+    const { postId, userId, content } = data;
+    const newComment = this.commentRepository.create({
+      post_id: postId,
+      user_id: userId,
+      content: content,
+    });
+    await this.commentRepository.save(newComment);
+    await this.postRepository.increment({ id: postId }, "comments_count", 1);
+  }
+  async removeComment(postId: string, comment: Comment) {
+    await this.commentRepository.remove(comment);
+    await this.postRepository.decrement({ id: postId }, "comments_count", 1);
+  }
+  async listComments(data: {
+    postId: string;
+    page: number;
+    commentsPerPage: number;
+  }): Promise<any> {
+    const { postId, page, commentsPerPage } = data;
+    const skip = page ? (page - 1) * commentsPerPage : 0;
+
+    const comments = await this.commentRepository
+      .createQueryBuilder("comments")
+      .innerJoin("comments.user", "user")
+      .addSelect(["user.id", "user.name", "user.email", "user.avatar"])
+      .where("comments.post_id = :postId", { postId })
+      .orderBy("comments.created_at", "DESC")
+      .skip(skip)
+      .take(commentsPerPage)
+      .getMany();
+
+    return comments;
+  }
+
+  async getCommentsCount(postId: string): Promise<number> {
+    const count = await this.commentRepository
+      .createQueryBuilder("comments")
+      .where("comments.post_id = :postId", { postId })
+      .getCount();
+
+    return count;
   }
 }
 

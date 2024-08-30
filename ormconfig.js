@@ -39,6 +39,10 @@ const NotificationType = isProduction
   ? require(path.join(__dirname, 'dist/src/modules/feed/infra/entities/PostMedia')).PostMedia
   : require(path.join(__dirname, 'src/modules/feed/infra/entities/PostMedia')).PostMedia;
 
+  const Comment = isProduction
+  ? require(path.join(__dirname, 'dist/src/modules/feed/infra/entities/Comment')).Comment
+  : require(path.join(__dirname, 'src/modules/feed/infra/entities/Comment')).Comment;
+  
 const ormConfig = {
   type: 'mysql',
   host: process.env.MYSQLDB_HOST,
@@ -49,7 +53,7 @@ const ormConfig = {
   migrations: isProduction
     ? ['./dist/src/shared/infra/typeorm/migrations/*.{js}']
     : ['./src/shared/infra/typeorm/migrations/*.{ts,js}'],
-  entities: [User, Friendship, NotificationType, Notification, Message, Post, Media, PostMedia, Like],
+  entities: [User, Friendship, NotificationType, Notification, Message, Post, Media, PostMedia, Like, Comment],
   logging: false,
   cli: {
     migrationsDir: './src/shared/infra/typeorm/migrations'

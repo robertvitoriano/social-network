@@ -32,6 +32,9 @@ export class Post {
   @Column({ type: "int", default: 0 })
   likes_count: number;
 
+  @Column({ type: "int", default: 0 })
+  comments_count: number;
+
   @Column({ type: "boolean", default: false })
   is_private: boolean;
 
@@ -45,4 +48,10 @@ export class Post {
 
   @OneToMany("post_media", "posts")
   media: any[];
+
+  @OneToMany("likes", "posts")
+  likes: any[];
+
+  @OneToMany("comments", "posts", { cascade: true })
+  comments: any[];
 }
