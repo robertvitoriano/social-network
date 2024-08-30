@@ -6,11 +6,14 @@ import {
   IListUserPostsParams,
   IPost,
 } from "../../useCases/listUserPosts/types";
+import { Like } from "../entities/Like";
 
 class FeedRepository implements IFeedRepository {
   private postRepository: Repository<Post>;
+  private likeRepository: Repository<Like>;
 
   constructor() {
+    this.likeRepository = getRepository(Like);
     this.postRepository = getRepository(Post);
   }
   async getPostsCount(userId: string): Promise<number> {
@@ -34,6 +37,7 @@ class FeedRepository implements IFeedRepository {
       .select([
         "posts.id as id",
         "posts.user_id as userId",
+        "posts.likes_count as likesCount",
         "user.avatar as userAvatar",
         "user.id as userId",
         "user.name as userName",
@@ -52,6 +56,7 @@ class FeedRepository implements IFeedRepository {
       userId: post.userId,
       content: post.content,
       createdAt: post.createdAt,
+      likesCount: post.likesCount,
       creator: {
         id: post.userId,
         name: post.userName,
@@ -68,6 +73,25 @@ class FeedRepository implements IFeedRepository {
       timeline_owner_id: data.timelinedOwnerId,
     });
     await this.postRepository.save(createdPost);
+  }
+  async removeLike(postId: string, like: Like) {
+    await this.likeRepository.remove(like);
+    await this.postRepository.decrement({ id: postId }, "likes_count", 1);
+  }
+  async findLike(postId: string, userId: string) {
+    const like = await this.likeRepository.findOne({
+      where: { postId, userId },
+    });
+    return like;
+  }
+
+  async createLike(postId: string, userId: string) {
+    const newLike = this.likeRepository.create({
+      post_id: postId,
+      user_id: userId,
+    });
+    await this.likeRepository.save(newLike);
+    await this.postRepository.increment({ id: postId }, "likes_count", 1);
   }
 }
 
