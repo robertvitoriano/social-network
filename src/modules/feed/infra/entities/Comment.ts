@@ -33,9 +33,9 @@ export class Comment {
 
   @ManyToOne("users", "comments", { onDelete: "CASCADE" })
   @JoinColumn({ name: "user_id" })
-  user: any;
+  user!: any;
 
   @ManyToOne("posts", "comments", { onDelete: "CASCADE" })
   @JoinColumn({ name: "post_id" })
-  post: any;
+  post!: any;
 }

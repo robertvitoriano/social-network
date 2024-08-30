@@ -38,6 +38,29 @@ class FeedRepository implements IFeedRepository {
     const posts = await this.postRepository
       .createQueryBuilder("posts")
       .innerJoin("posts.user", "user")
+      .leftJoinAndMapOne(
+        "posts.lastComment",
+        (qb) =>
+          qb
+            .select("c.content", "lastCommentContent")
+            .addSelect("c.id", "lastCommentId")
+            .addSelect("c.created_at", "lastCommentCreatedAt")
+            .addSelect("c.post_id", "lastCommentPostId")
+            .addSelect("commentUser.id", "lastCommentUserId")
+            .addSelect("commentUser.name", "lastCommentUserName")
+            .addSelect("commentUser.avatar", "lastCommentUserAvatar")
+            .from("comments", "c")
+            .innerJoin("c.user", "commentUser")
+            .where(
+              `c.created_at = (
+                SELECT MAX(c2.created_at)
+                FROM comments c2
+                WHERE c2.post_id = c.post_id
+              )`
+            ),
+        "lastComment",
+        "lastComment.lastCommentPostId = posts.id"
+      )
       .select([
         "posts.id as id",
         "posts.user_id as userId",
@@ -48,6 +71,14 @@ class FeedRepository implements IFeedRepository {
         "user.email as userEmail",
         "posts.content as content",
         "posts.created_at as createdAt",
+        "lastComment.lastCommentContent",
+        "lastComment.lastCommentContent",
+        "lastComment.lastCommentId",
+        "lastComment.lastCommentCreatedAt",
+        "lastComment.lastCommentPostId",
+        "lastComment.lastCommentUserId",
+        "lastComment.lastCommentUserName",
+        "lastComment.lastCommentUserAvatar",
       ])
       .where("posts.timeline_owner_id = :userId", { userId })
       .orderBy("posts.created_at", "DESC")
@@ -61,6 +92,19 @@ class FeedRepository implements IFeedRepository {
       content: post.content,
       createdAt: post.createdAt,
       likesCount: post.likesCount,
+      commentsCount: post.commentsCount,
+      lastComment: post.lastCommentId
+        ? {
+            id: post.lastCommentId,
+            content: post.lastCommentContent,
+            createdAt: post.lastCommentCreatedAt,
+            user: {
+              id: post.lastCommentUserId,
+              name: post.lastCommentUserName,
+              avatar: post.lastCommentUserAvatar,
+            },
+          }
+        : null,
       creator: {
         id: post.userId,
         name: post.userName,
