@@ -70,6 +70,7 @@ class FeedRepository implements IFeedRepository {
         "user.name as userName",
         "user.email as userEmail",
         "posts.content as content",
+        "posts.comments_count as commentsCount",
         "posts.created_at as createdAt",
         "lastComment.lastCommentContent",
         "lastComment.lastCommentContent",
