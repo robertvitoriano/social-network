@@ -3,7 +3,7 @@ import {
   QueryRunner,
   Table,
   TableForeignKey,
-  TableUnique,
+  TableIndex,
 } from "typeorm";
 
 export class CreateMediaAnPostMediaTables1724973184377
@@ -18,10 +18,9 @@ export class CreateMediaAnPostMediaTables1724973184377
         columns: [
           {
             name: "id",
-            type: "uuid",
+            type: "char",
+            length: "36",
             isPrimary: true,
-            isGenerated: true,
-            generationStrategy: "uuid",
           },
           {
             name: "url",
@@ -54,10 +53,10 @@ export class CreateMediaAnPostMediaTables1724973184377
         columns: [
           {
             name: "id",
-            type: "uuid",
+            type: "char",
+            length: "36",
             isPrimary: true,
-            isGenerated: true,
-            generationStrategy: "uuid",
+            isNullable: false,
           },
           {
             name: "post_id",
@@ -73,11 +72,12 @@ export class CreateMediaAnPostMediaTables1724973184377
       })
     );
 
-    await queryRunner.createUniqueConstraint(
+    await queryRunner.createIndex(
       "post_media",
-      new TableUnique({
-        name: "UQ_post_media",
+      new TableIndex({
+        name: "IDX_UNIQUE_POST_MEDIA",
         columnNames: ["post_id", "media_id"],
+        isUnique: true,
       })
     );
 
@@ -110,15 +110,19 @@ export class CreateMediaAnPostMediaTables1724973184377
     const mediaForeignKey = postMediaTable.foreignKeys.find(
       (fk) => fk.columnNames.indexOf("media_id") !== -1
     );
+    const index = postMediaTable.indices.find(
+      (idx) => idx.name === "IDX_UNIQUE_POST_MEDIA"
+    );
 
+    if (index) {
+      await queryRunner.dropIndex("post_media", index);
+    }
     if (postForeignKey) {
       await queryRunner.dropForeignKey("post_media", postForeignKey);
     }
-
     if (mediaForeignKey) {
       await queryRunner.dropForeignKey("post_media", mediaForeignKey);
     }
-
     await queryRunner.dropTable("post_media");
     await queryRunner.dropTable("media");
   }

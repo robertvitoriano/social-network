@@ -3,7 +3,7 @@ import {
   QueryRunner,
   Table,
   TableForeignKey,
-  TableUnique,
+  TableIndex,
 } from "typeorm";
 
 export class CreateLikesTable1724972102999 implements MigrationInterface {
@@ -16,19 +16,20 @@ export class CreateLikesTable1724972102999 implements MigrationInterface {
         columns: [
           {
             name: "id",
-            type: "uuid",
+            type: "char",
+            length: "36",
             isPrimary: true,
-            generationStrategy: "uuid",
-            default: "uuid_generate_v4()",
           },
           {
             name: "user_id",
-            type: "uuid",
+            type: "char",
+            length: "36",
             isNullable: false,
           },
           {
             name: "post_id",
-            type: "uuid",
+            type: "char",
+            length: "36",
             isNullable: false,
           },
           {
@@ -40,7 +41,7 @@ export class CreateLikesTable1724972102999 implements MigrationInterface {
             name: "target",
             type: "enum",
             enum: ["post", "comment"],
-            default: "post",
+            default: "'post'",
             isNullable: false,
           },
         ],
@@ -68,29 +69,38 @@ export class CreateLikesTable1724972102999 implements MigrationInterface {
       })
     );
 
-    await queryRunner.createUniqueConstraint(
+    await queryRunner.createIndex(
       "likes",
-      new TableUnique({
+      new TableIndex({
+        name: "IDX_USER_POST_UNIQUE",
         columnNames: ["user_id", "post_id"],
+        isUnique: true,
       })
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     const table = await queryRunner.getTable("likes");
+
     const foreignKeyUser = table.foreignKeys.find(
       (fk) => fk.columnNames.indexOf("user_id") !== -1
     );
     const foreignKeyPost = table.foreignKeys.find(
       (fk) => fk.columnNames.indexOf("post_id") !== -1
     );
-
-    await queryRunner.dropUniqueConstraint(
-      "likes",
-      new TableUnique({ columnNames: ["user_id", "post_id"] })
+    const index = table.indices.find(
+      (idx) => idx.name === "IDX_USER_POST_UNIQUE"
     );
-    await queryRunner.dropForeignKey("likes", foreignKeyUser);
-    await queryRunner.dropForeignKey("likes", foreignKeyPost);
+
+    if (index) {
+      await queryRunner.dropIndex("likes", "IDX_USER_POST_UNIQUE");
+    }
+    if (foreignKeyUser) {
+      await queryRunner.dropForeignKey("likes", foreignKeyUser);
+    }
+    if (foreignKeyPost) {
+      await queryRunner.dropForeignKey("likes", foreignKeyPost);
+    }
     await queryRunner.dropTable("likes");
   }
 }

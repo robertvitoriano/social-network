@@ -23,6 +23,10 @@ const NotificationType = isProduction
   ? require(path.join(__dirname, 'dist/src/modules/notifications/infra/typeorm/entities/NotificationType')).NotificationType
   : require(path.join(__dirname, 'src/modules/notifications/infra/typeorm/entities/NotificationType')).NotificationType;
   
+  const Like = isProduction
+  ? require(path.join(__dirname, 'dist/src/modules/feed/infra/entities/Like')).Like
+  : require(path.join(__dirname, 'src/modules/feed/infra/entities/Like')).Like;
+  
   const Post = isProduction
   ? require(path.join(__dirname, 'dist/src/modules/feed/infra/entities/Post')).Post
   : require(path.join(__dirname, 'src/modules/feed/infra/entities/Post')).Post;
@@ -45,7 +49,7 @@ const ormConfig = {
   migrations: isProduction
     ? ['./dist/src/shared/infra/typeorm/migrations/*.{js}']
     : ['./src/shared/infra/typeorm/migrations/*.{ts,js}'],
-  entities: [User, Friendship, NotificationType, Notification, Message, Post, Media, PostMedia],
+  entities: [User, Friendship, NotificationType, Notification, Message, Post, Media, PostMedia, Like],
   logging: false,
   cli: {
     migrationsDir: './src/shared/infra/typeorm/migrations'
