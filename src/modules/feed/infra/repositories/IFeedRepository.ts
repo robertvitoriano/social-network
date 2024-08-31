@@ -7,6 +7,7 @@ import { PostLike } from "../entities/PostLike";
 import { ICreatePostDTO } from "./../../dtos/ICreatePostDTO";
 import { Comment } from "../entities/Comment";
 import { IComment } from "../../useCases/listComments/types";
+import { CommentLike } from "../entities/CommentLike";
 
 export type UserUpdateFields = {
   username?: string;
@@ -20,6 +21,9 @@ interface IFeedRepository {
   listUserTimelinePosts(data: IListUserPostsParams): Promise<IPost[]>;
   removePostLike(postId: string, PostLike: PostLike): Promise<void>;
   findPostLike(postId: string, userId: string): Promise<PostLike>;
+  createCommentLike(commentId: string, userId: string): Promise<void>;
+  removeCommentLike(commentId: string, commentLike: CommentLike): Promise<void>;
+  findCommentLike(commentId: string, userId: string): Promise<CommentLike>;
   createPostLike(postId: string, userId: string): Promise<void>;
   createComment(data: ICreateCommentDTO);
   removeComment(postId: string, comment: Comment);

@@ -10,7 +10,7 @@ import {
 
 @Entity({ name: "comment_likes" })
 @Unique(["user_id", "comment_id"])
-export class Like {
+export class CommentLike {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 

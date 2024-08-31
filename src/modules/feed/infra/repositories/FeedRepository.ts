@@ -9,15 +9,18 @@ import {
 } from "../../useCases/listUserPosts/types";
 import { PostLike } from "../entities/PostLike";
 import { ICreateCommentDTO } from "../../dtos/ICreateCommentDTO";
+import { CommentLike } from "../entities/CommentLike";
 
 class FeedRepository implements IFeedRepository {
   private postRepository: Repository<Post>;
   private postLikeRepository: Repository<PostLike>;
   private commentRepository: Repository<Comment>;
+  private commentLikeRepository: Repository<CommentLike>;
+
   constructor() {
     this.postLikeRepository = getRepository(PostLike);
     this.postRepository = getRepository(Post);
-    this.commentRepository = getRepository(Comment);
+    this.commentLikeRepository = getRepository(CommentLike);
   }
 
   async getPostsCount(userId: string): Promise<number> {
@@ -47,7 +50,7 @@ class FeedRepository implements IFeedRepository {
           user: comment.user,
           postId: comment.post_id,
           createdAt: comment.created_at,
-          likesCount: 0,
+          likesCount: comment.likes_count,
         })) || [],
       createdAt: post.created_at,
       likesCount: post.likes_count,
@@ -173,6 +176,31 @@ class FeedRepository implements IFeedRepository {
     });
     await this.postLikeRepository.save(newPostLike);
     await this.postRepository.increment({ id: postId }, "likes_count", 1);
+  }
+
+  async createCommentLike(commentId: string, userId: string): Promise<void> {
+    const newCommentLike = this.commentLikeRepository.create({
+      comment_id: commentId,
+      user_id: userId,
+    });
+    await this.commentLikeRepository.save(newCommentLike);
+    await this.commentRepository.increment({ id: commentId }, "likes_count", 1);
+  }
+  async removeCommentLike(
+    commentId: string,
+    commentLike: CommentLike
+  ): Promise<void> {
+    await this.commentLikeRepository.remove(commentLike);
+    await this.commentRepository.decrement({ id: commentId }, "likes_count", 1);
+  }
+  async findCommentLike(
+    commentId: string,
+    userId: string
+  ): Promise<CommentLike> {
+    const commentLike = await this.commentLikeRepository.findOne({
+      where: { comment_id: commentId, user_id: userId },
+    });
+    return commentLike;
   }
 
   async createComment(data: ICreateCommentDTO) {
