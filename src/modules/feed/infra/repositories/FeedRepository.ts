@@ -1,4 +1,4 @@
-import { Repository, getRepository } from "typeorm";
+import { Repository, SelectQueryBuilder, getRepository } from "typeorm";
 import { Post } from "../entities/Post";
 import { Comment } from "./../entities/Comment";
 import { IFeedRepository } from "./IFeedRepository";
@@ -40,24 +40,7 @@ class FeedRepository implements IFeedRepository {
       .innerJoin("posts.user", "user")
       .leftJoinAndMapOne(
         "posts.lastComment",
-        (qb) =>
-          qb
-            .select("c.content", "lastCommentContent")
-            .addSelect("c.id", "lastCommentId")
-            .addSelect("c.created_at", "lastCommentCreatedAt")
-            .addSelect("c.post_id", "lastCommentPostId")
-            .addSelect("commentUser.id", "lastCommentUserId")
-            .addSelect("commentUser.name", "lastCommentUserName")
-            .addSelect("commentUser.avatar", "lastCommentUserAvatar")
-            .from("comments", "c")
-            .innerJoin("c.user", "commentUser")
-            .where(
-              `c.created_at = (
-                SELECT MAX(c2.created_at)
-                FROM comments c2
-                WHERE c2.post_id = c.post_id
-              )`
-            ),
+        this.getLastCommentSubquery,
         "lastComment",
         "lastComment.lastCommentPostId = posts.id"
       )
@@ -87,13 +70,16 @@ class FeedRepository implements IFeedRepository {
       .take(postsPerPage)
       .getRawMany();
 
-    return posts.map((post) => ({
+    return posts.map(this.mapPost);
+  }
+  private mapPost(post: any): IPost {
+    return {
       id: post.id,
-      userId: post.userId,
+      userId: post.user_id,
       content: post.content,
-      createdAt: post.createdAt,
-      likesCount: post.likesCount,
-      commentsCount: post.commentsCount,
+      createdAt: post.created_at,
+      likesCount: post.likes_count,
+      commentsCount: post.comments_count,
       lastComment: post.lastCommentId
         ? {
             id: post.lastCommentId,
@@ -107,13 +93,32 @@ class FeedRepository implements IFeedRepository {
           }
         : null,
       creator: {
-        id: post.userId,
+        id: post.user_id,
         name: post.userName,
         avatar: post.userAvatar,
         email: post.userEmail,
       },
-    }));
+    };
   }
+  private getLastCommentSubquery = (qb: SelectQueryBuilder<Comment>) => {
+    return qb
+      .select("c.content", "lastCommentContent")
+      .addSelect("c.id", "lastCommentId")
+      .addSelect("c.created_at", "lastCommentCreatedAt")
+      .addSelect("c.post_id", "lastCommentPostId")
+      .addSelect("commentUser.id", "lastCommentUserId")
+      .addSelect("commentUser.name", "lastCommentUserName")
+      .addSelect("commentUser.avatar", "lastCommentUserAvatar")
+      .from("comments", "c")
+      .innerJoin("c.user", "commentUser")
+      .where(
+        `c.created_at = (
+                SELECT MAX(c2.created_at)
+                FROM comments c2
+                WHERE c2.post_id = c.post_id
+              )`
+      );
+  };
 
   async createPost(data: ICreatePostDTO): Promise<void> {
     const createdPost = this.postRepository.create({
