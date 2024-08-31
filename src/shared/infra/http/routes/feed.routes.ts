@@ -6,7 +6,7 @@ import { ListUserFeedPostsController } from "../../../../modules/feed/useCases/l
 import { ToggleLikeController } from "../../../../modules/feed/useCases/toggleLike/ToggleLikeController";
 import { CreateCommentController } from "../../../../modules/feed/useCases/createComment/CreateCommentController";
 import { ListCommentController } from "../../../../modules/feed/useCases/listComments/ListCommentsController";
-import { GetPostController } from "src/modules/feed/useCases/getPost/GetPostController";
+import { GetPostController } from "../../../../modules/feed/useCases/getPost/GetPostController";
 const createPostController = new CreatePostController();
 const listUserFeedPostsController = new ListUserFeedPostsController();
 const toggleLikeController = new ToggleLikeController();
