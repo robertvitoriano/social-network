@@ -8,9 +8,9 @@ import {
   JoinColumn,
 } from "typeorm";
 
-@Entity({ name: "likes" })
+@Entity({ name: "post_likes" })
 @Unique(["user_id", "post_id"])
-export class Like {
+export class PostLike {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
@@ -20,21 +20,14 @@ export class Like {
   @Column({ type: "char", length: 36 })
   post_id: string;
 
-  @Column({
-    type: "enum",
-    enum: ["post", "comment"],
-    default: "post",
-  })
-  target: string;
-
   @CreateDateColumn({ type: "timestamp" })
   created_at: Date;
 
-  @ManyToOne("users", "likes", { onDelete: "CASCADE" })
+  @ManyToOne("users", "post_likes", { onDelete: "CASCADE" })
   @JoinColumn({ name: "user_id" })
   user: any;
 
-  @ManyToOne("posts", "likes", { onDelete: "CASCADE" })
+  @ManyToOne("posts", "post_likes", { onDelete: "CASCADE" })
   @JoinColumn({ name: "post_id" })
   post: any;
 }

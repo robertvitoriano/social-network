@@ -7,15 +7,15 @@ import {
   IListUserPostsParams,
   IPost,
 } from "../../useCases/listUserPosts/types";
-import { Like } from "../entities/Like";
+import { PostLike } from "../entities/PostLike";
 import { ICreateCommentDTO } from "../../dtos/ICreateCommentDTO";
 
 class FeedRepository implements IFeedRepository {
   private postRepository: Repository<Post>;
-  private likeRepository: Repository<Like>;
+  private postLikeRepository: Repository<PostLike>;
   private commentRepository: Repository<Comment>;
   constructor() {
-    this.likeRepository = getRepository(Like);
+    this.postLikeRepository = getRepository(PostLike);
     this.postRepository = getRepository(Post);
     this.commentRepository = getRepository(Comment);
   }
@@ -74,7 +74,7 @@ class FeedRepository implements IFeedRepository {
       .select([
         "posts.id as id",
         "posts.user_id as userId",
-        "posts.likes_count as likesCount",
+        "posts.likes_count as likes_count",
         "user.avatar as userAvatar",
         "user.id as userId",
         "user.name as userName",
@@ -155,23 +155,23 @@ class FeedRepository implements IFeedRepository {
     });
     await this.postRepository.save(createdPost);
   }
-  async removeLike(postId: string, like: Like) {
-    await this.likeRepository.remove(like);
+  async removePostLike(postId: string, PostLike: PostLike) {
+    await this.postLikeRepository.remove(PostLike);
     await this.postRepository.decrement({ id: postId }, "likes_count", 1);
   }
-  async findLike(postId: string, userId: string) {
-    const like = await this.likeRepository.findOne({
+  async findPostLike(postId: string, userId: string) {
+    const postLike = await this.postLikeRepository.findOne({
       where: { post_id: postId, user_id: userId },
     });
-    return like;
+    return postLike;
   }
 
-  async createLike(postId: string, userId: string) {
-    const newLike = this.likeRepository.create({
+  async createPostLike(postId: string, userId: string) {
+    const newPostLike = this.postLikeRepository.create({
       post_id: postId,
       user_id: userId,
     });
-    await this.likeRepository.save(newLike);
+    await this.postLikeRepository.save(newPostLike);
     await this.postRepository.increment({ id: postId }, "likes_count", 1);
   }
 

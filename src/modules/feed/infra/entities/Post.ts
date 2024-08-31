@@ -49,7 +49,7 @@ export class Post {
   @OneToMany("post_media", "posts")
   media: any[];
 
-  @OneToMany("likes", "posts")
+  @OneToMany("post_likes", "posts")
   likes: any[];
 
   @OneToMany("comments", "post")
