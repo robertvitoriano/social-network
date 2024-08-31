@@ -5,7 +5,6 @@ import { GetPostUseCase } from "./GetPostUseCase";
 class GetPostController {
   async handle(request: Request, response: Response): Promise<Response> {
     try {
-      console.log("trying to fetch post");
       const getPostUseCase: GetPostUseCase = container.resolve(GetPostUseCase);
 
       const { postId } = request.params;

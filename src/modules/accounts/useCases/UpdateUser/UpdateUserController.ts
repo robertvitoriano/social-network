@@ -11,8 +11,6 @@ export class UpdateUserController {
         body: { name, email, username },
       } = request;
 
-      console.log({ file, name, email, username });
-
       const updateUserUseCase = container.resolve(UpdateUserUseCase);
 
       const user = await updateUserUseCase.execute({

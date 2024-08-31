@@ -69,7 +69,6 @@ class UpdateUserUseCase {
     });
 
     await deleteFile(filePath);
-    console.log(updateResult);
     return updateResult;
   }
 }

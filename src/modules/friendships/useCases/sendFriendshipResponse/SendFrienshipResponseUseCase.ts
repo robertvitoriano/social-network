@@ -36,7 +36,6 @@ class SendFriendshipResponseUseCase {
       await this.friendshipRepository.update({ friendId, userId, status });
 
       if (status === FriendshipStatus.ACCEPTED) {
-        console.log("FRIENDSHIP REQUEST ACCEPTED");
         const webSocketServer = WebSocketServer.getInstance();
         const io = webSocketServer.getIO();
         const notificationCreated = await this.notificationsRepository.create({
