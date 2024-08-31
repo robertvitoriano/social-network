@@ -8,6 +8,24 @@ export type IPost = {
   userId: string;
   content: string;
   createdAt: string;
+  likesCount: number;
+  commentsCount: number;
+  lastComment: {
+    id: string;
+    content: string;
+    createdAt: string;
+    user: {
+      id: string;
+      name: string;
+      avatar: string | null;
+    };
+  } | null;
+  creator: {
+    id: string;
+    name: string;
+    avatar: string | null;
+    email: string;
+  };
 };
 
 export interface IListUserPostsResult {
