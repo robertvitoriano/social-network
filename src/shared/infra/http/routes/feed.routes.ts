@@ -6,11 +6,13 @@ import { ListUserFeedPostsController } from "../../../../modules/feed/useCases/l
 import { ToggleLikeController } from "../../../../modules/feed/useCases/toggleLike/ToggleLikeController";
 import { CreateCommentController } from "../../../../modules/feed/useCases/createComment/CreateCommentController";
 import { ListCommentController } from "../../../../modules/feed/useCases/listComments/ListCommentsController";
+import { GetPostController } from "src/modules/feed/useCases/getPost/GetPostController";
 const createPostController = new CreatePostController();
 const listUserFeedPostsController = new ListUserFeedPostsController();
 const toggleLikeController = new ToggleLikeController();
 const createCommentController = new CreateCommentController();
 const listCommentsController = new ListCommentController();
+const getPostController = new GetPostController();
 const feedRouter = Router();
 
 feedRouter.post("/", ensureAuthenticated, createPostController.handle);
@@ -21,6 +23,7 @@ feedRouter.get(
   ensureAuthenticated,
   listCommentsController.handle
 );
+feedRouter.get("/post/:postId", ensureAuthenticated, getPostController.handle);
 feedRouter.get(
   "/:userId",
   ensureAuthenticated,

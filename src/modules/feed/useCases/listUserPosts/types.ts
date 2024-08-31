@@ -3,24 +3,25 @@ export interface IListUserPostsParams {
   page: number;
   postsPerPage?: number;
 }
-export type IPost = {
+export type IComment = {
   id: string;
-  userId: string;
   content: string;
   createdAt: string;
+  user: {
+    id: string;
+    name: string;
+    avatar: string | null;
+  };
+};
+export type IPost = {
+  id: string;
+  content: string;
+  createdAt: Date;
   likesCount: number;
   commentsCount: number;
-  lastComment: {
-    id: string;
-    content: string;
-    createdAt: string;
-    user: {
-      id: string;
-      name: string;
-      avatar: string | null;
-    };
-  } | null;
-  creator: {
+  lastComment: IComment | null;
+  comments: IComment[] | null;
+  user: {
     id: string;
     name: string;
     avatar: string | null;

@@ -52,6 +52,6 @@ export class Post {
   @OneToMany("likes", "posts")
   likes: any[];
 
-  @OneToMany("comments", "posts", { cascade: true })
+  @OneToMany("comments", "post")
   comments: any[];
 }

@@ -28,6 +28,33 @@ class FeedRepository implements IFeedRepository {
 
     return count;
   }
+
+  async getPost(postId: string): Promise<IPost | null> {
+    const post = await this.postRepository
+      .createQueryBuilder("posts")
+      .andWhere("posts.id = :postId", { postId })
+      .innerJoinAndSelect("posts.user", "user")
+      .leftJoinAndSelect("posts.comments", "comments")
+      .leftJoinAndSelect("comments.user", "commentUser")
+      .getOne();
+    if (!post) return null;
+    return {
+      ...post,
+      comments:
+        post?.comments.map((comment: any) => ({
+          id: comment.id,
+          content: comment.content,
+          user: comment.user,
+          postId: comment.post_id,
+          createdAt: comment.created_at,
+          likesCount: 0,
+        })) || [],
+      createdAt: post.created_at,
+      likesCount: post.likes_count,
+      commentsCount: post.comments_count,
+      lastComment: null,
+    };
+  }
   async listUserTimelinePosts({
     userId,
     page,
@@ -75,11 +102,10 @@ class FeedRepository implements IFeedRepository {
   private mapPost(post: any): IPost {
     return {
       id: post.id,
-      userId: post.user_id,
       content: post.content,
-      createdAt: post.created_at,
-      likesCount: post.likes_count,
-      commentsCount: post.comments_count,
+      createdAt: post.createdAt,
+      likesCount: post.likesCount,
+      commentsCount: post.commentsCount,
       lastComment: post.lastCommentId
         ? {
             id: post.lastCommentId,
@@ -92,7 +118,8 @@ class FeedRepository implements IFeedRepository {
             },
           }
         : null,
-      creator: {
+      comments: null,
+      user: {
         id: post.user_id,
         name: post.userName,
         avatar: post.userAvatar,

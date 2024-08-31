@@ -29,6 +29,7 @@ interface IFeedRepository {
     commentsPerPage: number;
   }): Promise<IComment[]>;
   getCommentsCount(postId: string): Promise<number>;
+  getPost(postId: string): Promise<IPost>;
 }
 
 export { IFeedRepository };
