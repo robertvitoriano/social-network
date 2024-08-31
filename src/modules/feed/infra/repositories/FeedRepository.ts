@@ -21,6 +21,7 @@ class FeedRepository implements IFeedRepository {
     this.postLikeRepository = getRepository(PostLike);
     this.postRepository = getRepository(Post);
     this.commentLikeRepository = getRepository(CommentLike);
+    this.commentRepository = getRepository(Comment);
   }
 
   async getPostsCount(userId: string): Promise<number> {
