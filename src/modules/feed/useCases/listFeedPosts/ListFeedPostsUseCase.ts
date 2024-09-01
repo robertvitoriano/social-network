@@ -1,7 +1,7 @@
 import { inject, injectable } from "tsyringe";
 import { IListFeedPostsParams, IListFeedPostsResult, IPost } from "./types";
 import { IFeedRepository } from "../../infra/repositories/IFeedRepository";
-import { IFriendshipsRepository } from "src/modules/friendships/repositories/IFriendshipsRepository";
+import { IFriendshipsRepository } from "../../../friendships/repositories/IFriendshipsRepository";
 
 @injectable()
 export class ListFeedPostsUseCase {
