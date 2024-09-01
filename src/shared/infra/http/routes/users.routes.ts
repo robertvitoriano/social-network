@@ -19,7 +19,7 @@ usersRoutes.get("/:userId", getUserProfileController.handle);
 usersRoutes.patch(
   "/",
   ensureAuthenticated,
-  upload.single("avatar"),
+  upload.fields([{ name: "avatar" }, { name: "cover" }]),
   updateUserController.handle
 );
 
