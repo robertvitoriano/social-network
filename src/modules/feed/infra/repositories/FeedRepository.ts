@@ -10,6 +10,7 @@ import {
 import { PostLike } from "../entities/PostLike";
 import { ICreateCommentDTO } from "../../dtos/ICreateCommentDTO";
 import { CommentLike } from "../entities/CommentLike";
+import { IListFeedPostsParams } from "../../useCases/listFeedPosts/types";
 
 class FeedRepository implements IFeedRepository {
   private postRepository: Repository<Post>;
@@ -22,6 +23,52 @@ class FeedRepository implements IFeedRepository {
     this.postRepository = getRepository(Post);
     this.commentLikeRepository = getRepository(CommentLike);
     this.commentRepository = getRepository(Comment);
+  }
+  async listFeedPosts({
+    page,
+    userId,
+    postsPerPage,
+    friendIds,
+  }: IListFeedPostsParams): Promise<IPost[]> {
+    const skip = page ? (page - 1) * postsPerPage : 0;
+
+    const posts = await this.postRepository
+      .createQueryBuilder("posts")
+      .innerJoin("posts.user", "user")
+      .leftJoinAndMapOne(
+        "posts.lastComment",
+        this.getLastCommentSubquery,
+        "lastComment",
+        "lastComment.lastCommentPostId = posts.id"
+      )
+      .select([
+        "posts.id as id",
+        "posts.user_id as userId",
+        "user.avatar as userAvatar",
+        "user.id as userId",
+        "user.name as userName",
+        "user.email as userEmail",
+        "posts.content as content",
+        "posts.comments_count as commentsCount",
+        "posts.created_at as createdAt",
+        "posts.likes_count as likesCount",
+        "lastComment.lastCommentContent",
+        "lastComment.lastCommentId",
+        "lastComment.lastCommentCreatedAt",
+        "lastComment.lastCommentPostId",
+        "lastComment.lastCommentUserId",
+        "lastComment.lastCommentUserName",
+        "lastComment.lastCommentUserAvatar",
+        "lastComment.lastCommentLikesCount",
+      ])
+      .where("posts.timeline_owner_id != :userId", { userId })
+      .orWhere("posts.timeline_owner_id IN (:...friendIds)", { friendIds })
+      .orderBy("posts.created_at", "DESC")
+      .skip(skip)
+      .take(postsPerPage)
+      .getRawMany();
+
+    return posts.map(this.mapPost);
   }
 
   async getPostsCount(userId: string): Promise<number> {
