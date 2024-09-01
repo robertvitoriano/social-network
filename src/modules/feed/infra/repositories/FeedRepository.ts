@@ -61,7 +61,8 @@ class FeedRepository implements IFeedRepository {
         "lastComment.lastCommentUserAvatar",
         "lastComment.lastCommentLikesCount",
       ])
-      .where("posts.timeline_owner_id != :userId", { userId })
+      .where("posts.timeline_owner_id = posts.user_id")
+      .andWhere("posts.timeline_owner_id = :userId", { userId })
       .orWhere("posts.timeline_owner_id IN (:...friendIds)", { friendIds })
       .orderBy("posts.created_at", "DESC")
       .skip(skip)
