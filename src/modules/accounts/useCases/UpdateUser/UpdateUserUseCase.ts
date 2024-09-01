@@ -1,7 +1,7 @@
 import { inject, injectable } from "tsyringe";
 import { User } from "../../infra/typeorm/entities/User";
 import { IUsersRepository } from "../../repositories/IUsersRepository";
-import { uploadFile } from "src/utils/upload-file";
+import { uploadFile } from "./../../../../utils/upload-file";
 
 interface IRequest {
   user_id: string;
