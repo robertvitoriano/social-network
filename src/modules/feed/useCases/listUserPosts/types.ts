@@ -7,6 +7,7 @@ export type IComment = {
   id: string;
   content: string;
   createdAt: string;
+  likesCount: number;
   user: {
     id: string;
     name: string;

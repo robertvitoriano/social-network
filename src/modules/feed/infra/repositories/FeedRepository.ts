@@ -78,7 +78,6 @@ class FeedRepository implements IFeedRepository {
       .select([
         "posts.id as id",
         "posts.user_id as userId",
-        "posts.likes_count as likes_count",
         "user.avatar as userAvatar",
         "user.id as userId",
         "user.name as userName",
@@ -86,6 +85,7 @@ class FeedRepository implements IFeedRepository {
         "posts.content as content",
         "posts.comments_count as commentsCount",
         "posts.created_at as createdAt",
+        "posts.likes_count as likesCount",
         "lastComment.lastCommentContent",
         "lastComment.lastCommentContent",
         "lastComment.lastCommentId",
@@ -94,6 +94,7 @@ class FeedRepository implements IFeedRepository {
         "lastComment.lastCommentUserId",
         "lastComment.lastCommentUserName",
         "lastComment.lastCommentUserAvatar",
+        "lastComment.lastCommentLikesCount",
       ])
       .where("posts.timeline_owner_id = :userId", { userId })
       .orderBy("posts.created_at", "DESC")
@@ -104,6 +105,7 @@ class FeedRepository implements IFeedRepository {
     return posts.map(this.mapPost);
   }
   private mapPost(post: any): IPost {
+    console.log({ post });
     return {
       id: post.id,
       content: post.content,
@@ -115,6 +117,7 @@ class FeedRepository implements IFeedRepository {
             id: post.lastCommentId,
             content: post.lastCommentContent,
             createdAt: post.lastCommentCreatedAt,
+            likesCount: post.lastCommentLikesCount,
             user: {
               id: post.lastCommentUserId,
               name: post.lastCommentUserName,
@@ -137,6 +140,7 @@ class FeedRepository implements IFeedRepository {
       .addSelect("c.id", "lastCommentId")
       .addSelect("c.created_at", "lastCommentCreatedAt")
       .addSelect("c.post_id", "lastCommentPostId")
+      .addSelect("c.likes_count", "lastCommentLikesCount")
       .addSelect("commentUser.id", "lastCommentUserId")
       .addSelect("commentUser.name", "lastCommentUserName")
       .addSelect("commentUser.avatar", "lastCommentUserAvatar")
