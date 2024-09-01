@@ -10,7 +10,6 @@ export class UpdateUserController {
         file,
         body: { name, email, username },
       } = request;
-
       const updateUserUseCase = container.resolve(UpdateUserUseCase);
 
       const user = await updateUserUseCase.execute({

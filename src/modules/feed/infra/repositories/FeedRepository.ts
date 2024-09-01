@@ -105,7 +105,6 @@ class FeedRepository implements IFeedRepository {
     return posts.map(this.mapPost);
   }
   private mapPost(post: any): IPost {
-    console.log({ post });
     return {
       id: post.id,
       content: post.content,

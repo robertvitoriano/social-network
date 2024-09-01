@@ -1,19 +1,16 @@
-import AWS from "aws-sdk";
-import fs from "fs";
-import path from "path";
-import crypto from "crypto";
 import { inject, injectable } from "tsyringe";
 import { User } from "../../infra/typeorm/entities/User";
 import { IUsersRepository } from "../../repositories/IUsersRepository";
-import { deleteFile } from "../../../../utils/file";
+import { uploadFile } from "src/utils/upload-file";
 
 interface IRequest {
   user_id: string;
   updateData: {
-    name: string;
-    email: string;
-    username: string;
-    avatarFile: Express.Multer.File;
+    name?: string;
+    email?: string;
+    username?: string;
+    avatarFile?: Express.Multer.File;
+    coverFile?: Express.Multer.File;
   };
 }
 
@@ -21,54 +18,37 @@ interface IRequest {
 class UpdateUserUseCase {
   constructor(
     @inject("UsersRepository")
-    private usersRepository: IUsersRepository,
-    @inject("S3")
-    private s3: AWS.S3
+    private usersRepository: IUsersRepository
   ) {}
 
   async execute({ user_id, updateData }: IRequest): Promise<User> {
-    const { avatarFile, name, username, email } = updateData;
+    const { avatarFile, coverFile, name, username, email } = updateData;
     const user = await this.usersRepository.findById(user_id);
+    let avatarUrl = null;
+    let coverUrl = null;
 
     if (!user) {
       throw new Error("User not found");
     }
-
-    const tmpDir = path.resolve(__dirname, "../../../../../tmp/avatar");
-
-    if (!fs.existsSync(tmpDir)) {
-      fs.mkdirSync(tmpDir, { recursive: true });
+    if (avatarFile) {
+      avatarUrl = await uploadFile({
+        file: avatarFile,
+        bucketPath: "user-avatar",
+      });
     }
-
-    const filePath = path.resolve(tmpDir, avatarFile.filename);
-
-    if (!fs.existsSync(filePath)) {
-      throw new Error(`File not found: ${filePath}`);
+    if (coverFile) {
+      coverUrl = await uploadFile({
+        file: coverFile,
+        bucketPath: "cover-avatar",
+      });
     }
-
-    const fileContent = fs.readFileSync(filePath);
-    const fileHash = crypto.randomBytes(16).toString("hex");
-    const fileKey = `user-avatar/${fileHash}-${avatarFile.originalname}`;
-
-    const { Location } = await this.s3
-      .upload({
-        ACL: "public-read",
-        ContentDisposition: "attachment",
-        Bucket: process.env.S3_BUCKET,
-        Key: fileKey,
-        Body: fileContent,
-        ContentType: updateData.avatarFile.mimetype,
-      })
-      .promise();
-
     const updateResult = await this.usersRepository.updateUser(user_id, {
-      avatar: Location,
+      avatar: avatarUrl,
       email,
       username,
       name,
+      cover: coverUrl,
     });
-
-    await deleteFile(filePath);
     return updateResult;
   }
 }

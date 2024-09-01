@@ -5,6 +5,7 @@ export type UserUpdateFields = {
   name?: string;
   email?: string;
   avatar?: string;
+  cover?: string;
 };
 interface IUsersRepository {
   create(data: ICreateUserDTO): Promise<User>;

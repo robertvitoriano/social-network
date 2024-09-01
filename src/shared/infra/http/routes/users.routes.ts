@@ -8,7 +8,7 @@ import { GetUserProfileController } from "../../../../modules/accounts/useCases/
 
 const usersRoutes = Router();
 
-const uploadAvatar = multer(uploadConfig.upload("./tmp/avatar"));
+const upload = multer(uploadConfig.upload("./tmp/"));
 
 const createUserController = new CreateUserController();
 const updateUserController = new UpdateUserController();
@@ -19,7 +19,7 @@ usersRoutes.get("/:userId", getUserProfileController.handle);
 usersRoutes.patch(
   "/",
   ensureAuthenticated,
-  uploadAvatar.single("avatar"),
+  upload.single("avatar"),
   updateUserController.handle
 );
 

@@ -1,5 +1,4 @@
 import { container } from "tsyringe";
-import AWS from "aws-sdk";
 import { UserRepository } from "./../../modules/accounts/infra/repositories/UsersRepository";
 import { IUsersRepository } from "../../modules/accounts/repositories/IUsersRepository";
 import { ChatRepository } from "../../modules/chat/infra/repositories/ChatRepository";
@@ -24,6 +23,5 @@ container.registerSingleton<INotificationsRepository>(
   "NotificationRepository",
   NotificationsRepository
 );
-container.registerSingleton<AWS.S3>("S3", AWS.S3);
 container.registerSingleton<IChatRepository>("ChatRepository", ChatRepository);
 container.registerSingleton<IFeedRepository>("FeedRepository", FeedRepository);
