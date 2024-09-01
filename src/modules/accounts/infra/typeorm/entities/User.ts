@@ -30,6 +30,9 @@ export class User {
   @Column({ type: "varchar", nullable: true })
   avatar!: string;
 
+  @Column({ type: "varchar", nullable: true })
+  cover!: string;
+
   @Column({ type: "boolean", default: false })
   online: boolean;
 

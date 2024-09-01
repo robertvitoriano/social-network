@@ -25,7 +25,7 @@ class UserRepository implements IUsersRepository {
 
       const updatedUser = await this.repository.findOne({
         where: { id: userId },
-        select: ["id", "name", "email", "username", "avatar"],
+        select: ["id", "name", "email", "username", "avatar", "cover"],
       });
       return updatedUser || null;
     }
@@ -41,7 +41,7 @@ class UserRepository implements IUsersRepository {
   async findById(id: string): Promise<User> {
     const user = await this.repository.findOne({
       where: { id },
-      select: ["id", "name", "email", "username", "avatar"],
+      select: ["id", "name", "email", "username", "avatar", "cover"],
     });
     return user;
   }

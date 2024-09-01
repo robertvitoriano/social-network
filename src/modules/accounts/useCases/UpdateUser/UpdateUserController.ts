@@ -5,20 +5,28 @@ import { UpdateUserUseCase } from "./UpdateUserUseCase";
 export class UpdateUserController {
   async handle(request: Request, response: Response): Promise<Response> {
     try {
-      const { id } = request.user;
       const {
+        user: { id },
         file,
-        body: { name, email, username },
+        body: { name, email, username, fileBeingUploaded },
       } = request;
       const updateUserUseCase = container.resolve(UpdateUserUseCase);
-
+      let avatarFile;
+      let coverFile;
+      if (fileBeingUploaded === "avatar") {
+        avatarFile = file;
+      }
+      if (fileBeingUploaded === "cover") {
+        coverFile = file;
+      }
       const user = await updateUserUseCase.execute({
         user_id: id,
         updateData: {
           name,
           email,
           username,
-          avatarFile: request.file,
+          avatarFile,
+          coverFile,
         },
       });
 

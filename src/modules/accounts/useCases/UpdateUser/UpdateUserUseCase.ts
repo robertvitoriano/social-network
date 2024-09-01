@@ -44,10 +44,10 @@ class UpdateUserUseCase {
     }
     const updateResult = await this.usersRepository.updateUser(user_id, {
       avatar: avatarUrl,
+      cover: coverUrl,
       email,
       username,
       name,
-      cover: coverUrl,
     });
     return updateResult;
   }
