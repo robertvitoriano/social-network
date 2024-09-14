@@ -5,6 +5,7 @@ import { User } from "../../infra/typeorm/entities/User";
 
 interface IResponse {
   profile: User;
+  friendshipId: string;
 }
 @injectable()
 export class GetUserProfileUseCase {
@@ -15,10 +16,18 @@ export class GetUserProfileUseCase {
     private friendshipRepository: IFriendshipsRepository
   ) {}
 
-  public async execute(userId: string): Promise<IResponse> {
+  public async execute(
+    userId: string,
+    loggedUserId: string
+  ): Promise<IResponse> {
     const profile = await this.usersRepository.findById(userId);
+    const friendship = await this.friendshipRepository.findFriendship({
+      friendId: userId,
+      userId: loggedUserId,
+    });
     return {
-      profile,
+      profile: { ...profile },
+      friendshipId: friendship?.friendshipId,
     };
   }
 }

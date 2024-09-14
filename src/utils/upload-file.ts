@@ -34,6 +34,5 @@ export async function uploadFile({ file, bucketPath }): Promise<string> {
     .promise();
 
   await deleteFile(filePath);
-  console.log({ Location });
   return Location;
 }

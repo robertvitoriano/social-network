@@ -14,7 +14,11 @@ const createUserController = new CreateUserController();
 const updateUserController = new UpdateUserController();
 const getUserProfileController = new GetUserProfileController();
 usersRoutes.post("/", createUserController.handle);
-usersRoutes.get("/:userId", getUserProfileController.handle);
+usersRoutes.get(
+  "/:userId",
+  ensureAuthenticated,
+  getUserProfileController.handle
+);
 
 usersRoutes.patch(
   "/",

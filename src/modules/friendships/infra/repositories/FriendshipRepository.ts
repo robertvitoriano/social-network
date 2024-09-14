@@ -49,6 +49,7 @@ class FriendshipRepository implements IFriendshipsRepository {
       const { user, friend } = friendship;
 
       return {
+        friendshipId: friendship.id,
         avatar: user.id === userId ? friend.avatar : user.avatar,
         id: user.id === userId ? friend.id : user.id,
         name: user.id === userId ? friend.name : user.name,

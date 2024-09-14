@@ -1,4 +1,5 @@
 export interface IUserFriendDTO {
+  friendshipId: string;
   id: string;
   online?: string;
   name: string;

@@ -7,7 +7,10 @@ export class GetUserProfileController {
     try {
       const { userId } = request.params;
       const getUserProfileUseCase = container.resolve(GetUserProfileUseCase);
-      const profileResult = await getUserProfileUseCase.execute(userId);
+      const profileResult = await getUserProfileUseCase.execute(
+        userId,
+        request.user.id
+      );
       return response.json(profileResult);
     } catch (error) {
       console.error(error);
