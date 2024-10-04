@@ -86,7 +86,11 @@ class FeedRepository implements IFeedRepository {
       .createQueryBuilder("posts")
       .andWhere("posts.id = :postId", { postId })
       .innerJoinAndSelect("posts.user", "user")
-      .leftJoinAndSelect("posts.comments", "comments")
+      .leftJoinAndSelect(
+        "posts.comments",
+        "comments",
+        "comments.parent_comment_id IS NULL"
+      )
       .leftJoinAndSelect("comments.user", "commentUser")
       .leftJoinAndSelect("comments.replies", "commentReplies")
       .leftJoinAndSelect("commentReplies.user", "replyUser")
