@@ -88,6 +88,8 @@ class FeedRepository implements IFeedRepository {
       .innerJoinAndSelect("posts.user", "user")
       .leftJoinAndSelect("posts.comments", "comments")
       .leftJoinAndSelect("comments.user", "commentUser")
+      .leftJoinAndSelect("comments.replies", "commentReplies")
+      .leftJoinAndSelect("commentReplies.user", "replyUser")
       .getOne();
     if (!post) return null;
     return {
@@ -100,6 +102,15 @@ class FeedRepository implements IFeedRepository {
           postId: comment.post_id,
           createdAt: comment.created_at,
           likesCount: comment.likes_count,
+          replies: comment.replies.map((reply: any) => ({
+            id: reply.id,
+            content: reply.content,
+            user: reply.user,
+            postId: reply.post_id,
+            createdAt: reply.created_at,
+            likesCount: reply.likes_count,
+            replies: reply.replies,
+          })),
         })) || [],
       createdAt: post.created_at,
       likesCount: post.likes_count,

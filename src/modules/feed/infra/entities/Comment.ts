@@ -43,10 +43,10 @@ export class Comment {
   @JoinColumn({ name: "post_id" })
   post!: any;
 
-  @ManyToOne("comments", "childComments", { onDelete: "CASCADE" })
+  @ManyToOne("comments", "replies", { onDelete: "CASCADE" })
   @JoinColumn({ name: "parent_comment_id" })
   parentComment!: any;
 
   @OneToMany("comments", "parentComment")
-  childComments!: any[];
+  replies!: any[];
 }
