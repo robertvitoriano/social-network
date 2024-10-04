@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
   JoinColumn,
   ManyToOne,
+  OneToMany,
 } from "typeorm";
 
 @Entity({ name: "comments" })
@@ -18,6 +19,9 @@ export class Comment {
 
   @Column({ type: "char", length: 36 })
   post_id: string;
+
+  @Column({ type: "char", length: 36 })
+  parent_comment_id: string;
 
   @Column({ type: "text", nullable: true })
   content: string;
@@ -38,4 +42,11 @@ export class Comment {
   @ManyToOne("posts", "comments", { onDelete: "CASCADE" })
   @JoinColumn({ name: "post_id" })
   post!: any;
+
+  @ManyToOne("comments", "childComments", { onDelete: "CASCADE" })
+  @JoinColumn({ name: "parent_comment_id" })
+  parentComment!: any;
+
+  @OneToMany("comments", "parentComment")
+  childComments!: any[];
 }

@@ -104,7 +104,6 @@ class FeedRepository implements IFeedRepository {
       createdAt: post.created_at,
       likesCount: post.likes_count,
       commentsCount: post.comments_count,
-      lastComment: null,
     };
   }
   async listUserTimelinePosts({
@@ -256,11 +255,12 @@ class FeedRepository implements IFeedRepository {
   }
 
   async createComment(data: ICreateCommentDTO) {
-    const { postId, userId, content } = data;
+    const { postId, userId, content, parentCommentId } = data;
     const newComment = this.commentRepository.create({
       post_id: postId,
       user_id: userId,
       content: content,
+      parent_comment_id: parentCommentId || null,
     });
     await this.commentRepository.save(newComment);
     await this.postRepository.increment({ id: postId }, "comments_count", 1);

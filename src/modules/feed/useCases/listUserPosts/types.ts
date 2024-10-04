@@ -20,7 +20,7 @@ export type IPost = {
   createdAt: Date;
   likesCount: number;
   commentsCount: number;
-  lastComment: IComment | null;
+  lastComment?: IComment | null;
   comments: IComment[] | null;
   user: {
     id: string;

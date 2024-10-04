@@ -9,8 +9,14 @@ export class CreateCommentUseCase {
     private feedRepository: IFeedRepository
   ) {}
 
-  async execute({ content, userId, postId }: ICreateCommentDTO): Promise<void> {
+  async execute({
+    content,
+    userId,
+    postId,
+    parentCommentId,
+  }: ICreateCommentDTO): Promise<void> {
     await this.feedRepository.createComment({
+      parentCommentId,
       content,
       userId,
       postId,
