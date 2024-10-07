@@ -4,6 +4,7 @@ import { Comment } from "./../entities/Comment";
 import { IFeedRepository } from "./IFeedRepository";
 import { ICreatePostDTO } from "../../dtos/ICreatePostDTO";
 import {
+  IComment,
   IListUserPostsParams,
   IPost,
 } from "../../useCases/listUserPosts/types";
@@ -91,8 +92,25 @@ class FeedRepository implements IFeedRepository {
       .getOne();
 
     if (!post) return null;
-    const comments = post.comments
-      .filter((c) => !c.parent_comment_id)
+    const comments = this.mapComments(post.comments).filter(
+      (c) => !c.parentCommentId
+    );
+
+    return {
+      ...post,
+      comments,
+      createdAt: post.created_at,
+      likesCount: post.likes_count,
+      commentsCount: post.comments_count,
+    };
+  }
+
+  private mapComments(
+    comments,
+    parentCommentId: string | null = null
+  ): IComment[] {
+    return comments
+      .filter((comment) => comment.parent_comment_id === parentCommentId)
       .map((comment) => ({
         id: comment.id,
         content: comment.content,
@@ -101,17 +119,8 @@ class FeedRepository implements IFeedRepository {
         createdAt: comment.created_at,
         likesCount: comment.likes_count,
         parentCommentId: comment.parent_comment_id,
-        replies: post.comments.filter(
-          (c) => c.parent_comment_id === comment.id
-        ),
+        replies: this.mapComments(comments, comment.id),
       }));
-    return {
-      ...post,
-      comments,
-      createdAt: post.created_at,
-      likesCount: post.likes_count,
-      commentsCount: post.comments_count,
-    };
   }
   async listUserTimelinePosts({
     userId,
@@ -176,6 +185,7 @@ class FeedRepository implements IFeedRepository {
               name: post.lastCommentUserName,
               avatar: post.lastCommentUserAvatar,
             },
+            replies: [],
           }
         : null,
       comments: null,
