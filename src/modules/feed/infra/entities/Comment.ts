@@ -48,5 +48,5 @@ export class Comment {
   parentComment!: any;
 
   @OneToMany("comments", "parentComment")
-  replies!: any[];
+  replies!: Comment[];
 }

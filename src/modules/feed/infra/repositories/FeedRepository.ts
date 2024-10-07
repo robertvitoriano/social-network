@@ -86,36 +86,28 @@ class FeedRepository implements IFeedRepository {
       .createQueryBuilder("posts")
       .andWhere("posts.id = :postId", { postId })
       .innerJoinAndSelect("posts.user", "user")
-      .leftJoinAndSelect(
-        "posts.comments",
-        "comments",
-        "comments.parent_comment_id IS NULL"
-      )
+      .leftJoinAndSelect("posts.comments", "comments")
       .leftJoinAndSelect("comments.user", "commentUser")
-      .leftJoinAndSelect("comments.replies", "commentReplies")
-      .leftJoinAndSelect("commentReplies.user", "replyUser")
       .getOne();
+
     if (!post) return null;
+    const comments = post.comments
+      .filter((c) => !c.parent_comment_id)
+      .map((comment) => ({
+        id: comment.id,
+        content: comment.content,
+        user: comment.user,
+        postId: comment.post_id,
+        createdAt: comment.created_at,
+        likesCount: comment.likes_count,
+        parentCommentId: comment.parent_comment_id,
+        replies: post.comments.filter(
+          (c) => c.parent_comment_id === comment.id
+        ),
+      }));
     return {
       ...post,
-      comments:
-        post?.comments.map((comment: any) => ({
-          id: comment.id,
-          content: comment.content,
-          user: comment.user,
-          postId: comment.post_id,
-          createdAt: comment.created_at,
-          likesCount: comment.likes_count,
-          replies: comment.replies.map((reply: any) => ({
-            id: reply.id,
-            content: reply.content,
-            user: reply.user,
-            postId: reply.post_id,
-            createdAt: reply.created_at,
-            likesCount: reply.likes_count,
-            replies: reply.replies,
-          })),
-        })) || [],
+      comments,
       createdAt: post.created_at,
       likesCount: post.likes_count,
       commentsCount: post.comments_count,

@@ -8,6 +8,8 @@ export type IComment = {
   content: string;
   createdAt: string;
   likesCount: number;
+  parentCommentId?: string;
+  replies: IComment[];
   user: {
     id: string;
     name: string;
