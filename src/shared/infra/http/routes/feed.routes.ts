@@ -26,11 +26,7 @@ feedRouter.get(
   listCommentsController.handle
 );
 feedRouter.get("/post/:postId", ensureAuthenticated, getPostController.handle);
-feedRouter.get(
-  "/timeline/:userId",
-  ensureAuthenticated,
-  listUserFeedPostsController.handle
-);
+feedRouter.get("/timeline/:userId", listUserFeedPostsController.handle);
 feedRouter.get("/:userId", ensureAuthenticated, listFeedPostsController.handle);
 feedRouter.post(
   "/comments",
