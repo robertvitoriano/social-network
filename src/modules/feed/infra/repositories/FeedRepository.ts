@@ -32,7 +32,7 @@ class FeedRepository implements IFeedRepository {
     friendIds,
   }: IListFeedPostsParams): Promise<IPost[]> {
     const skip = page ? (page - 1) * postsPerPage : 0;
-
+    const userIdsToListPostsFrom = [userId, ...friendIds];
     const posts = await this.postRepository
       .createQueryBuilder("posts")
       .innerJoin("posts.user", "user")
@@ -62,9 +62,9 @@ class FeedRepository implements IFeedRepository {
         "lastComment.lastCommentUserAvatar",
         "lastComment.lastCommentLikesCount",
       ])
-      .where("posts.timeline_owner_id = posts.user_id")
-      .andWhere("posts.timeline_owner_id = :userId", { userId })
-      .orWhere("posts.timeline_owner_id IN (:...friendIds)", { friendIds })
+      .where("posts.timeline_owner_id IN (:...userIdsToListPostsFrom)", {
+        userIdsToListPostsFrom,
+      })
       .orderBy("posts.created_at", "DESC")
       .skip(skip)
       .take(postsPerPage)
