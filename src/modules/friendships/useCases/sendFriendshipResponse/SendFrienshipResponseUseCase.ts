@@ -1,5 +1,4 @@
 import { inject, injectable } from "tsyringe";
-import ICreateUserDTO from "../../dtos/ICreateFriendshipDTO";
 import { IFriendshipsRepository } from "../../repositories/IFriendshipsRepository";
 import { IUsersRepository } from "../../../accounts/repositories/IUsersRepository";
 import { INotificationsRepository } from "../../../notifications/repositories/INotificationsRepository";
