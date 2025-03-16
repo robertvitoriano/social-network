@@ -10,7 +10,7 @@ dbConnection.connect().then(() => {
   const webSocketServer = WebSocketServer.getInstance();
   webSocketServer.init(httpServer);
 
-  httpServer.listen(3334, () => {
-    console.info("My app is running");
+  httpServer.listen(process.env.PORT, () => {
+    console.info("My app is running on PORT " + process.env.PORT);
   });
 });
