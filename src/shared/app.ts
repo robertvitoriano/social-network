@@ -1,5 +1,3 @@
-// src/shared/infra/http/app.ts
-
 import "reflect-metadata";
 import express from "express";
 import "express-async-errors";
