@@ -10,16 +10,16 @@ export class ListUserFeedPostsUseCase {
   ) {}
 
   async execute({
-    userId,
+    handle,
     page,
   }: IListUserPostsParams): Promise<IListUserPostsResult> {
     const postsPerPage = 25;
     const posts: IPost[] = await this.feedRepository.listUserTimelinePosts({
-      userId,
+      handle,
       page,
       postsPerPage,
     });
-    const total = await this.feedRepository.getPostsCount(userId);
+    const total = await this.feedRepository.getPostsCount(handle);
     const totalPages: number = Math.ceil(total / postsPerPage);
     return { posts, currentPage: page, totalPages };
   }

@@ -5,11 +5,13 @@ import { GetUserProfileUseCase } from "./GetUserProfileUseCase";
 export class GetUserProfileController {
   async handle(request: Request, response: Response): Promise<Response> {
     try {
-      const { userId } = request.params;
+      const { handle } = request.params;
+
       const getUserProfileUseCase = container.resolve(GetUserProfileUseCase);
+
       const profileResult = await getUserProfileUseCase.execute(
-        userId,
-        request.user.id
+        handle,
+        request?.user?.id
       );
       return response.json(profileResult);
     } catch (error) {

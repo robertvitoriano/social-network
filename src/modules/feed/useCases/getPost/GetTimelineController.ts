@@ -1,15 +1,16 @@
 import { AppError } from "../../../../shared/errors/AppError";
 import { Request, Response } from "express";
 import { container } from "tsyringe";
-import { GetPostUseCase } from "./GetPostUseCase";
-class GetPostController {
+import { GetTimelineUseCase } from "./GetTimelineUseCase";
+class GetTimelineController {
   async handle(request: Request, response: Response): Promise<Response> {
     try {
-      const getPostUseCase: GetPostUseCase = container.resolve(GetPostUseCase);
+      const getTimelineUseCase: GetTimelineUseCase =
+        container.resolve(GetTimelineUseCase);
 
       const { postId } = request.params;
 
-      const getFeedPostResponse = await getPostUseCase.execute(postId);
+      const getFeedPostResponse = await getTimelineUseCase.execute(postId);
       if (!getFeedPostResponse) {
         return response.status(404).json(getFeedPostResponse);
       }
@@ -21,4 +22,4 @@ class GetPostController {
   }
 }
 
-export { GetPostController };
+export { GetTimelineController };

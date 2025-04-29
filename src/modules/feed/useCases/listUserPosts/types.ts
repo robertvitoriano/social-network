@@ -1,5 +1,5 @@
 export interface IListUserPostsParams {
-  userId: string;
+  handle: string;
   page: number;
   postsPerPage?: number;
 }

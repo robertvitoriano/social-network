@@ -3,7 +3,7 @@ import { IFeedRepository } from "../../infra/repositories/IFeedRepository";
 import { IPost } from "../listUserPosts/types";
 
 @injectable()
-export class GetPostUseCase {
+export class GetTimelineUseCase {
   constructor(
     @inject("FeedRepository")
     private feedRepository: IFeedRepository

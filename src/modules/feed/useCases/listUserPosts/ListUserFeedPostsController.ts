@@ -8,10 +8,10 @@ class ListUserFeedPostsController {
       const listUserFeedPostsUseCase: ListUserFeedPostsUseCase =
         container.resolve(ListUserFeedPostsUseCase);
 
-      const { userId } = request.params;
+      const { handle } = request.params;
       const { page } = request.query;
       const listUserFeedPostsResponse = await listUserFeedPostsUseCase.execute({
-        userId,
+        handle,
         page: Number(page),
       });
 

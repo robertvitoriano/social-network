@@ -17,12 +17,13 @@ export class GetUserProfileUseCase {
   ) {}
 
   public async execute(
-    userId: string,
-    loggedUserId: string
+    handle: string,
+    loggedUserId?: string
   ): Promise<IResponse> {
-    const profile = await this.usersRepository.findById(userId);
+    let profile = await this.usersRepository.findById(handle);
+    if (!profile) profile = await this.usersRepository.findByUsername(handle);
     const friendship = await this.friendshipRepository.findFriendship({
-      friendId: userId,
+      friendId: handle,
       userId: loggedUserId,
     });
     return {

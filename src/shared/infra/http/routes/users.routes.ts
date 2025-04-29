@@ -5,6 +5,7 @@ import uploadConfig from "../../../../config/upload";
 import multer from "multer";
 import { ensureAuthenticated } from "../middlewares/ensureAuthenticated";
 import { GetUserProfileController } from "../../../../modules/accounts/useCases/getUserProfile/GetUserProfileController";
+import { setAuthenticatedUser } from "../middlewares/setAuthenticatedUser";
 
 const usersRoutes = Router();
 
@@ -15,8 +16,8 @@ const updateUserController = new UpdateUserController();
 const getUserProfileController = new GetUserProfileController();
 usersRoutes.post("/", createUserController.handle);
 usersRoutes.get(
-  "/:userId",
-  ensureAuthenticated,
+  "/:handle",
+  setAuthenticatedUser,
   getUserProfileController.handle
 );
 

@@ -123,7 +123,7 @@ class FeedRepository implements IFeedRepository {
       }));
   }
   async listUserTimelinePosts({
-    userId,
+    handle,
     page,
     postsPerPage = 25,
   }: IListUserPostsParams): Promise<IPost[]> {
@@ -159,7 +159,10 @@ class FeedRepository implements IFeedRepository {
         "lastComment.lastCommentUserAvatar",
         "lastComment.lastCommentLikesCount",
       ])
-      .where("posts.timeline_owner_id = :userId", { userId })
+      .where("posts.timeline_owner_id = :handle", {
+        handle,
+      })
+      .orWhere("user.username = :handle", { handle })
       .orderBy("posts.created_at", "DESC")
       .skip(skip)
       .take(postsPerPage)
