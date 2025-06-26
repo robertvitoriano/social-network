@@ -1,0 +1,107 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: social-network-deployment
+  labels:
+    app: social-network
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: social-network
+  template:
+    metadata:
+      labels:
+        app: social-network
+    spec:
+      containers:
+      - name: social-network
+        image: robertvitoriano/social-network:latest
+        ports:
+        - containerPort: 3333
+        env:
+        - name: MYSQLDB_USER
+          valueFrom:
+            secretKeyRef:
+              name: social-network-secret
+              key: MYSQLDB_USER
+        - name: MYSQLDB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: social-network-secret
+              key: MYSQLDB_ROOT_PASSWORD
+        - name: MYSQLDB_LOCAL_PORT
+          valueFrom:
+            secretKeyRef:
+              name: social-network-secret
+              key: MYSQLDB_LOCAL_PORT
+        - name: MYSQLDB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: social-network-secret
+              key: MYSQLDB_HOST
+        - name: MYSQLDB_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: social-network-secret
+              key: MYSQLDB_DATABASE
+        - name: API_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: social-network-secret
+              key: API_SECRET_KEY
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: social-network-secret
+              key: AWS_ACCESS_KEY_ID
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: social-network-secret
+              key: AWS_SECRET_ACCESS_KEY
+        - name: AWS_REGION
+          valueFrom:
+            secretKeyRef:
+              name: social-network-secret
+              key: AWS_REGION
+        - name: S3_BUCKET
+          valueFrom:
+            secretKeyRef:
+              name: social-network-secret
+              key: S3_BUCKET
+        - name: LANG
+          valueFrom:
+            secretKeyRef:
+              name: social-network-secret
+              key: LANG
+        - name: ENVIRONMENT
+          valueFrom:
+            secretKeyRef:
+              name: social-network-secret
+              key: ENVIRONMENT
+        - name: GOOGLE_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: social-network-secret
+              key: GOOGLE_CLIENT_ID
+        - name: GOOGLE_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: social-network-secret
+              key: GOOGLE_CLIENT_SECRET
+        - name: GOOGLE_CALLBACK_URL
+          valueFrom:
+            secretKeyRef:
+              name: social-network-secret
+              key: GOOGLE_CALLBACK_URL
+        - name: CLIENT_URL
+          valueFrom:
+            secretKeyRef:
+              name: social-network-secret
+              key: CLIENT_URL
+        - name: PORT
+          valueFrom:
+            secretKeyRef:
+              name: social-network-secret
+              key: PORT
