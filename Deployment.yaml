@@ -15,6 +15,10 @@ spec:
         app: social-network
     spec:
       containers:
+      - name: social-network-redis
+        image: redis:8
+        ports:
+          - containerPort: 6739
       - name: social-network
         image: robertvitoriano/social-network:latest
         ports:
