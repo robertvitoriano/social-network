@@ -19,12 +19,12 @@ AWS.config.update({
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   region: process.env.AWS_REGION,
 });
-Redis.connect().then(()=>{
-  console.info("Redis connection stablished!")
-})
+Redis.connect().then(() => {
+  console.info("Redis connection stablished!");
+});
 const app = express();
 app.set("trust proxy", true);
-app.use((req, res, next) => rateLimiter(req, res, next, 60, 60, 120));
+app.use((req, res, next) => rateLimiter(req, res, next, 60, 60, 2 * 60 * 60));
 app.use(cors({ origin: "*", methods: ["GET", "POST", "DELETE", "PATCH"] }));
 app.use(express.json());
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerConfig));
