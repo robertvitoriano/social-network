@@ -11,6 +11,7 @@ export class Redis {
     }
     return Redis.client;
   }
+  
   static async connect(): Promise <void> {
     if (this.isConnected) return;
     Redis.client = createClient();
