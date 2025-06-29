@@ -10,8 +10,7 @@ import { appErrorMiddleware } from "./infra/http/middlewares/appErrorMiddleware"
 import { router } from "./infra/http/routes";
 import swaggerConfig from "./../swagger.json";
 import "./container";
-import "./infra/redis";
-import { connectToRedis } from "./infra/redis";
+import { Redis } from "./infra/redis";
 import { rateLimiter } from "./infra/http/middlewares/rate-limiter";
 dotenv.config();
 
@@ -20,9 +19,9 @@ AWS.config.update({
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   region: process.env.AWS_REGION,
 });
-connectToRedis.then(() => {
-  console.info("Redis conneceted");
-});
+Redis.connect().then(()=>{
+  console.info("Redis connection stablished!")
+})
 const app = express();
 app.set("trust proxy", true);
 app.use((req, res, next) => rateLimiter(req, res, next, 60, 60, 120));
