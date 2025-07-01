@@ -8,7 +8,7 @@ WORKDIR /app
 COPY  package*.json ./
 COPY  ormconfig.js ./
 COPY  .swcrc ./
-RUN npm install
+RUN npm install --force
 
 # Copy all source files
 COPY . .
@@ -27,10 +27,6 @@ COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/ormconfig.js ./
 COPY --from=builder /app/.swcrc ./
 
-COPY --from=builder /app/.env .env
-
-# Install only production dependencies
-RUN npm install --omit=dev
 
 # Expose application port
 EXPOSE 3333

@@ -65,7 +65,7 @@
     "typescript": "^4.9.5"
   },
   "scripts": {
-    "build": "swc src -d dist && cp src/swagger.json dist/src && cp .env dist/",
+    "build": "swc src -d dist && cp src/swagger.json   dist/",
     "start": "node dist/src/shared/infra/http/server.js",
     "dev": "tsx --watch src/shared/infra/http/server.ts",
     "typeorm": "tsx ./node_modules/typeorm/cli.js",
