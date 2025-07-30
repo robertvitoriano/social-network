@@ -1,4 +1,3 @@
-import { password } from "ormconfig.example";
 import { env } from "src/config/env";
 import { Connection, createConnection, getConnectionOptions } from "typeorm";
 
@@ -10,7 +9,7 @@ class DatabaseConnection {
     return createConnection(
       Object.assign(defaultOptions, {
         database:env.MYSQLDB_DATABASE,
-        user:env.MYSQLDB_USER,
+        username:env.MYSQLDB_USER,
         host,
         password:env.MYSQLDB_ROOT_PASSWORD,
       })
