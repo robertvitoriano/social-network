@@ -6,6 +6,7 @@ import crypto from "crypto";
 import { WebSocketServer } from "./../../../../shared/infra/ws/WebSocketServer";
 import { EventType } from "../../../../shared/enums/websocket-events";
 import { IFriendshipsRepository } from "../../../friendships/repositories/IFriendshipsRepository";
+import { env } from "src/config/env";
 
 interface IResponse {
   user: {
@@ -30,11 +31,11 @@ export class LoginOAuthUseCase {
     const tokenResponse = await axios.post(
       "https://oauth2.googleapis.com/token",
       {
-        client_id: process.env.GOOGLE_CLIENT_ID,
-        client_secret: process.env.GOOGLE_CLIENT_SECRET,
+        client_id: env.GOOGLE_CLIENT_ID,
+        client_secret: env.GOOGLE_CLIENT_SECRET,
         code: oauthCode,
         grant_type: "authorization_code",
-        redirect_uri: process.env.GOOGLE_CALLBACK_URL,
+        redirect_uri: env.GOOGLE_CALLBACK_URL,
       }
     );
 

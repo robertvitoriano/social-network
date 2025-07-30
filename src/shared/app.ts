@@ -10,12 +10,13 @@ import { router } from "./infra/http/routes";
 import "./container";
 import { Redis } from "./infra/redis";
 import { rateLimiter } from "./infra/http/middlewares/rate-limiter";
+import { env } from "src/config/env";
 dotenv.config();
 
 AWS.config.update({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION,
+  accessKeyId: env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: env.AWS_SECRET_ACCESS_KEY,
+  region: env.AWS_REGION,
 });
 Redis.connect().then(() => {
   console.info("Redis connection stablished!");

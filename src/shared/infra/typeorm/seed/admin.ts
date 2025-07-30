@@ -1,10 +1,11 @@
 import { v4 as uuidV4 } from "uuid";
 import { hash } from "bcrypt";
 import { DatabaseConnection } from "../DatabaseConnection";
+import { env } from "src/config/env";
 
 async function create() {
   const defaultHost =
-    process.env.ENVIRONMENT === "dev" ? "mysqldb" : process.env.MYSQLDB_HOST;
+    env.ENVIRONMENT === "dev" ? "mysqldb" : env.MYSQLDB_HOST;
   const dbConnection = new DatabaseConnection();
   const connection = await dbConnection.connect(defaultHost);
   const password = await hash("123456", 8);

@@ -30,7 +30,8 @@
     "swc-node": "^1.0.0",
     "tsyringe": "^4.9.1",
     "typeorm": "^0.2.34",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "zod": "^4.0.13"
   },
   "devDependencies": {
     "@babel/core": "^7.17.5",

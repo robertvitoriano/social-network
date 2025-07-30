@@ -7,6 +7,7 @@ WORKDIR /app
 # Install dependencies
 COPY  package*.json ./
 COPY  ormconfig.js ./
+COPY .env.local ./.env.local
 COPY  .swcrc ./
 RUN npm install --force
 
@@ -23,6 +24,7 @@ WORKDIR /app
 
 # Copy only the necessary files from the builder
 COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/.env.local ./.env.local
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/ormconfig.js ./

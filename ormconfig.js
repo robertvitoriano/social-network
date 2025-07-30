@@ -1,7 +1,8 @@
 const dotEnv = require('dotenv')
 const path = require('path');
+const env = require("./src/config/env")
 dotEnv.config()
-const isProduction = process.env.ENVIRONMENT === 'prod';
+const isProduction = env.ENVIRONMENT === 'prod';
 
 const User = isProduction
   ? require(path.join(__dirname, 'dist/src/modules/accounts/infra/typeorm/entities/User')).User
@@ -49,11 +50,11 @@ const NotificationType = isProduction
   
 const ormConfig = {
   type: 'mysql',
-  host: process.env.MYSQLDB_HOST,
-  port: parseInt(process.env.MYSQLDB_LOCAL_PORT, 10),
-  username: process.env.MYSQLDB_USER,
-  password: process.env.MYSQLDB_ROOT_PASSWORD,
-  database: process.env.MYSQLDB_DATABASE,
+  host: env.MYSQLDB_HOST,
+  port: parseInt(env.MYSQLDB_LOCAL_PORT, 10),
+  username: env.MYSQLDB_USER,
+  password: env.MYSQLDB_ROOT_PASSWORD,
+  database: env.MYSQLDB_DATABASE,
   migrations: isProduction
     ? ['./dist/src/shared/infra/typeorm/migrations/*.{js}']
     : ['./src/shared/infra/typeorm/migrations/*.{ts,js}'],

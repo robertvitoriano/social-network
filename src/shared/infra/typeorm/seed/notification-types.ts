@@ -1,9 +1,10 @@
 import dotEnv from "dotenv";
 import { DatabaseConnection } from "../DatabaseConnection";
+import { env } from "src/config/env";
 dotEnv.config();
 async function create() {
   const dbConnection = new DatabaseConnection();
-  const connection = await dbConnection.connect(process.env.MYSQLDB_HOST);
+  const connection = await dbConnection.connect(env.MYSQLDB_HOST);
   await connection.query(`
     INSERT INTO notification_types (id, type, created_at)
     VALUES 

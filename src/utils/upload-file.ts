@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 import crypto from "crypto";
 import { deleteFile } from "./file";
+import { env } from "src/config/env";
 
 export async function uploadFile({ file, bucketPath }): Promise<string> {
   const s3 = new AWS.S3();
@@ -26,7 +27,7 @@ export async function uploadFile({ file, bucketPath }): Promise<string> {
     .upload({
       ACL: "public-read",
       ContentDisposition: "attachment",
-      Bucket: process.env.S3_BUCKET,
+      Bucket: env.S3_BUCKET,
       Key: fileKey,
       Body: fileContent,
       ContentType: file.mimetype,
