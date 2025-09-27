@@ -11,7 +11,7 @@ interface IRequest {
     username?: string;
     avatarFile?: Express.Multer.File;
     coverFile?: Express.Multer.File;
-    avatarUrl: string;
+    avatarUrl?: string;
   };
 }
 
