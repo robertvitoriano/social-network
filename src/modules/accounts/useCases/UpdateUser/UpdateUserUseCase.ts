@@ -11,6 +11,7 @@ interface IRequest {
     username?: string;
     avatarFile?: Express.Multer.File;
     coverFile?: Express.Multer.File;
+    avatarUrl: string;
   };
 }
 
@@ -22,16 +23,16 @@ class UpdateUserUseCase {
   ) {}
 
   async execute({ user_id, updateData }: IRequest): Promise<User> {
-    const { avatarFile, coverFile, name, username, email } = updateData;
+    const { avatarFile, coverFile, name, username, email,avatarUrl } = updateData;
     const user = await this.usersRepository.findById(user_id);
-    let avatarUrl = null;
+    let newAvatarUrl = avatarUrl;
     let coverUrl = null;
 
     if (!user) {
       throw new Error("User not found");
     }
     if (avatarFile) {
-      avatarUrl = await uploadFile({
+      newAvatarUrl = await uploadFile({
         file: avatarFile,
         bucketPath: "user-avatar",
       });
@@ -43,7 +44,7 @@ class UpdateUserUseCase {
       });
     }
     const updateResult = await this.usersRepository.updateUser(user_id, {
-      avatar: avatarUrl,
+      avatar: newAvatarUrl,
       cover: coverUrl,
       email,
       username,

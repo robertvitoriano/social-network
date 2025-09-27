@@ -8,6 +8,7 @@ export type UserUpdateFields = {
   cover?: string;
 };
 interface IUsersRepository {
+  list(): Promise<User[]>
   create(data: ICreateUserDTO): Promise<User>;
   updateUser(userId: string, fields: UserUpdateFields): Promise<User | null>;
   findByEmail(email: string): Promise<User>;
