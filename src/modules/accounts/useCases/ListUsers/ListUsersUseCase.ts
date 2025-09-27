@@ -4,7 +4,8 @@ import { User } from "../../infra/typeorm/entities/User";
 @injectable()
 export class ListUsersUseCase {
   constructor(
-    @inject("UsersRepostiry") private usersRepository: IUsersRepository
+    // @inject("UsersRepostiry") 
+    private usersRepository: IUsersRepository
   ) {}
   async execute():Promise<User[]> {
     
