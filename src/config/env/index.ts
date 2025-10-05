@@ -1,8 +1,11 @@
-import { config } from 'dotenv'
-import { z } from 'zod'
+import { config } from "dotenv";
+import { resolve } from "path";
+import { z } from "zod";
 
+const envPath = resolve(__dirname, "../../../.env.local");
 
-config({ path: '.env.local' })
+config({ path: envPath });
+
 
 const envSchema = z.object({
   MYSQLDB_USER: z.string(),
@@ -11,7 +14,7 @@ const envSchema = z.object({
   MYSQLDB_DATABASE: z.string(),
   MYSQLDB_LOCAL_PORT: z.coerce.number().default(3306),
   MYSQLDB_DOCKER_PORT: z.coerce.number().default(3306),
-  
+
   REDIS_URL: z.string(),
 
   API_SECRET_KEY: z.string(),
@@ -19,25 +22,26 @@ const envSchema = z.object({
   AWS_ACCESS_KEY_ID: z.string(),
   AWS_SECRET_ACCESS_KEY: z.string(),
   AWS_REGION: z.string(),
-  
+
   S3_BUCKET: z.string(),
 
-  LANG: z.string().default('en_US.UTF-8'),
-  ENVIRONMENT: z.enum(['dev', 'development', 'test', 'production', 'prod']).default('dev'),
+  LANG: z.string().default("en_US.UTF-8"),
+  ENVIRONMENT: z
+    .enum(["dev", "development", "test", "production", "prod"])
+    .default("dev"),
 
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
-  GOOGLE_CALLBACK_URL: z.string().url(),
-  CLIENT_URL: z.string().url(),
+  GOOGLE_CALLBACK_URL: z.url(),
+  CLIENT_URL: z.url(),
 
   PORT: z.coerce.number().default(3333),
-})
-
-const _env = envSchema.safeParse(process.env)
+});
+const _env = envSchema.safeParse(process.env);
 
 if (!_env.success) {
-  console.error('❌ Invalid environment variables', _env.error.format())
-  throw new Error('Invalid environment variables.')
+  console.error("❌ Invalid environment variables", _env.error.format());
+  throw new Error("Invalid environment variables.");
 }
 
-export const env = _env.data
+export const env = _env.data;

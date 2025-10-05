@@ -1,4 +1,5 @@
 import "reflect-metadata"
+import "./../shared/container";
 import { ListUsersUseCase } from "src/modules/accounts/useCases/ListUsers/ListUsersUseCase";
 import { UpdateUserUseCase } from "src/modules/accounts/useCases/UpdateUser/UpdateUserUseCase";
 import { DatabaseConnection } from "src/shared/infra/typeorm/DatabaseConnection";
@@ -31,4 +32,6 @@ db.connect().then(async () => {
     }
     console.log("Avatars updated");
   });
+}).catch(error=>{
+  console.error(error);
 });
